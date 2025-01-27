@@ -41,7 +41,7 @@ BaboonFeed es un espacio para compartir humor, respetando siempre a los demás y
 
 1. **Primario (`primary`)**: `#f39c12`
 
-   - Naranja vibrante del logo. Úsado para botones principales, encabezados destacados y elementos que requieran atención.
+   - Naranja vibrante del logo. Usado para botones principales, encabezados destacados y elementos que requieran atención.
 
 2. **Secundario (`secondary`)**: `#34495e`
 
@@ -49,7 +49,7 @@ BaboonFeed es un espacio para compartir humor, respetando siempre a los demás y
 
 3. **Éxito (`success`)**: `#2ecc71`
 
-   - Un verde complementario. Úsado para mensajes de éxito o acciones positivas.
+   - Un verde complementario. Usado para mensajes de éxito o acciones positivas.
 
 4. **Peligro (`danger`)**: `#e74c3c`
 
@@ -61,7 +61,7 @@ BaboonFeed es un espacio para compartir humor, respetando siempre a los demás y
 
 6. **Advertencia (`warning`)**: `#f1c40f`
 
-   - Amarillo complementario al naranja. Úsado para advertencias o alertas importantes.
+   - Amarillo complementario al naranja. Usado para advertencias o alertas importantes.
 
 7. **Fondo (`background`)**: `#ecf0f1`
    - Gris claro. Ideal como fondo para mantener un diseño limpio y minimalista.
