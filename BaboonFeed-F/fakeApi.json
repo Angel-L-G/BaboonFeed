@@ -1,0 +1,107 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "email": "user1@example.com",
+      "username": "user1",
+      "created_at": "2024-01-01T12:00:00Z",
+      "bio": "Hola, soy user1!",
+      "file": {
+        "id": 1,
+        "name": "avatar1.png",
+        "type": "image"
+      },
+      "followers": 10,
+      "follows": 5
+    },
+    {
+      "id": 2,
+      "email": "user2@example.com",
+      "username": "user2",
+      "created_at": "2024-01-02T14:30:00Z",
+      "bio": "Amante de la tecnología.",
+      "file": null,
+      "followers": 20,
+      "follows": 15
+    }
+  ],
+  "files": [
+    {
+      "id": 1,
+      "name": "avatar1.png",
+      "type": "image"
+    },
+    {
+      "id": 2,
+      "name": "song.mp3",
+      "type": "audio"
+    }
+  ],
+  "messages": [
+    {
+      "id": 1,
+      "content": "Hola!",
+      "created_at": "2024-01-02T10:00:00Z",
+      "author": 1,
+      "file": null
+    },
+    {
+      "id": 2,
+      "content": "Qué tal?",
+      "created_at": "2024-01-02T11:00:00Z",
+      "author": 2,
+      "file": null
+    }
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "name": "Grupo 1",
+      "file": null,
+      "leader": 1,
+      "members": [1, 2]
+    }
+  ],
+  "posts": [
+    {
+      "id": 1,
+      "content": "Este es mi primer post!",
+      "created_at": "2024-01-03T14:00:00Z",
+      "user": 1,
+      "file": null,
+      "likes": [2],
+      "dislikes": []
+    },
+    {
+      "id": 2,
+      "content": "Un día increíble!",
+      "created_at": "2024-01-04T18:30:00Z",
+      "user": 2,
+      "file": {
+        "id": 2,
+        "name": "song.mp3",
+        "type": "audio"
+      },
+      "likes": [1],
+      "dislikes": []
+    }
+  ],
+  "replies": [
+    {
+      "id": 1,
+      "content": "Buena publicación!",
+      "created_at": "2024-01-03T15:00:00Z",
+      "replies": [],
+      "post": 1,
+      "user": 2
+    },
+    {
+      "id": 2,
+      "content": "Me encanta esa canción!",
+      "created_at": "2024-01-04T19:00:00Z",
+      "replies": [],
+      "post": 2,
+      "user": 1
+    }
+  ]
+}
