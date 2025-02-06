@@ -1,16 +1,14 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import Footer from '@/components/Footer.vue'
+import Footer from '@/components/Navbar.vue'
 </script>
 
 <template>
-  <div class="container">
-    <h2 class="primary">
-      ABC
-      <FontAwesomeIcon icon="fa-solid fa-dog" />
-    </h2>
-    <button class="btn btn-primary">AAAAAAa</button>
-  </div>
+  <Navbar />
+
+  <Footer />
 </template>
 
 
