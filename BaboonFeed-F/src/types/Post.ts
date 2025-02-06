@@ -1,14 +1,19 @@
-import { User } from "@/types/User";
-import { File } from "@/types/File";
+import type { User } from "@/types/User";
+import type { File } from "@/types/File";
 
 export interface Post {
   id: number;
   content: string;
   created_at: string;
   user: User;
-  file: File | null;
+  file?: File;
   likes: number[];
   dislikes: number[];
+}
+
+export interface PostCreate {
+  content: string;
+  file?: File;
 }
 
 export interface Reply {

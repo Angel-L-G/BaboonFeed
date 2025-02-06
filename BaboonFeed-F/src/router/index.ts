@@ -3,12 +3,16 @@ import { createRouter, createWebHistory } from 'vue-router'
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    // {
-    //   path: '/about',
-    //   name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
+    {
+      path: '/',
+      name: 'home',
+      component: () => import('@/views/Home.vue'),
+    },
+    {
+      path: '/posts/add/',
+      name: 'createPost',
+      component: () => import('@/components/post/CreatePost.vue'),
+    }
   ],
 })
 

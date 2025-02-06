@@ -1,10 +1,10 @@
 export interface File {
-  id: number;
+  id?: number;
   name: string;
   type: FileTypes;
 }
 
-enum FileTypes {
+export enum FileTypes {
   IMAGE = 'image',
   AUDIO = 'audio',
   VIDEO = 'video'
