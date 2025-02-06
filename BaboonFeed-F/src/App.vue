@@ -10,5 +10,3 @@ import Footer from '@/components/Navbar.vue'
 
   <Footer />
 </template>
-
-
