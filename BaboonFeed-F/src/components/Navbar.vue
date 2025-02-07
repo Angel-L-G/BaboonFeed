@@ -8,13 +8,13 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
-          <router-link :to="{ name: 'createPost' }" class="nav-link text-light" :class="{ active: route.path === '/posts/add/' }">Create Post</router-link>
-          <!--
-          <router-link :to="{ name: '' }" class="nav-link" :class="{ active: route.path === '/' }">Example</router-link>
-          <router-link :to="{ name: '' }" class="nav-link" :class="{ active: route.path === '/' }">Example</router-link>
-          <router-link :to="{ name: '' }" class="nav-link" :class="{ active: route.path === '/' }">Example</router-link>
-          <router-link :to="{ name: '' }" class="nav-link" :class="{ active: route.path === '/' }">Example</router-link>
-          -->
+            <!--<router-link :to="{ name: 'createPost' }" class="nav-link text-light" :class="{ active: route.path === '/posts/add/' }">Create Post</router-link>
+
+            <router-link :to="{ name: '' }" class="nav-link" :class="{ active: route.path === '/' }">Example</router-link>
+            <router-link :to="{ name: '' }" class="nav-link" :class="{ active: route.path === '/' }">Example</router-link>
+            <router-link :to="{ name: '' }" class="nav-link" :class="{ active: route.path === '/' }">Example</router-link>
+            <router-link :to="{ name: '' }" class="nav-link" :class="{ active: route.path === '/' }">Example</router-link>
+            -->
         </div>
       </div>
     </div>

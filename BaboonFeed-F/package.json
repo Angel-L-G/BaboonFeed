@@ -7,11 +7,13 @@
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
-    "test:unit": "vitest",
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
     "lint": "eslint . --fix",
-    "format": "prettier --write src/"
+    "format": "prettier --write src/",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:watch": "vitest --watch"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.7.2",
@@ -31,10 +33,11 @@
   "devDependencies": {
     "@tsconfig/node22": "^22.0.0",
     "@types/jsdom": "^21.1.7",
-    "@types/node": "^22.10.7",
+    "@types/node": "^22.13.1",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vitejs/plugin-vue-jsx": "^4.1.1",
     "@vitest/eslint-plugin": "1.1.25",
+    "@vitest/ui": "^3.0.5",
     "@vue/eslint-config-prettier": "^10.1.0",
     "@vue/eslint-config-typescript": "^14.3.0",
     "@vue/test-utils": "^2.4.6",
@@ -48,7 +51,7 @@
     "typescript": "~5.7.3",
     "vite": "^6.0.11",
     "vite-plugin-vue-devtools": "^7.7.0",
-    "vitest": "^3.0.2",
+    "vitest": "^3.0.5",
     "vue-tsc": "^2.2.0"
   }
 }
