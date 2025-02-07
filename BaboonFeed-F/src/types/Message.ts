@@ -1,10 +1,11 @@
-import { File } from "@/types/File";
-import { User } from "@/types/User";
+import type { File } from "@/types/File";
 
 export interface Message {
   id: number;
   content: string;
   created_at: string;
-  author: User;
-  file: File | null;
+  author: number; //string;
+  receiver?: string;
+  group?: string;
+  file?: File;
 }

@@ -18,14 +18,20 @@ $theme-colors: (
   'dark': $dark,
 );
 
+$form-file-button-bg: $primary;
+$form-file-button-hover-bg: $warning;
+
 .btn-outline-primary:hover {
   color: white !important; // Cambia el color del texto en hover
 }
 
-footer {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
+body {
+    background-color: $secondary !important;
+    color: $light !important;
+}
+
+main {
+  min-height: 45.5vh;
 }
 
 @import '../../../node_modules/bootstrap/scss/bootstrap';

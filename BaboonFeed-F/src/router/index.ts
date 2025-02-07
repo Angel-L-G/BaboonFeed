@@ -10,11 +10,15 @@ const router = createRouter({
       component: () => import('@/components/HomePage.vue'),
     },
     {
-      path: '/posts/add/',
-      name: 'createPost',
-      component: () => import('@/components/post/CreatePost.vue'),
-    }
-  ],
+        path: '/posts/add/',
+        name: 'createPost',
+        component: () => import('@/components/post/CreatePost.vue'),
+    },
+    {
+        path: '/chat/',
+        name: 'chat',
+        component: () => import('@/components/Chat.vue'),
+    }],
 })
 
 export default router
