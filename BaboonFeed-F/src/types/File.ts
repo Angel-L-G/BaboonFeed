@@ -1,5 +1,5 @@
 export interface File {
-  id: number;
+  id?: number;
   name: string;
   type: FileTypes;
 }

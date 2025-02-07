@@ -18,6 +18,10 @@ $theme-colors: (
   'dark': $dark,
 );
 
+.btn-outline-primary:hover {
+  color: white !important; // Cambia el color del texto en hover
+}
+
 @import '../../../node_modules/bootstrap/scss/bootstrap';
 @import '../../../node_modules/bootstrap/scss/functions';
 
