@@ -1,5 +1,5 @@
-import { File } from "@/types/File";
-import { User } from "@/types/User";
+import type { File } from "@/types/File";
+import type { User } from "@/types/User";
 
 export interface Message {
   id: number;

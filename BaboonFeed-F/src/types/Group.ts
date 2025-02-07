@@ -1,5 +1,5 @@
-import { File } from "./File";
-import { User } from "./User";
+import type { File } from "./File";
+import type { User } from "./User";
 
 export interface Group {
   id: number;

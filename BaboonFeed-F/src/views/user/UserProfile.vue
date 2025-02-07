@@ -1,9 +1,10 @@
 <script setup lang="ts">
-  //import {User} from "@/types/User.ts";
+import type {User} from "@/types/User.ts";
+//import type { File } from "@/types/File";
 
-  //const props = defineProps({
-  //  user: User,
-  //})
+const props = defineProps<{
+  "user": User,
+}>();
 
 </script>
 
@@ -18,23 +19,23 @@
 
           <div class="col-md-6">
             <div class="card-title">
-              <h3 class="text-decoration-underline">Username</h3>
+              <h3 class="text-decoration-underline">Username: {{props.user.username}}</h3>
             </div>
 
             <div class="card-body">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro nostrum quo eaque omnis, iure magni sint! Quidem quo excepturi dolor minus praesentium nostrum maxime vel tenetur quaerat? Adipisci, illo pariatur.
+              Bio: {{props.user.bio}}
             </div>
 
             <div class="display-flex justify-content-center">
               <span class="card-text m-2">
                 <small class="text-body-light">
-                  Followers: 25
+                  Followers: {{props.user.followers}}
                 </small>
               </span>
 
               <span class="card-text">
                 <small class="text-body-light">
-                  Following: 59
+                  Following: {{props.user.follows}}
                 </small>
               </span>
             </div>
