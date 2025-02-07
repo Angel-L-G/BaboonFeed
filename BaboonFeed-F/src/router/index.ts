@@ -1,19 +1,23 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
-  history: createWebHistory(),
-  routes: [
+    history: createWebHistory(),
+    routes: [
     {
-      path: '/',
-      name: 'home',
-      component: () => import('@/views/Home.vue'),
+        path: '/',
+        name: 'home',
+        component: () => import('@/views/Home.vue'),
     },
     {
-      path: '/posts/add/',
-      name: 'createPost',
-      component: () => import('@/components/post/CreatePost.vue'),
-    }
-  ],
+        path: '/posts/add/',
+        name: 'createPost',
+        component: () => import('@/components/post/CreatePost.vue'),
+    },
+    {
+        path: '/chat/',
+        name: 'chat',
+        component: () => import('@/components/Chat.vue'),
+    }],
 })
 
 export default router

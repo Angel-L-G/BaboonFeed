@@ -1,7 +1,7 @@
 {
   "users": [
     {
-      "id": 1,
+      "id": "1",
       "email": "user1@example.com",
       "username": "user1",
       "created_at": "2024-01-01T12:00:00Z",
@@ -15,7 +15,7 @@
       "follows": 5
     },
     {
-      "id": 2,
+      "id": "2",
       "email": "user2@example.com",
       "username": "user2",
       "created_at": "2024-01-02T14:30:00Z",
@@ -27,12 +27,12 @@
   ],
   "files": [
     {
-      "id": 1,
+      "id": "1",
       "name": "avatar1.png",
       "type": "image"
     },
     {
-      "id": 2,
+      "id": "2",
       "name": "song.mp3",
       "type": "audio"
     }
@@ -51,29 +51,76 @@
       "created_at": "2024-01-02T11:00:00Z",
       "author": 2,
       "file": null
+    },
+    {
+      "id": 3,
+      "content": "Coso",
+      "created_at": "Fri Feb 07 2025 19:27:30 GMT+0000 (hora estándar de Europa occidental)",
+      "author": 1
+    },
+    {
+      "id": 4,
+      "content": "Coso",
+      "created_at": "Fri Feb 07 2025 19:27:55 GMT+0000 (hora estándar de Europa occidental)",
+      "author": 1
+    },
+    {
+      "id": 5,
+      "content": "hola",
+      "created_at": "Fri Feb 07 2025 19:28:35 GMT+0000 (hora estándar de Europa occidental)",
+      "author": 1
+    },
+    {
+      "id": 6,
+      "content": "hfjsdhjkfhsaldjkfhjlsdahfjhsdjkfhadfkjsfjksdhfkdshfksdhalkfhlsdahfjklsdhjkfhasdjkhfkjldshfkjlsdahjkfdhahfjksadhfksdajflsdfhjshfkjdshfjdshfklashdfjkshajkfhdsjfhdshfhdjsfhsdjhfdlsahfdshjfhdjkfhsahfkdshfhdsfhsjsd",
+      "created_at": "Fri Feb 07 2025 19:29:28 GMT+0000 (hora estándar de Europa occidental)",
+      "author": 1
+    },
+    {
+      "id": 7,
+      "content": "hfjsdhjkfhsaldjkfhjlsdahfjhsdjkfhadfkjsfjksdhfkdshfksdhalkfhlsdahfjklsdhjkfhasdjkhfkjldshfkjlsdahjkfdhahfjksadhfksdajflsdfhjshfkjdshfjdshfklashdfjkshajkfhdsjfhdshfhdjsfhsdjhfdlsahfdshjfhdjkfhsahfkdshfhdsfhsjsdjkgfdsjkgkljfdhghdsfjkghfsjkdgdfjkghjfdkjdhgkdsflhgdshgjkhfdghjhgjkfdhjghfdjhgjhfdghfdjkghfjkhgsdhghfdghdfjkghsdjkghdsfjkhgldlhgdsfhgjkfsdhghldfsghlfdhgldsfhglsfdhkghsdfl",
+      "created_at": "Fri Feb 07 2025 19:29:46 GMT+0000 (hora estándar de Europa occidental)",
+      "author": 1
+    },
+    {
+      "id": 8,
+      "content": "a",
+      "created_at": "Fri Feb 07 2025 19:46:45 GMT+0000 (hora estándar de Europa occidental)",
+      "author": 1
+    },
+    {
+      "id": 9,
+      "content": "b",
+      "created_at": "Fri Feb 07 2025 19:46:50 GMT+0000 (hora estándar de Europa occidental)",
+      "author": 1
     }
   ],
   "groups": [
     {
-      "id": 1,
+      "id": "1",
       "name": "Grupo 1",
       "file": null,
       "leader": 1,
-      "members": [1, 2]
+      "members": [
+        1,
+        2
+      ]
     }
   ],
   "posts": [
     {
-      "id": 1,
+      "id": "1",
       "content": "Este es mi primer post!",
       "created_at": "2024-01-03T14:00:00Z",
       "user": 1,
       "file": null,
-      "likes": [2],
+      "likes": [
+        2
+      ],
       "dislikes": []
     },
     {
-      "id": 2,
+      "id": "2",
       "content": "Un día increíble!",
       "created_at": "2024-01-04T18:30:00Z",
       "user": 2,
@@ -82,13 +129,15 @@
         "name": "song.mp3",
         "type": "audio"
       },
-      "likes": [1],
+      "likes": [
+        1
+      ],
       "dislikes": []
     }
   ],
   "replies": [
     {
-      "id": 1,
+      "id": "1",
       "content": "Buena publicación!",
       "created_at": "2024-01-03T15:00:00Z",
       "replies": [],
@@ -96,7 +145,7 @@
       "user": 2
     },
     {
-      "id": 2,
+      "id": "2",
       "content": "Me encanta esa canción!",
       "created_at": "2024-01-04T19:00:00Z",
       "replies": [],

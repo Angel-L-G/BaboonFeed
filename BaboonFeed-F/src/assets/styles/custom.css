@@ -3,10 +3,13 @@
   color: white !important;
 }
 
-footer {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
+body {
+  background-color: #34495e !important;
+  color: #ecf0f1 !important;
+}
+
+main {
+  min-height: 45.5vh;
 }
 
 /*!
@@ -2170,7 +2173,7 @@ progress {
   margin: -0.375rem -0.75rem;
   margin-inline-end: 0.75rem;
   color: var(--bs-body-color);
-  background-color: var(--bs-tertiary-bg);
+  background-color: #f39c12;
   pointer-events: none;
   border-color: inherit;
   border-style: solid;
@@ -2185,7 +2188,7 @@ progress {
   }
 }
 .form-control:hover:not(:disabled):not([readonly])::file-selector-button {
-  background-color: var(--bs-secondary-bg);
+  background-color: #f1c40f;
 }
 
 .form-control-plaintext {
