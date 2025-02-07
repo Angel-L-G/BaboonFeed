@@ -10,7 +10,7 @@ import UserProfile from '@/views/User/UserProfile.vue'
   <div class="bg-secondary">
     <Navbar />
 
-    <UserProfile />
+    <router-view />
 
     <Footer />
   </div>
