@@ -4,7 +4,7 @@
             <img class="me-2 rounded-circle border border-primary-subtle border-3" :src="post.user.file?.name" :alt="post.user.username" style="height: 35px; width: 35px;">
             <h2>{{ post.user.username }}</h2>
         </div>
-        <div class="d-flex flex-column p-2 align-items-center justify-content-center">
+        <div class="d-flex flex-column p-2 align-items-center justify-content-center bg-white">
             <div v-if="post.file">
                 <FileHandler :file="post.file"/>
             </div>
