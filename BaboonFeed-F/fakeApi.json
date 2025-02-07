@@ -8,7 +8,7 @@
       "bio": "Hola, soy user1!",
       "file": {
         "id": 1,
-        "name": "avatar1.png",
+        "name": "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
         "type": "image"
       },
       "followers": 10,
@@ -28,7 +28,7 @@
   "files": [
     {
       "id": 1,
-      "name": "avatar1.png",
+      "name": "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
       "type": "image"
     },
     {
@@ -75,13 +75,17 @@
         "bio": "Hola, soy user1!",
         "file": {
           "id": 1,
-          "name": "avatar1.png",
+          "name": "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
           "type": "image"
         },
         "followers": 10,
         "follows": 5
       },
-      "file": null,
+      "file": {
+          "id": 1,
+          "name": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+          "type": "audio"
+        },
       "likes": [2],
       "dislikes": []
     },
@@ -95,13 +99,17 @@
         "username": "user2",
         "created_at": "2024-01-02T14:30:00Z",
         "bio": "Amante de la tecnología.",
-        "file": null,
+        "file": {
+          "id": 1,
+          "name": "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+          "type": "image"
+        },
         "followers": 20,
         "follows": 15
       },
       "file": {
         "id": 2,
-        "name": "https://www.youtube.com/watch?v=_61WzuaRKQY",
+        "name": "https://www.w3schools.com/html/mov_bbb.mp4",
         "type": "video"
       },
       "likes": [1],
@@ -119,7 +127,7 @@
         "bio": "Hola, soy user1!",
         "file": {
           "id": 1,
-          "name": "avatar1.png",
+          "name": "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
           "type": "image"
         },
         "followers": 10,
