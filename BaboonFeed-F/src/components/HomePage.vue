@@ -2,7 +2,7 @@
     <div class="container-fluid">
         <h1 class="display-4 m-3 text-white">Home Page</h1>
         <div class="row justify-content-center">
-            <div class="col-md-12 col-lg-9 me-2">                
+            <div class="col-md-12 col-lg-9 me-2">
                 <PostView v-for="post in posts" :key="post.id" :post="post"/>
             </div>
             <div class="d-none d-lg-flex flex-column rounded col-lg-2 align-items-center bg-primary-subtle mt-1">
@@ -21,25 +21,34 @@
     import type { Post } from '../types/Post';
     import type { User } from '../types/User';
     import { API_URL } from '@/globals';
-    import axios from 'axios';
     import PostView from './post/PostView.vue';
 
     const posts = reactive<Post[]>([]);
     const users = reactive<User[]>([]);
 
     onMounted( async () => {
-        await axios.get(`${API_URL}posts`)
-        .then((response) => {
-            posts.push(...response.data);
+        await fetch(`${API_URL}posts`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }).then(async (response) => {
+            const data = await response.json();
+            posts.push(...data);
             console.log(posts);
-            
+
         }).catch((error) => {
             console.log(error);
         })
 
-        await axios.get(`${API_URL}users`)
-        .then((response) => {
-            users.push(...response.data);
+        await fetch(`${API_URL}users`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }).then(async (response) => {
+            const data = await response.json();
+            users.push(...data);
             console.log(users);
         }).catch((error) => {
             console.log(error);

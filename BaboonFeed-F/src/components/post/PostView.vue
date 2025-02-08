@@ -14,8 +14,8 @@
 </template>
 
 <script setup lang="ts">
-import type { Post } from '../../types/Post';
-import FileHandler from '../file/FileHandler.vue';
+import type { Post } from '@/types/Post.ts';
+import FileHandler from '@/components/file/FileHandler.vue';
 
 const {post} = defineProps<{post: Post}>();
 

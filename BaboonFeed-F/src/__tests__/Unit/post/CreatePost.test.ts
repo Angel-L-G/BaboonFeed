@@ -1,82 +1,101 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { mount } from '@vue/test-utils';
-import CreatePost from '../../../components/post/CreatePost.vue';
-//import type { File } from '../../../types/File.ts';
+import CreatePost from '@/components/post/CreatePost.vue';
 
 describe('CreatePost.vue', () => {
+    beforeEach(() => {
+        vi.clearAllMocks();
+    });
 
     it('se monta correctamente', () => {
         const wrapper = mount(CreatePost);
         expect(wrapper.exists()).toBe(true);
     });
 
-    it('el valor de contenido se actualiza cuando se escribe en el input', async () => {
+    it('permite escribir contenido en el input', async () => {
         const wrapper = mount(CreatePost);
         const input = wrapper.find('input[type="text"]');
-        await input.setValue('Nuevo contenido para el post');
-        expect(input.element.value).toBe('Nuevo contenido para el post');
+
+        await input.setValue('Este es un nuevo post');
+
+        expect(wrapper.vm.content).toBe('Este es un nuevo post');
     });
 
-    /*it('el estado del archivo se actualiza al seleccionar un archivo', async () => {
-        const wrapper = mount(CreatePost);
-        const fileInput = wrapper.find('input[type="file"]');
-
-        const file = new File(['dummy content'], 'image.png', { type: 'image/png' });
-        await fileInput.trigger('change', {
-            target: { files: [file] }
+    it('permite seleccionar un archivo', async () => {
+        const wrapper = mount(CreatePost, {
+            global: {
+                stubs: {
+                    'font-awesome-icon': true,
+                },
+            },
         });
+        const testFile = new File(['contenido'], 'test.png', { type: 'image/png' });
 
-        expect(wrapper.vm.file).toEqual(file);
+        // Llamamos directamente a la función de manejo de archivos
+        wrapper.vm.handleFileChange({
+            target: { files: [testFile] }
+        } as unknown as Event);
+
+        // Verificamos que el archivo se guardó en la variable `file`
+        expect(wrapper.vm.file).not.toBe(null);
+        expect(wrapper.vm.file?.name).toBe('test.png');
     });
 
-    it('el estado del archivo se elimina correctamente cuando se hace clic en "Remove File"', async () => {
-        const wrapper = mount(CreatePost);
-        const fileInput = wrapper.find('input[type="file"]');
-
-        const file = new File(['dummy content'], 'image.png', { type: 'image/png' });
-        await fileInput.trigger('change', {
-            target: { files: [file] }
+    it('permite eliminar un archivo seleccionado', async () => {
+        const wrapper = mount(CreatePost, {
+            global: {
+                stubs: {
+                    'font-awesome-icon': true,
+                },
+            },
         });
+        const removeButton = wrapper.find('button.btn-warning');
 
-        expect(wrapper.vm.file).toEqual(file);
+        const testFile = new File(['contenido'], 'test.png', { type: 'image/png' });
 
-        const removeButton = wrapper.find('button[type="button"]');
+        wrapper.vm.handleFileChange({
+            target: { files: [testFile] }
+        } as unknown as Event);
+
+        expect(wrapper.vm.file).not.toBe(null);
+
         await removeButton.trigger('click');
 
-        expect(wrapper.vm.file).toBeNull();
+        expect(wrapper.vm.file).toBe(null);
     });
 
-    it('llama a handleSubmit cuando se envía el formulario', async () => {
-        const handleSubmitMock = vi.fn();
-        const wrapper = mount(CreatePost);
-
-        wrapper.vm.handleSubmit = handleSubmitMock;
-
-        const submitButton = wrapper.find('button[type="submit"]');
-        await submitButton.trigger('click');
-
-        expect(handleSubmitMock).toHaveBeenCalled();
-    });
-
-    it('verifica el objeto de creación de post', async () => {
-        const wrapper = mount(CreatePost);
-
-        await wrapper.setData({ content: 'Contenido de prueba' });
-
-        const file = new File(['dummy content'], 'test.jpg', { type: 'image/jpeg' });
-        await wrapper.vm.handleFileChange({
-            target: { files: [file] }
-        } as Event);
-        await wrapper.vm.handleSubmit();
-
-        const createPost = {
-            content: 'Contenido de prueba',
-            file: {
-                name: 'jpg',
-                type: FileTypes.IMAGE,
+    it('envía el formulario correctamente con datos estructurados', async () => {
+        const wrapper = mount(CreatePost, {
+            global: {
+                stubs: {
+                    'font-awesome-icon': true,
+                },
             },
-        };
+        });
+        const input = wrapper.find('input[type="text"]');
+        const form = wrapper.find('form');
 
-        expect(wrapper.vm.createPost).toEqual(createPost);
-    });*/
+        const testFile = new File(['contenido'], 'test.png', { type: 'image/png' });
+
+        wrapper.vm.handleFileChange({
+            target: { files: [testFile] }
+        } as unknown as Event);
+
+        await input.setValue('Este es un nuevo post');
+
+        // Espía la función `console.log` para verificar la salida
+        const consoleSpy = vi.spyOn(console, 'log');
+
+        await form.trigger('submit');
+
+        expect(consoleSpy).toHaveBeenCalledWith({
+            content: 'Este es un nuevo post',
+            file: {
+                name: 'png',
+                type: 'image',
+            },
+        });
+
+        consoleSpy.mockRestore();
+    });
 });

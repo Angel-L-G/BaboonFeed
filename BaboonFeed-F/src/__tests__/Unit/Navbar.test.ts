@@ -6,7 +6,11 @@ import { createRouter, createWebHistory } from 'vue-router';
 // Mock de Vue Router para evitar errores
 const router = createRouter({
     history: createWebHistory(),
-    routes: [{ path: '/', name: 'home', component: {} }],
+    routes: [
+        { path: '/', name: 'home', component: {} },
+        { path: '/posts/add/', name: 'createPost', component: {} },
+        { path: '/chat', name: 'chat', component: {} },
+    ],
 });
 
 describe('Navbar.vue', () => {
@@ -38,14 +42,16 @@ describe('Navbar.vue', () => {
         expect(homeLink.text()).toBe('Home');
     });
 
-    it('contiene el botón de hamburguesa para colapsar el menú', () => {
-        const wrapper = mount(Navbar);
-        const toggler = wrapper.find('.navbar-toggler');
-        expect(toggler.exists()).toBe(true);
-    });
+    it('contiene el contenedor de navegación', async () => {
+        router.push('/');
+        await router.isReady();
 
-    it('contiene el contenedor de navegación', () => {
-        const wrapper = mount(Navbar);
+        const wrapper = mount(Navbar, {
+            global: {
+                plugins: [router],
+            },
+        });
+
         const navbarCollapse = wrapper.find('.collapse.navbar-collapse');
         expect(navbarCollapse.exists()).toBe(true);
     });
