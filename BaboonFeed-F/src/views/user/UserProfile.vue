@@ -1,11 +1,23 @@
 <script setup lang="ts">
+/*
+No esta acabado
+ */
 import type {User} from "@/types/User.ts";
-//import type { File } from "@/types/File";
 
-const props = defineProps<{
-  "user": User,
-}>();
-
+const user: User = {
+    "id": 1,
+    "email": "user1@example.com",
+    "username": "user1",
+    "created_at": "2024-01-01T12:00:00Z",
+    "bio": "Hola, soy user1!",
+    "file": {
+    "id": 1,
+        "name": "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+        "type": "image"
+},
+    "followers": 10,
+    "follows": 5
+};
 </script>
 
 <template>
@@ -19,23 +31,23 @@ const props = defineProps<{
 
           <div class="col-md-6">
             <div class="card-title">
-              <h3 class="text-decoration-underline">Username: {{props.user.username}}</h3>
+              <h3 class="text-decoration-underline">Username: {{user.username}}</h3>
             </div>
 
             <div class="card-body">
-              Bio: {{props.user.bio}}
+              Bio: {{user.bio}}
             </div>
 
             <div class="display-flex justify-content-center">
               <span class="card-text m-2">
                 <small class="text-body-light">
-                  Followers: {{props.user.followers}}
+                  Followers: {{user.followers}}
                 </small>
               </span>
 
               <span class="card-text">
                 <small class="text-body-light">
-                  Following: {{props.user.follows}}
+                  Following: {{user.follows}}
                 </small>
               </span>
             </div>

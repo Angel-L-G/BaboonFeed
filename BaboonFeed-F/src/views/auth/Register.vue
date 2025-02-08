@@ -18,40 +18,27 @@
                 <button type="submit" class="btn btn-primary w-100">Registrarse</button>
             </form>
             <p v-if="error" class="text-danger mt-2">{{ error }}</p>
-            <p v-if="success" class="text-success mt-2">{{ success }}</p>
         </div>
     </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-export default {
-    setup() {
-        const name = ref('');
-        const email = ref('');
-        const password = ref('');
-        const error = ref('');
-        const success = ref('');
+const router = useRouter();
 
-        const handleRegister = () => {
-            if (name.value && email.value && password.value) {
-                success.value = 'Registro exitoso';
-                error.value = '';
-            } else {
-                error.value = 'Por favor, complete todos los campos';
-                success.value = '';
-            }
-        };
+const name = ref('');
+const email = ref('');
+const password = ref('');
+const error = ref('');
 
-        return {
-            name,
-            email,
-            password,
-            error,
-            success,
-            handleRegister
-        };
+const handleRegister = () => {
+    if (name.value && email.value && password.value) {
+        error.value = '';
+        router.push('/home/');
+    } else {
+        error.value = 'Por favor, complete todos los campos';
     }
 };
 </script>

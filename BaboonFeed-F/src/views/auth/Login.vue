@@ -18,29 +18,21 @@
     </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-export default {
-    setup() {
-        const email = ref('');
-        const password = ref('');
-        const error = ref('');
+const router = useRouter();
 
-        const handleLogin = () => {
-            if (email.value === 'admin@example.com' && password.value === 'password') {
-                alert('Login exitoso');
-            } else {
-                error.value = 'Credenciales incorrectas';
-            }
-        };
+const email = ref('');
+const password = ref('');
+const error = ref('');
 
-        return {
-            email,
-            password,
-            error,
-            handleLogin
-        };
+const handleLogin = () => {
+    if (email.value === 'admin@example.com' && password.value === 'password') {
+        router.push('/home/');
+    } else {
+        error.value = 'Credenciales incorrectas';
     }
 };
 </script>
