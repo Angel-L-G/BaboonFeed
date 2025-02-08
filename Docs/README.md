@@ -39,13 +39,19 @@
 1. Clonar el repositorio:
    ```sh
    git clone https://github.com/Angel-L-G/BaboonFeed.git
-   cd BaboonFeed
+   cd BaboonFeed-F
    ```
 2. Instalar dependencias:
    ```sh
    npm install
+   npm install -g json-server
+   sudo npm install -g sass
    ```
-3. Ejecutar el servidor en modo desarrollo:
+3. Iniciar la Fake API
+  ```sh
+  json-server --watch ./fakeApi.json --port 3000
+  ```
+4. Ejecutar el servidor en modo desarrollo:
    ```sh
    npm run dev
    ```
@@ -72,9 +78,11 @@ BaboonFeed/
 │   ├── router/       # Configuración del router
 │   ├── i18n/         # Configuración de idiomas
 │   ├── assets/       # Recursos estáticos
-│   ├── tests/        # Pruebas unitarias
+│   ├── types/        # Tipos definidos
+│   ├── __tests__/    # Pruebas unitarias
 │   ├── plugins/      # Configuración de distintas librerias
 │   └── main.ts       # Punto de entrada principal
+│-- fakeApi.json      # Fake API simulando un Backend
 │-- package.json      # Configuración del proyecto
 │-- vite.config.ts    # Configuración de Vite
 ```
@@ -85,5 +93,3 @@ BaboonFeed/
 - Estructura limpia y ordenada.
 - Uso de buenas prácticas de programación.
 - Modularidad y reutilización de componentes.
-
-
