@@ -42,8 +42,8 @@ INSTALLED_APPS = [
     'files.apps.FileConfig',
     'users.apps.UsersConfig',
     'accounts.apps.AccountsConfig',
+    'chats.apps.ChatsConfig',
     'groups.apps.GroupsConfig',
-    'messages.apps.MessagesConfig',
 ]
 
 MIDDLEWARE = [
@@ -81,11 +81,16 @@ WSGI_APPLICATION = 'main.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+   'default': {
+       'ENGINE': 'django.db.backends.postgresql_psycopg2',
+       'NAME': 'baboonfeed',
+       'USER': 'admin',
+       'PASSWORD': '1q2w3e4r',
+       'HOST': 'localhost',
+       'PORT': '',
+   }
 }
+
 
 
 # Password validation
