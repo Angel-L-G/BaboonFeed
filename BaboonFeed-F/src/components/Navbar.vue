@@ -11,7 +11,7 @@
                         <div class="navbar-nav">
                             <router-link :to="{ name: 'createPost' }" class="nav-link text-light" :class="{ active: route.path === '/posts/add/' }">Create Post</router-link>
                             <router-link :to="{ name: 'chat' }" class="nav-link text-light" :class="{ active: route.path === '/chat/' }">Chat</router-link>
-                            <router-link :to="{ name: 'profile' }" class="nav-link text-light" :class="{ active: route.path === '/users/profile/' }">Profile</router-link>
+                            <router-link :to="{ name: 'profile', params:{ username: '1'} }" class="nav-link text-light" :class="{ active: route.path === '/users/profile/' }">Profile</router-link>
                             <router-link :to="{ name: 'login' }" class="nav-link text-light" :class="{ active: route.path === '/login/' }">Login</router-link>
                             <router-link :to="{ name: 'register' }" class="nav-link text-light" :class="{ active: route.path === '/register/' }">Register</router-link>
                             <!--
