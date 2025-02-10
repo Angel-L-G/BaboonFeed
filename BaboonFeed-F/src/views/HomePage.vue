@@ -21,7 +21,7 @@
     import type { Post } from '../types/Post';
     import type { User } from '../types/User';
     import { API_URL } from '@/globals';
-    import PostView from './post/PostView.vue';
+    import PostView from '@/components/post/PostView.vue';
 
     const posts = reactive<Post[]>([]);
     const users = reactive<User[]>([]);
