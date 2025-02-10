@@ -1,23 +1,29 @@
 <script setup lang="ts">
-/*
-No esta acabado
- */
 import type {User} from "@/types/User.ts";
+import { onMounted, ref } from "vue";
+import { API_URL } from "@/globals";
+import { useRouter } from "vue-router";
 
-const user: User = {
-    "id": 1,
-    "email": "user1@example.com",
-    "username": "user1",
-    "created_at": "2024-01-01T12:00:00Z",
-    "bio": "Hola, soy user1!",
-    "file": {
-    "id": 1,
-        "name": "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
-        "type": "image"
-},
-    "followers": 10,
-    "follows": 5
-};
+const router = useRouter()
+const username = router.currentRoute.value.params.username
+const user = ref<User>({} as User)
+
+onMounted(async () => {
+  await fetch(`${API_URL}users/${username}`, {
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+  })
+  .then(async (response) => {
+    user.value = await response.json() 
+    console.log(user.value)
+  })
+  .catch(error => {
+    console.log(error)
+  })
+})
+
 </script>
 
 <template>
@@ -26,7 +32,7 @@ const user: User = {
       <div class="card bg-primary text-light" style="height: 13rem">
         <div class="row my-3">
           <div class="col-md-4">
-            <img src="..." class="img-fluid rounded-start" alt="Profile Picture">
+            <img :src="user.file?.name" class="img-fluid rounded-start w-50" alt="Profile Picture">
           </div>
 
           <div class="col-md-6">
@@ -54,16 +60,6 @@ const user: User = {
           </div>
         </div>
       </div>
-    </div>
-
-    <div class="row my-3">
-      <ul class="list-group">
-        <li class="list-group-item">A Post</li>
-        <li class="list-group-item">A second Post</li>
-        <li class="list-group-item">A third Post</li>
-        <li class="list-group-item">A fourth Post</li>
-        <li class="list-group-item">And a fifth Post</li>
-      </ul>
     </div>
   </div>
 </template>
