@@ -16,9 +16,9 @@ describe('CreatePost.vue', () => {
         const wrapper = mount(CreatePost);
         const input = wrapper.find('input[type="text"]');
 
-        await input.setValue('Este es un nuevo post');
+        await input.setValue('Este es un nuevo posts');
 
-        expect(wrapper.vm.content).toBe('Este es un nuevo post');
+        expect(wrapper.vm.content).toBe('Este es un nuevo posts');
     });
 
     it('permite seleccionar un archivo', async () => {
@@ -36,7 +36,7 @@ describe('CreatePost.vue', () => {
             target: { files: [testFile] }
         } as unknown as Event);
 
-        // Verificamos que el archivo se guardó en la variable `file`
+        // Verificamos que el archivo se guardó en la variable `files`
         expect(wrapper.vm.file).not.toBe(null);
         expect(wrapper.vm.file?.name).toBe('test.png');
     });
@@ -81,7 +81,7 @@ describe('CreatePost.vue', () => {
             target: { files: [testFile] }
         } as unknown as Event);
 
-        await input.setValue('Este es un nuevo post');
+        await input.setValue('Este es un nuevo posts');
 
         // Espía la función `console.log` para verificar la salida
         const consoleSpy = vi.spyOn(console, 'log');
@@ -89,7 +89,7 @@ describe('CreatePost.vue', () => {
         await form.trigger('submit');
 
         expect(consoleSpy).toHaveBeenCalledWith({
-            content: 'Este es un nuevo post',
+            content: 'Este es un nuevo posts',
             file: {
                 name: 'png',
                 type: 'image',
