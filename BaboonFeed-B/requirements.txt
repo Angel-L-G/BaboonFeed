@@ -1,0 +1,10 @@
+django
+djangorestframework
+django-channels
+pillow
+model-bakery
+pytest-django
+faker
+ipython
+django-rq
+prettyconf
