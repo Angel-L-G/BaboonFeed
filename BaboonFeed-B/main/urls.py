@@ -26,7 +26,7 @@ from files.views import FileViewSet
 from accounts.views import RegisterViewSet
 
 router = DefaultRouter()
-router.register(r'files', FileViewSet)
+router.register(r'files', FileViewSet, basename='file')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
