@@ -8,3 +8,4 @@ faker
 ipython
 django-rq
 prettyconf
+psycopg2

@@ -3,6 +3,11 @@ venv-name := ".venv"
 venv-path := join(justfile_dir(), venv-name)
 pip-cmd := shell('if [ -x "$(command -v uv)" ]; then echo "uv pip"; else echo "pip"; fi')
 
+# Justfile
+alias a := "just a"
+a:
+    source .venv/bin/activate && exec $SHELL
+
 # ==============================================================================
 # DJANGO RECIPES
 # ==============================================================================
