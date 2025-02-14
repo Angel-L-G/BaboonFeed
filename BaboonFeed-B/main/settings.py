@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'chats.apps.ChatsConfig',
     'groups.apps.GroupsConfig',
     'rest_framework',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 MIDDLEWARE = [
@@ -88,7 +90,10 @@ DATABASES = {
        'USER': 'admin',
        'PASSWORD': '1q2w3e4r',
        'HOST': 'localhost',
-       'PORT': '',
+       'PORT': '5432',
+       'OPTIONS': {
+           'client_encoding': 'UTF8',
+       }
    }
 }
 
@@ -148,4 +153,12 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ],
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=12),  # Expira en 12 horas
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),  # Expira en 7 días
+    'ROTATE_REFRESH_TOKENS': True,  # Genera un nuevo refresh token cada vez que se usa
+    'BLACKLIST_AFTER_ROTATION': True,  # Invalida el refresh token antiguo
+    'AUTH_HEADER_TYPES': ('Bearer',),  # Se usa "Bearer <token>" en el header de autorización
 }

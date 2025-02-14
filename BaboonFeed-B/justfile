@@ -1,7 +1,6 @@
 project := file_stem(justfile_dir())
 venv-name := ".venv"
 venv-path := join(justfile_dir(), venv-name)
-pip-cmd := shell('if [ -x "$(command -v uv)" ]; then echo "uv pip"; else echo "pip"; fi')
 
 # Justfile
 alias a := "just a"
@@ -77,7 +76,7 @@ check-venv: create-venv
 alias i := install-reqs
 # Install project requirements
 install-reqs: check-venv
-    {{ pip-cmd }} install -r requirements.txt
+    pip install -r requirements.txt
 
 # ==============================================================================
 # DJANGO AUX RECIPES
@@ -205,3 +204,15 @@ redis:
             pgrep -x Redis &> /dev/null || (open /Applications/Redis.app && sleep 2)
         fi
     fi
+
+set shell := ["powershell.exe", "-c"]
+
+alias mmw := makemigrationswindows
+# Make Django migrations
+makemigrationswindows:
+    python .\manage.py makemigrations
+
+alias mw := migratewindows
+# Apply Django migrations
+migratewindows:
+    python .\manage.py migrate
