@@ -1,5 +1,6 @@
 django
 djangorestframework
+djangorestframework-simplejwt
 django-channels
 pillow
 model-bakery
@@ -8,3 +9,4 @@ faker
 ipython
 django-rq
 prettyconf
+psycopg2
