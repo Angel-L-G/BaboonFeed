@@ -1,9 +1,9 @@
 from rest_framework import viewsets, status
-from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from django.shortcuts import get_object_or_404
 from .models import File
 from .serializers import FileSerializer
+import mimetypes
+from rest_framework.response import Response
 
 class FileViewSet(viewsets.ModelViewSet):
     queryset = File.objects.all()
@@ -21,15 +21,31 @@ class FileViewSet(viewsets.ModelViewSet):
 
     # Subir un nuevo archivo
     def create(self, request, *args, **kwargs):
-        self.permission_classes = [IsAuthenticated]  # Necesita token
+        self.permission_classes = [IsAuthenticated]
         self.check_permissions(request)
-        return super().create(request, *args, **kwargs)
 
-    # Actualizar un archivo
+        file_data = request.FILES['file']
+        mime_type, _ = mimetypes.guess_type(file_data.name)
+
+        if mime_type:
+            if mime_type.startswith('image'):
+                file_type = 'image'
+            elif mime_type.startswith('video'):
+                file_type = 'video'
+            elif mime_type.startswith('audio'):
+                file_type = 'audio'
+            else:
+                file_type = 'unknown'
+        else:
+            file_type = 'unknown'
+
+        file = File.objects.create(file=file_data, type=file_type)
+        serializer = FileSerializer(file)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    # No permitido
     def update(self, request, *args, **kwargs):
-        self.permission_classes = [IsAuthenticated]  # Necesita token
-        self.check_permissions(request)
-        return super().update(request, *args, **kwargs)
+        pass
 
     # No permitido
     def partial_update(self, request, *args, **kwargs):
