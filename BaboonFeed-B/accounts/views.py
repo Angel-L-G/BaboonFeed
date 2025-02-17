@@ -22,6 +22,6 @@ class RegisterViewSet(viewsets.ViewSet):
         access_token = str(refresh.access_token)
 
         return Response({
-            "refresh": f"Bearer {str(refresh)}",
-            "access": f"Bearer {access_token}"
+            "refresh": str(refresh),
+            "access": access_token
         }, status=status.HTTP_201_CREATED)
