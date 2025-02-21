@@ -2,7 +2,7 @@ from rest_framework import permissions
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
     """
-    Permite lectura a todos, pero solo el dueño del post puede editarlo o eliminarlo.
+    Permite lectura a todos, pero solo el dueño del post puede eliminarlo.
     """
 
     def has_object_permission(self, request, view, obj):
@@ -11,7 +11,7 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
             return True
 
         # Permitir eliminar pero NO actualizar
-        if request.method in ['DELETE']:
+        if request.method in ['DELETE', 'POST']:
             return obj.user == request.user
 
         # Bloquear cualquier otra acción (PUT/PATCH)

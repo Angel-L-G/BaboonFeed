@@ -7,8 +7,9 @@ from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
 
 from shared.permissions import IsOwnerOrReadOnly
-from .models import Post
-from .serializers import PostSerializer
+from .models import Post, Reply
+from .serializers import PostSerializer, ReplySerializer
+
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all().order_by('-created_at')
@@ -63,3 +64,42 @@ class PostViewSet(viewsets.ModelViewSet):
         post.likes.remove(user)  # Si el usuario ya dio like, lo eliminamos
         post.dislikes.add(user)
         return Response({"mensaje": "Post dislikeado"}, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['get', 'post'], url_path='replies')
+    def replies(self, request, pk=None):
+        post = self.get_object()
+
+        if request.method == 'GET':
+            """
+            Retorna todas las respuestas de un post, incluyendo respuestas anidadas.
+            """
+            replies = post.replies.filter(parent_reply__isnull=True)  # Solo respuestas principales
+            serializer = ReplySerializer(replies, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        elif request.method == 'POST':
+            """
+            Crea una respuesta a un post o dentro de otra respuesta.
+            """
+            serializer = ReplySerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+
+            # Obtener la respuesta padre si se envió un parent_reply
+            parent_reply = None
+            parent_reply_id = request.data.get('parent_reply')
+            if parent_reply_id:
+                parent_reply = get_object_or_404(Reply, id=parent_reply_id)
+
+            serializer.save(user=request.user, post=post, parent_reply=parent_reply)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    @action(detail=True, methods=['delete'], url_path='replies/(?P<reply_pk>[^/.]+)')
+    def delete_reply(self, request, pk=None, reply_pk=None):
+        """
+        Elimina una respuesta a un post.
+        """
+        post = self.get_object()
+        reply = get_object_or_404(post.replies, pk=reply_pk)
+        reply.user = get_object_or_404(get_user_model(), username='deleted')
+        reply.save()
+        return Response({"mensaje": "Respuesta eliminada"}, status=status.HTTP_200_OK)
