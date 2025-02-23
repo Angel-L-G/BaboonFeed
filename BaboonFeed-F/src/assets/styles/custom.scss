@@ -1,21 +1,51 @@
-$primary: #f39c12;
-$secondary: #34495e;
-$success: #2ecc71;
-$info: #3498db;
-$warning: #f1c40f;
-$danger: #e74c3c;
-$light: #ecf0f1;
-$dark: #2c3e50;
+$primary: #f39c12; // Naranja intenso
+$primary-alt: #e67e22; // Naranja más quemado
+
+$secondary: #34495e; // Azul grisáceo
+$secondary-alt: #2c3e50; // Azul oscuro más frío
+
+$success: #2ecc71; // Verde esmeralda
+$success-alt: #27ae60; // Verde más profundo
+
+$info: #3498db; // Azul vívido
+$info-alt: #2980b9; // Azul más oscuro y serio
+
+$warning: #f1c40f; // Amarillo dorado
+$warning-alt: #e67e22; // Naranja-ámbar para más contraste
+
+$danger: #e74c3c; // Rojo vivo
+$danger-alt: #c0392b; // Rojo sangre más oscuro
+
+$light: #ecf0f1; // Gris muy claro
+$light-alt: #d5dbdb; // Gris claro con más contraste
+
+$dark: #2c3e50; // Azul oscuro
+$dark-alt: #1c2833; // Azul casi negro para más profundidad
 
 $theme-colors: (
   'primary': $primary,
+  'primary-alt': $primary-alt,
+
   'secondary': $secondary,
+  'secondary-alt': $secondary-alt,
+
   'success': $success,
+  'success-alt': $success-alt,
+
   'info': $info,
+  'info-alt': $info-alt,
+
   'warning': $warning,
+  'warning-alt': $warning-alt,
+
   'danger': $danger,
+  'danger-alt': $danger-alt,
+
   'light': $light,
+  'light-alt': $light-alt,
+
   'dark': $dark,
+  'dark-alt': $dark-alt,
 );
 
 $form-file-button-bg: $primary;

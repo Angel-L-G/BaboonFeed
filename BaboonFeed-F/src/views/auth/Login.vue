@@ -1,6 +1,6 @@
 <template>
     <div class="container d-flex justify-content-center align-items-center vh-100">
-        <div class="card p-4 bg-danger-subtle" style="width: 22rem;">
+        <div class="card p-4 bg-primary" style="width: 22rem;">
             <h3 class="text-center">Login</h3>
             <form @submit.prevent="handleLogin">
                 <div class="mb-3">
@@ -11,7 +11,7 @@
                     <label for="password" class="form-label">Contraseña</label>
                     <input type="password" id="password" class="form-control bg-primary-subtle" v-model="password" required />
                 </div>
-                <button type="submit" class="btn btn-primary w-100">Ingresar</button>
+                <button type="submit" class="btn btn-primary-alt w-100">Ingresar</button>
             </form>
             <p v-if="error" class="text-danger mt-2">{{ error }}</p>
         </div>
