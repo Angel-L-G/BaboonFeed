@@ -1,16 +1,12 @@
-@charset "UTF-8";
 .btn-outline-primary:hover {
-  color: white !important;
-}
+  color: white !important; }
 
 body {
   background-color: #34495e !important;
-  color: #ecf0f1 !important;
-}
+  color: #ecf0f1 !important; }
 
 main {
-  min-height: 45.5vh;
-}
+  min-height: 45.5vh; }
 
 /*!
  * Bootstrap  v5.3.3 (https://getbootstrap.com/)
@@ -18,7 +14,7 @@ main {
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
 :root,
-[data-bs-theme=light] {
+[data-bs-theme="light"] {
   --bs-blue: #0d6efd;
   --bs-indigo: #6610f2;
   --bs-purple: #6f42c1;
@@ -58,12 +54,12 @@ main {
   --bs-danger-rgb: 231, 76, 60;
   --bs-light-rgb: 236, 240, 241;
   --bs-dark-rgb: 44, 62, 80;
-  --bs-primary-text-emphasis: rgb(97.2, 62.4, 7.2);
-  --bs-secondary-text-emphasis: rgb(20.8, 29.2, 37.6);
-  --bs-success-text-emphasis: rgb(18.4, 81.6, 45.2);
-  --bs-info-text-emphasis: rgb(20.8, 60.8, 87.6);
-  --bs-warning-text-emphasis: rgb(96.4, 78.4, 6);
-  --bs-danger-text-emphasis: rgb(92.4, 30.4, 24);
+  --bs-primary-text-emphasis: #613e07;
+  --bs-secondary-text-emphasis: #151d26;
+  --bs-success-text-emphasis: #12522d;
+  --bs-info-text-emphasis: #153d58;
+  --bs-warning-text-emphasis: #604e06;
+  --bs-danger-text-emphasis: #5c1e18;
   --bs-light-text-emphasis: #495057;
   --bs-dark-text-emphasis: #495057;
   --bs-primary-bg-subtle: #fdebd0;
