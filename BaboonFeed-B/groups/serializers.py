@@ -7,7 +7,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'avatar_url']
+        fields = ['username', 'avatar_url']
 
     def get_avatar_url(self, obj):
         request = self.context.get('request')
@@ -16,13 +16,18 @@ class UserSerializer(serializers.ModelSerializer):
         return None
 
 class GroupChatSerializer(serializers.ModelSerializer):
-    leader = UserSerializer(read_only=True)
-    members = UserSerializer(many=True, read_only=True)
+    leader = serializers.SlugRelatedField(
+        queryset=User.objects.all(), slug_field='username', required=False
+    )
+    members = serializers.SlugRelatedField(
+        many=True, queryset=User.objects.all(), slug_field='username'
+    )
     avatar_url = serializers.SerializerMethodField()
+
 
     class Meta:
         model = GroupChat
-        fields = ['id', 'name', 'avatar_url', 'leader', 'members']
+        fields = ['id', 'name','avatar_url', 'leader', 'members']
 
     def get_avatar_url(self, obj):
         request = self.context.get('request')

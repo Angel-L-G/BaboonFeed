@@ -22,10 +22,11 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from accounts.views import RegisterViewSet
 from posts.views import PostViewSet
+from groups.views import GroupChatViewSet
 
 router = DefaultRouter()
 router.register(r'posts', PostViewSet)
-#router.register(r'groups', GroupChatViewSet)
+router.register(r'groups', GroupChatViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
