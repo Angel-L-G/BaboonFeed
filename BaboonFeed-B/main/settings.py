@@ -31,6 +31,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",  # Servidor ASGI
+    "channels",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -160,4 +162,15 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': True,  # Genera un nuevo refresh token cada vez que se usa
     'BLACKLIST_AFTER_ROTATION': True,  # Invalida el refresh token antiguo
     'AUTH_HEADER_TYPES': ('Bearer',),  # Se usa "Bearer <token>" en el header de autorización
+}
+
+ASGI_APPLICATION = "main.asgi.application"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",  # Para pruebas
+        # Para producción, usa Redis:
+        # "BACKEND": "channels_redis.core.RedisChannelLayer",
+        # "CONFIG": {"hosts": [("localhost", 6379)]},
+    }
 }

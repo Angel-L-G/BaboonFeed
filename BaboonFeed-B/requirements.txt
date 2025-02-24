@@ -1,7 +1,9 @@
 django
 djangorestframework
 djangorestframework-simplejwt
-django-channels
+channels
+channels-redis
+daphne
 pillow
 model-bakery
 pytest-django
