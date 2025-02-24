@@ -2,6 +2,11 @@ project := file_stem(justfile_dir())
 venv-name := ".venv"
 venv-path := join(justfile_dir(), venv-name)
 
+# Justfile
+alias a := "just a"
+a:
+    source .venv/bin/activate && exec $SHELL
+
 # ==============================================================================
 # DJANGO RECIPES
 # ==============================================================================
