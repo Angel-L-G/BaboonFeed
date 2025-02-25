@@ -14,6 +14,15 @@ class GroupChatViewSet(viewsets.ModelViewSet):
         """Al crear un grupo, el usuario que lo crea será automáticamente el líder."""
         serializer.save(leader=self.request.user)
 
+    def get_queryset(self):
+        """
+        Filtra los grupos para que el usuario solo vea los grupos donde es líder o miembro.
+        """
+        user = self.request.user
+        return GroupChat.objects.filter(members=user).union(
+            GroupChat.objects.filter(leader=user)
+        )
+
     def perform_update(self, serializer):
         """
         Solo el líder actual puede modificar el grupo.
