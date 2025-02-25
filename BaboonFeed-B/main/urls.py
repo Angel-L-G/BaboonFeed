@@ -17,9 +17,13 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
+from files.views import FileViewSet
 from accounts.views import RegisterViewSet
 from posts.views import PostViewSet
 from groups.views import GroupChatViewSet
@@ -27,6 +31,7 @@ from groups.views import GroupChatViewSet
 router = DefaultRouter()
 router.register(r'posts', PostViewSet)
 router.register(r'groups', GroupChatViewSet)
+router.register(r'files', FileViewSet, basename='file')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -34,4 +39,6 @@ urlpatterns = [
     path('api/register/', RegisterViewSet.as_view({'post': 'register'}), name='register'),  # Register
     path('api/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # Login (JWT)
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
