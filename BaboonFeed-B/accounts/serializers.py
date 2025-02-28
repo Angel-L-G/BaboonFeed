@@ -2,6 +2,8 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from rest_framework import serializers
 
+from accounts.utils import send_confirmation_email
+
 
 class RegisterSerializer(serializers.ModelSerializer):
     confirmPassword = serializers.CharField(write_only=True)
@@ -18,4 +20,6 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data.pop('confirmPassword')
         user = get_user_model().objects.create_user(**validated_data)
+        user.is_active = False
+        user.save()
         return user
