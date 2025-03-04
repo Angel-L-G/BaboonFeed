@@ -1,65 +1,54 @@
 <script setup lang="ts">
-/*
-import { ref, onMounted } from 'vue'
-import { db } from '@/firebase' // Asegúrate de configurar Firebase
-import { collection, addDoc, query, orderBy, onSnapshot } from 'firebase/firestore'
-
-const messages = ref([])
-const newMessage = ref('')
-const messagesRef = collection(db, 'messages')
-
-onMounted(() => {
-    const q = query(messagesRef, orderBy('createdAt'))
-    onSnapshot(q, (snapshot) => {
-        messages.value = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
-    })
-})
-
-const sendMessage = async () => {
-    if (newMessage.value.trim() === '') return
-    await addDoc(messagesRef, {
-        text: newMessage.value,
-        createdAt: new Date(),
-    })
-    newMessage.value = ''
-}
-*/
-import {onMounted, ref} from "vue";
-import type {Message} from "@/types/Message.ts";
+import { ref, onMounted, onUnmounted } from 'vue';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import type {MessageReceived, MessageSent} from "@/types/Message.ts";
 import MessageComponent from "@/components/Message.vue";
 
-const messages = ref<Message[]>([]);
-const newMessage = ref('');
+
+const messages = ref<MessageReceived[]>([]);
+const newMessage = ref<string>('');
+const socket = ref<ReconnectingWebSocket | null>(null);
+const token = localStorage.getItem('token');
 
 onMounted(() => {
-    fetch('http://localhost:3000/messages')
-        .then(messagesFetch => {
-            return messagesFetch.json();
-        }).then(messagesData => {
-            messages.value = messagesData;
-        }).catch(error => {
-            console.log(error);
-        })
+    socket.value = new ReconnectingWebSocket('ws://localhost:8000/ws/chat/private/Coso_Coso2/');
+
+    socket.value.onmessage = (event: MessageEvent) => {
+        try {
+            console.log('WebSocket message:', event.data);
+            const message: MessageReceived = JSON.parse(event.data).message;
+            messages.value.push(message);
+        } catch (error) {
+            console.error('Error parsing WebSocket message:', error);
+        }
+    }
+
+    socket.value.onclose = () => {
+        console.log('WebSocket cerrado');
+    }
+
+    // Cuando se abra la conexión, enviar el token como un primer mensaje
+    socket.value.onopen = () => {
+        // Enviar el token en el primer mensaje
+        const authMessage = { type: 'auth', token: token };
+        socket.value!.send(JSON.stringify(authMessage));
+
+        console.log('Conexión WebSocket establecida y token enviado');
+    };
 });
 
 const sendMessage = () => {
-    fetch('http://localhost:3000/messages', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            id: messages.value.length + 1,
-            content: newMessage.value,
-            created_at: new Date().toString(),
-            author: 1
-        })
-    }).then(() => {
-        newMessage.value = '';
-    }).catch(error => {
-        console.log(error);
-    });
-};
+    if (socket.value) {
+        const messageData: MessageSent = { content: newMessage.value, receiver: "Coso2" };
+        socket.value.send(JSON.stringify(messageData));
+    }
+}
+
+onUnmounted(() => {
+    if (socket.value) {
+        socket.value.close();
+    }
+});
 </script>
 
 <template>
