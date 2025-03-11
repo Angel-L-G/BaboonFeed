@@ -1,14 +1,19 @@
 <template>
-    <div class="border border-secondary rounded m-2">
-        <div class="d-flex align-items-center justify-content-center rounded-top bg-info-alt p-2 border border-bottom-0 border-info-subtle">
-            <img class="me-2 rounded-circle border border-info-subtle border-3" :src="post.user.file?.name" :alt="post.user.username" style="height: 35px; width: 35px;">
-            <h2 class="text-light-alt">{{ post.user.username }}</h2>
+    <div class="border border-secondary rounded m-2 bg-secondary-alt">
+        <div class="d-flex align-items-center justify-content-between mx-3 p-2">
+            <div class="d-flex mt-2">
+                <img class="me-2 rounded-circle" :src="post.user.file?.name" :alt="post.user.username" style="height: 35px; width: 35px;">
+                <h2 class="text-light-alt">{{ post.user.username }}</h2>
+            </div>
+            <div>
+                <small class="">{{ getTimeSince(post.created_at) }}</small>
+            </div>
         </div>
-        <div class="d-flex flex-column p-2 align-items-center justify-content-center rounded-bottom bg-dark border border-top-0 border-info-subtle">
-            <div v-if="post.file">
+        <div class="m-3 p-2">
+            <p class="text-start">{{ post.content }}</p>
+            <div class="w-100 h-100" v-if="post.file">
                 <FileHandler :file="post.file"/>
             </div>
-            <p>{{ post.content }}</p>
         </div>
     </div>
 </template>
@@ -16,6 +21,22 @@
 <script setup lang="ts">
 import type { Post } from '@/types/Post.ts';
 import FileHandler from '@/components/file/FileHandler.vue';
+
+import { format, formatDistanceToNow, isToday, isYesterday } from "date-fns";
+import { enUS } from "date-fns/locale";
+
+const getTimeSince = (date: string) => {
+    const postDate = new Date(date);
+
+    if (isToday(postDate)) {
+        return formatDistanceToNow(postDate, { addSuffix: true, locale: enUS });
+    } else if (isYesterday(postDate)) {
+        return "Yesterday";
+    } else {
+        return format(postDate, "EEEE do MMMM", { locale: enUS });
+    }
+};
+
 
 const {post} = defineProps<{post: Post}>();
 
