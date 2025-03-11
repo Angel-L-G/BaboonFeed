@@ -9,9 +9,10 @@ const messages = ref<MessageReceived[]>([]);
 const newMessage = ref<string>('');
 const socket = ref<ReconnectingWebSocket | null>(null);
 const token = localStorage.getItem('token');
+const otherUserId = 2;/*TODO change the id to the receiver*/
 
 onMounted(() => {
-    socket.value = new ReconnectingWebSocket('ws://localhost:8000/ws/chat/private/Coso_Coso2/');
+    socket.value = new ReconnectingWebSocket(`ws://localhost:8000/ws/chat/private/${otherUserId}/`);
 
     socket.value.onmessage = (event: MessageEvent) => {
         try {

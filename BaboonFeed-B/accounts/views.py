@@ -14,7 +14,7 @@ class RegisterViewSet(viewsets.ViewSet):
     def register(self, request):
         serializer = RegisterSerializer(data=request.data)
         if not serializer.is_valid():
-            return Response({'error': 'Las contraseñas no coinciden'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         user = serializer.create(serializer.validated_data)
 
         # Generar tokens para el usuario recién creado
