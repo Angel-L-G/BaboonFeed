@@ -4,8 +4,8 @@
             <h3 class="text-center">Login</h3>
             <form @submit.prevent="handleLogin">
                 <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" id="email" class="form-control bg-primary-subtle" v-model="email" required />
+                    <label for="usernam" class="form-label">Username</label>
+                    <input type="text" id="username" class="form-control bg-primary-subtle" v-model="username" required />
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Contraseña</label>
@@ -24,13 +24,34 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
-const email = ref('');
+const username = ref('');
 const password = ref('');
 const error = ref('');
 
 const handleLogin = () => {
-    if (email.value === 'admin@example.com' && password.value === 'password') {
-        router.push('/home/');
+    if (username.value && password.value) {
+        fetch(
+            'http://localhost:8000/api/login/',
+            {
+                method: 'POST',
+                body: JSON.stringify({
+                    username: username.value,
+                    password: password.value
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+        )
+        .then(response => response.json())
+        .then(data => {
+            if (data.access) {
+                localStorage.setItem('token', data.access);
+                router.push('/home/');
+            } else {
+                error.value = 'Credenciales incorrectas';
+            }
+        });
     } else {
         error.value = 'Credenciales incorrectas';
     }
