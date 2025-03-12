@@ -16,6 +16,19 @@ class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]  # Permite lectura a todos, pero escritura solo a autenticados
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        # Filtrar por usuario si se pasa en la URL como ?user_id=1
+        user_id = self.request.query_params.get("user_id")
+        if user_id:
+            queryset = self.queryset.filter(author_id=user_id)
+
+        followed = self.request.query_params.get("followed")
+        if followed:
+            queryset = queryset.filter(author__followers__in=[self.request.user])
+
+        return queryset
+
     def perform_create(self, serializer):
         """
         Asigna el usuario autenticado al crear un post.
