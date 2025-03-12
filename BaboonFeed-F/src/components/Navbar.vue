@@ -1,58 +1,135 @@
 <template>
-    <div class="navigation">
-        <h3 class="d-flex justify-content-center align-items-center mt-3">
-            <router-link :to="{ name: 'home' }" class="navbar-brand text-primary mb-3 fs-3">
-                BaboonFeed
-            </router-link>
-        </h3>
-        <ul class="list-group list-group-flush primary gap-2 d-flex justify-content-center align-items-center">
-            <li class="text-primary list-group-item bg-dark-alt">
-                <router-link :to="{ name: 'chat' }" class="nav-link text-primary fs-4" :class="{ active: route.path === '/chat/' }">
-                    Chat
+    <div :class="['sidebar', 'bg-dark', { 'expanded': isExpanded }]">
+        <button class="btn btn-outline-primary toggle-btn" @click="toggleSidebar">
+            <font-awesome-icon :icon="['fas', 'bars']" />
+        </button>
+
+        <div class="ms-3 title-container">
+            <p class="text-cyan text-center title-text">
+                <router-link :to="{ name: 'home' }" class="navbar-brand text-cyan">
+                    <font-awesome-icon :icon="['fas', 'dove']" class="icon-fixed-large" />
+                    <span v-if="isExpanded" class="ms-3">BaboonFeed</span>
+                </router-link>
+            </p>
+        </div>
+
+        <ul class="nav flex-column">
+            <li v-for="item in menuItems" :key="item.name" class="nav-item">
+                <router-link :to="item.route" class="nav-link text-light d-flex align-items-center py-3 px-3">
+                    <font-awesome-icon :icon="item.icon" class="icon-fixed-large" />
+                    <span v-if="isExpanded" class="ms-3 nav-text">{{ item.name }}</span>
                 </router-link>
             </li>
-            <li class="text-light list-group-item bg-dark-alt">
-                <router-link :to="{ name: 'profile', params: { username: '1' } }" class="nav-link text-primary fs-4" :class="{ active: route.path === '/users/profile/' }">
-                    Profile
-                </router-link>
-            </li>
-            <li class="text-light list-group-item bg-dark-alt ">
-                <div type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="text-primary fs-4">
-                    New Post
-                </div>
-            </li>
-            <li class="text-light list-group-item bg-dark-alt">
+
+            <li class="nav-item">
+                <button class="nav-link text-warning d-flex align-items-center py-3 px-3 border-0 bg-transparent new-post-btn"
+                        data-bs-toggle="modal" data-bs-target="#CreatePostModal">
+                    <font-awesome-icon :icon="['fas', 'circle-plus']" class="icon-fixed-large" />
+                    <span v-if="isExpanded" class="ms-3 nav-text ellipsis-text">New Post</span>
+                </button>
             </li>
         </ul>
     </div>
 
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="CreatePostModal" tabindex="-1" aria-labelledby="CreatePostModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content bg-secondary">
+            <div class="modal-content bg-secondary text-light">
                 <CreatePost></CreatePost>
             </div>
         </div>
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
+import { ref, defineEmits } from 'vue';
 import { useRoute } from 'vue-router';
-import CreatePost from "@/components/post/CreatePost.vue";
+import CreatePost from '@/components/post/CreatePost.vue';
+
 const route = useRoute();
+const isExpanded = ref(false);
+const emit = defineEmits(["update:expanded"]); // Emitir cambios al padre
 
+const toggleSidebar = () => {
+    isExpanded.value = !isExpanded.value;
+    emit("update:expanded", isExpanded.value); // Notificar al padre
+};
 
+const menuItems = [
+    { name: 'Chat', icon: ['fas', 'comment'], route: { name: 'chat' } },
+    { name: 'Profile', icon: ['fas', 'id-card'], route: { name: 'profile', params: { username: '1' } } }
+];
 </script>
 
 <style scoped>
-    .navigation{
-        justify-content: center;
-        align-items: center;
-        margin: 0;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        position: fixed;
-        width: inherit;
-        height: inherit;
-    }
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 80px;
+    transition: width 0.3s ease-in-out;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.sidebar.expanded {
+    width: 250px;
+}
+
+span {
+    white-space: nowrap;
+    padding: 0;
+    margin: 0;
+}
+
+.toggle-btn {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    background: transparent;
+    color: white;
+}
+
+.title-container {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    text-align: start;
+    width: 100%;
+    height: 95px;
+}
+
+.title-text {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.nav-item {
+    width: 100%;
+    padding: 0 !IMPORTANT;
+    height: 75px;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    font-size: 1.2rem;
+}
+
+.icon-fixed-large {
+    width: 30px;
+    min-width: 30px;
+    text-align: center;
+}
+
+.nav-text {
+    font-size: 1.2rem;
+}
 </style>

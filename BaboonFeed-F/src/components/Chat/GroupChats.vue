@@ -22,21 +22,20 @@ onMounted( async () => {
 </script>
 
 <template>
-    <div class="navigation">
-        <h2 class="w-100 text-center text-primary">Groups</h2>
+    <div id="groups">
+        <h2 class="w-100 text-center text-primary">
+            <font-awesome-icon :icon="['fas', 'people-group']" />
+            <span class="m-2 d-md-none d-lg-inline">Groups</span>
+        </h2>
         <div v-for="user in users" :key="user.id" class="d-flex align-items-center justify-content-center rounded-top text-primary p-2">
             <img class="me-3 rounded-circle border-3" :src="user.file?.name" :alt="user.username" style="height: 35px; width: 35px;">
-            <h2>{{ user.username }}</h2>
+            <h2>
+                {{ user.username }}
+            </h2>
         </div>
     </div>
 </template>
 
 <style scoped>
-    .navigation{
-        justify-content: center;
-        align-items: center;
-        position: fixed;
-        width: inherit;
-        height: inherit;
-    }
+
 </style>

@@ -1,30 +1,29 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import Navbar from '@/components/Navbar.vue'
-import OpenChats from "@/components/Chat/OpenChats.vue";
 
-const route = useRoute()
-const isAuthPage = computed(() => {
-    return route.name === 'login' || route.name === 'register'
-})
+const route = useRoute();
+const isAuthPage = computed(() => route.name === 'login' || route.name === 'register');
+
+// Estado de la Navbar (contraída por defecto)
+const isNavbarExpanded = ref(false);
 </script>
 
 <template>
     <div class="layout">
-        <div v-if="!isAuthPage" class="col-2 col-lg-2 bg-dark-alt static">
-            <Navbar />
-        </div>
-        <div class="content">
+        <!-- Navbar solo si no es una página de autenticación -->
+        <Navbar v-if="!isAuthPage" @update:expanded="isNavbarExpanded = $event" />
+
+        <!-- Contenido ajustando su margen según la navbar -->
+        <div :class="['content', { 'content-expanded': isNavbarExpanded }]">
             <router-view />
-        </div>
-        <div class="col-2 col-lg-2 bg-dark-alt static">
-            <OpenChats />
         </div>
     </div>
 </template>
 
 <style scoped>
+/* Layout principal */
 .layout {
     display: flex;
     flex-direction: row;
@@ -32,12 +31,20 @@ const isAuthPage = computed(() => {
     height: 100vh;
 }
 
+/* Contenido cuando la navbar está contraída */
 .content {
-    flex: 1;
-    overflow: auto; /* Solo hace scroll si es necesario */
+    overflow: auto;
+    flex-grow: 1;
+    margin-left: 100px; /* Espacio de la navbar contraída */
+    transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
 }
 
-/* Ocultar scrollbar en navegadores WebKit (Chrome, Safari, Edge) */
+/* Contenido desplazado cuando la navbar está expandida */
+.content-expanded {
+    margin-left: 250px;
+}
+
+/* Ocultar scrollbar en navegadores WebKit */
 .content::-webkit-scrollbar {
     display: none;
 }
@@ -47,7 +54,7 @@ const isAuthPage = computed(() => {
     scrollbar-width: none;
 }
 
-/* Ocultar scrollbar en Edge y otros */
+/* Ocultar scrollbar en Edge */
 .content {
     -ms-overflow-style: none;
 }

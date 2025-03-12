@@ -1,5 +1,5 @@
 <template>
-    <div class="container-fluid text-center">
+    <div class="container-fluid text-center" >
         <h1 class="display-4 m-3 text-primary-alt">Home Page</h1>
         <div class="row justify-content-center">
             <div class="col-md-12 col-lg-9 me-2 content">
