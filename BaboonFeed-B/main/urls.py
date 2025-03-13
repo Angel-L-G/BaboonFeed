@@ -27,9 +27,11 @@ from chats.views import MessageViewSet
 from files.views import FileViewSet
 from accounts.views import RegisterViewSet
 from posts.views import PostViewSet
+from groups.views import GroupChatViewSet
 
 router = DefaultRouter()
 router.register(r'posts', PostViewSet)
+router.register(r'groups', GroupChatViewSet)
 router.register(r'files', FileViewSet, basename='file')
 router.register(r'messages', MessageViewSet, basename='message')
 
