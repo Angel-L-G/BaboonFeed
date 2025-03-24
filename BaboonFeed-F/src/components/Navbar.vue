@@ -8,24 +8,24 @@
             <p class="text-cyan text-center title-text">
                 <router-link :to="{ name: 'home' }" class="navbar-brand text-cyan">
                     <font-awesome-icon :icon="['fas', 'dove']" class="icon-fixed-large" />
-                    <span v-if="isExpanded" class="ms-3">BaboonFeed</span>
+                    <span v-show="isExpanded" class="ms-3">BaboonFeed</span>
                 </router-link>
             </p>
         </div>
 
         <ul class="nav flex-column">
             <li v-for="item in menuItems" :key="item.name" class="nav-item">
-                <router-link :to="item.route" class="nav-link text-light d-flex align-items-center py-3 px-3">
-                    <font-awesome-icon :icon="item.icon" class="icon-fixed-large" />
-                    <span v-if="isExpanded" class="ms-3 nav-text">{{ item.name }}</span>
+                <router-link :to="item.route" class="nav-link text-light d-flex py-3 px-3">
+                    <font-awesome-icon :icon="item.icon" class="icon-fixed-large pt-1" />
+                    <span v-show="isExpanded" class="ms-3 nav-text">{{ item.name }}</span>
                 </router-link>
             </li>
 
             <li class="nav-item">
-                <button class="nav-link text-warning d-flex align-items-center py-3 px-3 border-0 bg-transparent new-post-btn"
+                <button class="nav-link text-warning d-flex py-3 px-3 border-0 bg-transparent new-post-btn"
                         data-bs-toggle="modal" data-bs-target="#CreatePostModal">
-                    <font-awesome-icon :icon="['fas', 'circle-plus']" class="icon-fixed-large" />
-                    <span v-if="isExpanded" class="ms-3 nav-text ellipsis-text">New Post</span>
+                    <font-awesome-icon :icon="['fas', 'circle-plus']" class="icon-fixed-large pt-1" />
+                    <span v-show="isExpanded" class="ms-3 nav-text ellipsis-text text">New Post</span>
                 </button>
             </li>
         </ul>
@@ -42,10 +42,8 @@
 
 <script setup>
 import { ref, defineEmits } from 'vue';
-import { useRoute } from 'vue-router';
 import CreatePost from '@/components/post/CreatePost.vue';
 
-const route = useRoute();
 const isExpanded = ref(false);
 const emit = defineEmits(["update:expanded"]); // Emitir cambios al padre
 
@@ -107,6 +105,7 @@ span {
 .title-text {
     font-size: 1.5rem;
     margin: 0;
+    text-align: start;
 }
 
 .nav-item {
@@ -117,7 +116,7 @@ span {
 
 .nav-link {
     display: flex;
-    align-items: center;
+    align-items: start;
     justify-content: flex-start;
     width: 100%;
     font-size: 1.2rem;
