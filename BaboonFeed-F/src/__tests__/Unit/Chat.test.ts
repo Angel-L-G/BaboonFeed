@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { mount } from '@vue/test-utils';
-import ChatComponent from '@/components/Chat.vue';
+import ChatComponent from '@/components/Chat/Chat.vue';
 import MessageComponent from '@/components/Message.vue';
 
 // Mock de fetch
