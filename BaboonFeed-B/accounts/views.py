@@ -20,12 +20,15 @@ class RegisterViewSet(viewsets.ViewSet):
         if not serializer.is_valid():
             return Response({'error': 'Las contraseñas no coinciden'}, status=status.HTTP_400_BAD_REQUEST)
         user = serializer.create(serializer.validated_data)
-        send_confirmation_email(user, request)
-        return Response({
-            "message": "Check your email to confirm your account",
-        }, status=status.HTTP_201_CREATED)
+
+        if not send_confirmation_email(user, request):
+            return Response(
+                {'error': 'Email error'}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({"message": "Check your email to confirm your account"}, status=status.HTTP_201_CREATED)
 
 class VerifyEmailView(APIView):
+
     def get(self, request, user_email, uid):
         decoded_email = urlsafe_base64_decode(user_email).decode()
 
@@ -37,6 +40,7 @@ class VerifyEmailView(APIView):
         except (User.DoesNotExist, ValueError, TypeError):
             return Response({"error": "Invalid user."}, status=status.HTTP_400_BAD_REQUEST)
         if verify_object.is_expired():
+            user.delete()
             return Response({"error": "Token expired."}, status=status.HTTP_410_GONE)
 
         user.is_active = True

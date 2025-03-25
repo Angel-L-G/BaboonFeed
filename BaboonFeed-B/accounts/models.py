@@ -11,7 +11,7 @@ class Verify(models.Model):
     hash = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='verify', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    expires_at = models.DateTimeField(default=default_expires_at)  # Usar la función definida
+    expires_at = models.DateTimeField(default=default_expires_at)
 
     def is_expired(self):
         return now() > self.expires_at
