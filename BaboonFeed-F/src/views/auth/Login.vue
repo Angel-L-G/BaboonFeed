@@ -4,11 +4,11 @@
             <h3 class="text-center">Login</h3>
             <form @submit.prevent="handleLogin">
                 <div class="mb-3">
-                    <label for="usernam" class="form-label">Username</label>
+                    <label for="username" class="form-label text-secondary-alt">Username</label>
                     <input type="text" id="username" class="form-control bg-primary-subtle" v-model="username" required />
                 </div>
                 <div class="mb-3">
-                    <label for="password" class="form-label">Contraseña</label>
+                    <label for="password" class="form-label text-secondary-alt">Contraseña</label>
                     <input type="password" id="password" class="form-control bg-primary-subtle" v-model="password" required />
                 </div>
                 <button type="submit" class="btn btn-primary-alt w-100">Ingresar</button>

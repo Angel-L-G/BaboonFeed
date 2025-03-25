@@ -1,35 +1,137 @@
 <template>
-    <header>
-        <nav class="navbar navbar-expand-lg bg-primary-alt">
-            <div class="container-fluid">
-                <router-link :to="{ name: 'home' }" class="navbar-brand text-light">Home</router-link>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
-                        aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                        <div class="navbar-nav">
-                            <router-link :to="{ name: 'createPost' }" class="nav-link text-light" :class="{ active: route.path === '/posts/add/' }">Create Post</router-link>
-                            <router-link :to="{ name: 'chat' }" class="nav-link text-light" :class="{ active: route.path === '/chat/' }">Chat</router-link>
-                            <router-link :to="{ name: 'profile', params:{ username: '1'} }" class="nav-link text-light" :class="{ active: route.path === '/users/profile/' }">Profile</router-link>
-                            <router-link :to="{ name: 'login' }" class="nav-link text-light" :class="{ active: route.path === '/login/' }">Login</router-link>
-                            <router-link :to="{ name: 'register' }" class="nav-link text-light" :class="{ active: route.path === '/register/' }">Register</router-link>
-                            <!--
-                            <router-link :to="{ name: '' }" class="nav-link" :class="{ active: route.path === '/' }">Example</router-link>
-                            <router-link :to="{ name: '' }" class="nav-link" :class="{ active: route.path === '/' }">Example</router-link>
-                            <router-link :to="{ name: '' }" class="nav-link" :class="{ active: route.path === '/' }">Example</router-link>
-                            <router-link :to="{ name: '' }" class="nav-link" :class="{ active: route.path === '/' }">Example</router-link>
-                            -->
-                    </div>
-                </div>
-            </div>
-        </nav>
-    </header>
+    <div :class="['sidebar', 'bg-dark', { 'expanded': isExpanded }]">
+        <button class="btn btn-outline-primary toggle-btn" @click="toggleSidebar">
+            <font-awesome-icon :icon="['fas', 'bars']" />
+        </button>
+
+        <div class="ms-3 title-container">
+            <p class="text-cyan text-center title-text">
+                <router-link :to="{ name: 'home' }" class="navbar-brand text-cyan">
+                    <font-awesome-icon :icon="['fas', 'dove']" class="icon-fixed-large" />
+                    <span v-show="isExpanded" class="ms-3">BaboonFeed</span>
+                </router-link>
+            </p>
+        </div>
+
+        <ul class="nav flex-column">
+            <li v-for="item in menuItems" :key="item.name" class="nav-item">
+                <router-link :to="item.route" class="nav-link text-light d-flex py-3 px-3">
+                    <font-awesome-icon :icon="item.icon" class="icon-fixed-large pt-1" />
+                    <span :class="['nav-text', { 'visible': isExpanded }]">{{ item.name }}</span>
+                </router-link>
+            </li>
+
+            <li class="nav-item">
+                <button class="nav-link text-warning d-flex py-3 px-3 border-0 bg-transparent new-post-btn"
+                        data-bs-toggle="modal" data-bs-target="#CreatePostModal">
+                    <font-awesome-icon :icon="['fas', 'circle-plus']" class="icon-fixed-large pt-1" />
+                    <span :class="['nav-text', { 'visible': isExpanded }]">New Post</span>
+                </button>
+            </li>
+        </ul>
+    </div>
 </template>
 
-<script setup lang="ts">
-import { useRoute } from 'vue-router';
-const route = useRoute();
+<script setup>
+import { ref, defineEmits } from 'vue';
 
+const isExpanded = ref(false);
+const emit = defineEmits(["update:expanded"]);
 
+const toggleSidebar = () => {
+    isExpanded.value = !isExpanded.value;
+    emit("update:expanded", isExpanded.value);
+};
+
+const menuItems = [
+    { name: 'Chat', icon: ['fas', 'comment'], route: { name: 'chat' } },
+    { name: 'Profile', icon: ['fas', 'id-card'], route: { name: 'profile', params: { username: '1' } } }
+];
 </script>
+
+<style scoped>
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 80px;
+    transition: width 0.3s ease-in-out;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    overflow: hidden;
+}
+
+.sidebar.expanded {
+    width: 250px;
+}
+
+/* 🎯 ANIMACIÓN FLUIDA AL DESAPARECER */
+.nav-text {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    transition:
+        opacity 0.3s ease-in-out 0.2s, /* ⏳ Agregamos un pequeño delay al ocultar */
+        width 0.5s ease-in-out;
+}
+
+/* Cuando la sidebar está expandida */
+.nav-text.visible {
+    opacity: 1;
+    width: auto;
+    transition:
+        opacity 0.3s ease-in-out,  /* ⚡ Sin delay al aparecer */
+        width 0.3s ease-in-out;
+}
+
+.toggle-btn {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    background: transparent;
+    color: white;
+}
+
+.title-container {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    text-align: start;
+    width: 100%;
+    height: 95px;
+}
+
+.title-text {
+    font-size: 1.5rem;
+    margin: 0;
+    text-align: start;
+}
+
+.nav-item {
+    width: 100%;
+    padding: 0 !important;
+    height: 75px;
+    min-width: 250px;
+}
+
+.nav-link {
+    display: flex;
+    align-items: start;
+    justify-content: flex-start;
+    width: 100%;
+    font-size: 1.2rem;
+}
+
+.icon-fixed-large {
+    width: 30px;
+    min-width: 30px;
+    text-align: center;
+}
+</style>
