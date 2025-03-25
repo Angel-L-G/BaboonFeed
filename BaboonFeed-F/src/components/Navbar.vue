@@ -30,9 +30,18 @@
             </li>
         </ul>
     </div>
+
+    <div class="modal fade" id="CreatePostModal" tabindex="-1" aria-labelledby="CreatePostModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content bg-secondary text-light">
+                <CreatePost></CreatePost>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script setup>
+import CreatePost from '@/components/post/CreatePost.vue';
 import { ref, defineEmits } from 'vue';
 
 const isExpanded = ref(false);

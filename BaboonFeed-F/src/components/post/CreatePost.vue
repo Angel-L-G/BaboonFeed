@@ -1,13 +1,13 @@
 <template>
     <div class="container my-2">
-        <h2 class="">Create Post</h2>
+        <h2 class="text-center">Create Post</h2>
         <form @submit.prevent="handleSubmit" enctype="multipart/form-data">
             <textarea class="form-control mt-3 bg-primary-subtle" v-model="content" rows="4" placeholder="Write your post here!"/>
             <div class="input-group mb-3 mt-3">
                 <input class="form-control bg-primary-subtle" type="file" ref="fileInput" @change="handleFileChange" id="file">
                 <button class="btn btn-purple-alt" type="button" @click="removeFile"><font-awesome-icon :icon="['far', 'trash-can']" /></button>
             </div>
-            <button class="btn btn-purple-alt text-light" type="submit">Create</button>
+            <button class="btn btn-purple-alt text-light w-100" type="submit">Create</button>
         </form>
     </div>
 </template>
