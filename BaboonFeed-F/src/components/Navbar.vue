@@ -17,7 +17,7 @@
             <li v-for="item in menuItems" :key="item.name" class="nav-item">
                 <router-link :to="item.route" class="nav-link text-light d-flex py-3 px-3">
                     <font-awesome-icon :icon="item.icon" class="icon-fixed-large pt-1" />
-                    <span v-show="isExpanded" class="ms-3 nav-text">{{ item.name }}</span>
+                    <span :class="['nav-text', { 'visible': isExpanded }]">{{ item.name }}</span>
                 </router-link>
             </li>
 
@@ -25,31 +25,22 @@
                 <button class="nav-link text-warning d-flex py-3 px-3 border-0 bg-transparent new-post-btn"
                         data-bs-toggle="modal" data-bs-target="#CreatePostModal">
                     <font-awesome-icon :icon="['fas', 'circle-plus']" class="icon-fixed-large pt-1" />
-                    <span v-show="isExpanded" class="ms-3 nav-text ellipsis-text text">New Post</span>
+                    <span :class="['nav-text', { 'visible': isExpanded }]">New Post</span>
                 </button>
             </li>
         </ul>
-    </div>
-
-    <div class="modal fade" id="CreatePostModal" tabindex="-1" aria-labelledby="CreatePostModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content bg-secondary text-light">
-                <CreatePost></CreatePost>
-            </div>
-        </div>
     </div>
 </template>
 
 <script setup>
 import { ref, defineEmits } from 'vue';
-import CreatePost from '@/components/post/CreatePost.vue';
 
 const isExpanded = ref(false);
-const emit = defineEmits(["update:expanded"]); // Emitir cambios al padre
+const emit = defineEmits(["update:expanded"]);
 
 const toggleSidebar = () => {
     isExpanded.value = !isExpanded.value;
-    emit("update:expanded", isExpanded.value); // Notificar al padre
+    emit("update:expanded", isExpanded.value);
 };
 
 const menuItems = [
@@ -70,16 +61,31 @@ const menuItems = [
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    overflow: hidden;
 }
 
 .sidebar.expanded {
     width: 250px;
 }
 
-span {
+/* 🎯 ANIMACIÓN FLUIDA AL DESAPARECER */
+.nav-text {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
     white-space: nowrap;
-    padding: 0;
-    margin: 0;
+    transition:
+        opacity 0.3s ease-in-out 0.2s, /* ⏳ Agregamos un pequeño delay al ocultar */
+        width 0.5s ease-in-out;
+}
+
+/* Cuando la sidebar está expandida */
+.nav-text.visible {
+    opacity: 1;
+    width: auto;
+    transition:
+        opacity 0.3s ease-in-out,  /* ⚡ Sin delay al aparecer */
+        width 0.3s ease-in-out;
 }
 
 .toggle-btn {
@@ -110,8 +116,9 @@ span {
 
 .nav-item {
     width: 100%;
-    padding: 0 !IMPORTANT;
+    padding: 0 !important;
     height: 75px;
+    min-width: 250px;
 }
 
 .nav-link {
@@ -126,9 +133,5 @@ span {
     width: 30px;
     min-width: 30px;
     text-align: center;
-}
-
-.nav-text {
-    font-size: 1.2rem;
 }
 </style>
