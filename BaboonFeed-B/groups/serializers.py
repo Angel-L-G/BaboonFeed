@@ -2,7 +2,7 @@ from rest_framework import serializers
 from users.models import User
 from .models import GroupChat
 
-class UserSerializer(serializers.ModelSerializer):
+class UserGroupSerializer(serializers.ModelSerializer):
     avatar_url = serializers.SerializerMethodField()
 
     class Meta:
