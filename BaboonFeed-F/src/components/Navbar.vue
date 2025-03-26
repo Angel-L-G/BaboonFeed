@@ -15,10 +15,15 @@
 
         <ul class="nav flex-column">
             <li v-for="item in menuItems" :key="item.name" class="nav-item">
-                <router-link :to="item.route" class="nav-link text-light d-flex py-3 px-3">
+                <router-link :to="item.route" class="nav-link text-light d-flex py-3 px-3" v-if="isAuthenticated">
                     <font-awesome-icon :icon="item.icon" class="icon-fixed-large pt-1" />
                     <span :class="['nav-text', { 'visible': isExpanded }]">{{ item.name }}</span>
                 </router-link>
+                <button class="nav-link text-light d-flex py-3 px-3"
+                        data-bs-toggle="modal" data-bs-target="#CreatePostModal" v-else-if="!isAuthenticated">
+                    <font-awesome-icon :icon="item.icon" class="icon-fixed-large pt-1" />
+                    <span :class="['nav-text', { 'visible': isExpanded }]">{{ item.name }}</span>
+                </button>
             </li>
 
             <li class="nav-item">
@@ -38,7 +43,7 @@
                 <span :class="['nav-text', { 'visible': isExpanded }]">Logout</span>
             </button>
             <router-link class="nav-link text-success d-flex py-3 px-3 border-0 bg-transparent"
-                         v-if="!isAuthenticated" :to="{ name: 'login' }">
+                         v-else-if="!isAuthenticated" :to="{ name: 'login' }">
                 <font-awesome-icon :icon="['fas', 'arrow-right-to-bracket']" class="icon-fixed-large pt-1" />
                 <span :class="['nav-text', { 'visible': isExpanded }]">Login/Register</span>
             </router-link>
@@ -48,7 +53,8 @@
     <div class="modal fade" id="CreatePostModal" tabindex="-1" aria-labelledby="CreatePostModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content bg-secondary text-light">
-                <CreatePost />
+                <CreatePost v-if="isAuthenticated"/>
+                <NeedToLogin v-else-if="!isAuthenticated" />
             </div>
         </div>
     </div>
@@ -58,6 +64,7 @@
 import CreatePost from '@/components/post/CreatePost.vue';
 import { ref, defineEmits, computed } from 'vue'
 import { useAuthStore } from '@/stores/auth.ts'
+import NeedToLogin from '@/components/NeedToLogin.vue'
 
 const isExpanded = ref(false);
 const emit = defineEmits(["update:expanded"]);
