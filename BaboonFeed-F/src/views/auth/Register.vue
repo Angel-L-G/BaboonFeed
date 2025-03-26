@@ -1,26 +1,26 @@
 <template>
     <div class="container d-flex justify-content-center align-items-center vh-100">
-        <div class="card p-4 bg-primary" style="width: 22rem;">
-            <h3 class="text-center text-secondary-alt">Register</h3>
+        <div class="card p-4 bg-secondary-alt border-primary" style="width: 22rem;">
+            <h3 class="text-center text-primary">Register</h3>
             <form @submit.prevent="handleRegister">
                 <div class="mb-3">
-                    <label for="username" class="form-label text-secondary-alt">Username</label>
+                    <label for="username" class="form-label text-primary">Username</label>
                     <input type="text" id="username" class="form-control bg-primary-subtle" v-model="username" required />
                 </div>
                 <div class="mb-3">
-                    <label for="email" class="form-label text-secondary-alt">Email</label>
+                    <label for="email" class="form-label text-primary">Email</label>
                     <input type="email" id="email" class="form-control bg-primary-subtle" v-model="email" required />
                 </div>
                 <div class="mb-3">
-                    <label for="password" class="form-label text-secondary-alt">Password</label>
+                    <label for="password" class="form-label text-primary">Password</label>
                     <input type="password" id="password" class="form-control bg-primary-subtle" v-model="password" required />
                 </div>
                 <div class="mb-3">
-                    <label for="confPassword" class="form-label text-secondary-alt">Confirm Password</label>
+                    <label for="confPassword" class="form-label text-primary">Confirm Password</label>
                     <input type="password" id="confPassword" class="form-control bg-primary-subtle" v-model="confPassword" required />
                 </div>
-                <button type="submit" class="btn btn-primary-alt w-100 mb-3">Register</button>
-                <router-link :to="{ name: 'login' }" class="btn btn-primary-alt w-100">Go to Login</router-link>
+                <button type="submit" class="btn btn-purple w-100 mb-3">Register</button>
+                <router-link :to="{ name: 'login' }" class="btn btn-purple-alt w-100">Go to Login</router-link>
             </form>
             <p v-if="errorMsg" class="text-danger mt-2">{{ errorMsg }}</p>
         </div>
