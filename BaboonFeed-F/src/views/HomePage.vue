@@ -18,7 +18,7 @@
     const posts = reactive<Post[]>([]);
 
     onMounted( async () => {
-        await fetch(`${API_URL}posts`, {
+        await fetch(`${API_URL}posts/`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

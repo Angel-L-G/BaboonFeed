@@ -29,33 +29,55 @@
                 </button>
             </li>
         </ul>
+
+        <!-- Logout -->
+        <div class="nav-item d-flex h-100 justify-content-end align-items-end">
+            <button class="nav-link text-danger d-flex py-3 px-3 border-0 bg-transparent"
+                    @click="logout" v-if="isAuthenticated">
+                <font-awesome-icon :icon="['fas', 'arrow-right-from-bracket']" class="icon-fixed-large pt-1" />
+                <span :class="['nav-text', { 'visible': isExpanded }]">Logout</span>
+            </button>
+            <router-link class="nav-link text-success d-flex py-3 px-3 border-0 bg-transparent"
+                         v-if="!isAuthenticated" :to="{ name: 'login' }">
+                <font-awesome-icon :icon="['fas', 'arrow-right-to-bracket']" class="icon-fixed-large pt-1" />
+                <span :class="['nav-text', { 'visible': isExpanded }]">Login/Register</span>
+            </router-link>
+        </div>
     </div>
 
     <div class="modal fade" id="CreatePostModal" tabindex="-1" aria-labelledby="CreatePostModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content bg-secondary text-light">
-                <CreatePost></CreatePost>
+                <CreatePost />
             </div>
         </div>
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CreatePost from '@/components/post/CreatePost.vue';
-import { ref, defineEmits } from 'vue';
+import { ref, defineEmits, computed } from 'vue'
+import { useAuthStore } from '@/stores/auth.ts'
 
 const isExpanded = ref(false);
 const emit = defineEmits(["update:expanded"]);
+const authStore = useAuthStore();
 
 const toggleSidebar = () => {
     isExpanded.value = !isExpanded.value;
     emit("update:expanded", isExpanded.value);
 };
 
+const isAuthenticated = computed(() => authStore.isAuthenticated);
+
 const menuItems = [
     { name: 'Chat', icon: ['fas', 'comment'], route: { name: 'chat' } },
     { name: 'Profile', icon: ['fas', 'id-card'], route: { name: 'profile', params: { username: '1' } } }
 ];
+
+const logout = () => {
+    authStore.logout();
+};
 </script>
 
 <style scoped>
