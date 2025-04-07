@@ -30,7 +30,7 @@ from groups.views import GroupChatViewSet
 
 router = DefaultRouter()
 router.register(r'posts', PostViewSet)
-router.register(r'groups', GroupChatViewSet)
+router.register(r'groups', GroupChatViewSet, basename='groupchat')
 router.register(r'files', FileViewSet, basename='file')
 
 urlpatterns = [

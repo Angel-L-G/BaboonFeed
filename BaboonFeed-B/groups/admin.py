@@ -5,6 +5,6 @@ from groups.models import GroupChat
 
 @admin.register(GroupChat)
 class GroupChatAdmin(admin.ModelAdmin):
-    list_display = ['name','avatar' ,'leader']
+    list_display = ['pk', 'name','avatar' ,'leader']
     search_fields = ['name', 'leader']
     ordering = ['name']
