@@ -1,11 +1,6 @@
-project := file_stem(justfile_dir())
+project := file_stem(justfile_directory())
 venv-name := ".venv"
-venv-path := join(justfile_dir(), venv-name)
-
-# Justfile
-alias a := "just a"
-a:
-    source .venv/bin/activate && exec $SHELL
+venv-path := join(justfile_directory(), venv-name)
 
 # ==============================================================================
 # DJANGO RECIPES
@@ -106,7 +101,6 @@ create-su username="admin" password="admin" email="admin@example.com":
 # https://medium.com/@mustahibmajgaonkar/how-to-reset-django-migrations-6787b2a1e723
 # https://stackoverflow.com/a/76300128
 # Remove migrations and database. Reset DB artefacts.
-[confirm("⚠️ All migrations and database will be removed. Continue? [yN]:")]
 reset-db: && create-su
     #!/usr/bin/env bash
     find . -path "*/migrations/*.py" ! -path "./.venv/*" ! -name "__init__.py" -delete
@@ -204,15 +198,3 @@ redis:
             pgrep -x Redis &> /dev/null || (open /Applications/Redis.app && sleep 2)
         fi
     fi
-
-set shell := ["powershell.exe", "-c"]
-
-alias mmw := makemigrationswindows
-# Make Django migrations
-makemigrationswindows:
-    python .\manage.py makemigrations
-
-alias mw := migratewindows
-# Apply Django migrations
-migratewindows:
-    python .\manage.py migrate

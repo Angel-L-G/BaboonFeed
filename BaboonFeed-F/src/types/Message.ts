@@ -1,11 +1,18 @@
 import type { File } from "@/types/File";
 
-export interface Message {
+export interface MessageReceived {
   id: number;
   content: string;
   created_at: string;
-  author: number; //string;
+  author: string;
   receiver?: string;
-  group?: string;
+  group?: number;
   file?: File;
+}
+
+export interface MessageSent {
+    content: string;
+    receiver?: string;
+    group?: number;
+    file?: File;
 }

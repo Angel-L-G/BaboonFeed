@@ -5,9 +5,11 @@
             <video v-if="file.type == FileTypes.VIDEO" controls>
                 <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
             </video>
-            <audio v-else-if="file.type == FileTypes.AUDIO" controls>
-                <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3" />
-            </audio>
+            <div v-else-if="file.type == FileTypes.AUDIO" class="bg-dark">
+                <audio controls class="audio-container">
+                    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3"/>
+                </audio>
+            </div>
         </Plyr>
     </div>
 </template>

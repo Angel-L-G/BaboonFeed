@@ -23,6 +23,7 @@ from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
+from chats.views import MessageViewSet
 from files.views import FileViewSet
 from accounts.views import RegisterViewSet, VerifyEmailView
 from posts.views import PostViewSet
@@ -32,6 +33,7 @@ router = DefaultRouter()
 router.register(r'posts', PostViewSet)
 router.register(r'groups', GroupChatViewSet, basename='groupchat')
 router.register(r'files', FileViewSet, basename='file')
+router.register(r'messages', MessageViewSet, basename='message')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
