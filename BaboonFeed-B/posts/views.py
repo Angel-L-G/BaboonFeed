@@ -1,6 +1,6 @@
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets, status
+from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.decorators import action
@@ -11,10 +11,19 @@ from .models import Post, Reply
 from .serializers import PostSerializer, ReplySerializer
 
 
+class PostLimitOffsetPagination(LimitOffsetPagination):
+    """
+    Clase de paginación para los posts.
+    Permite paginar los resultados con un límite y un desplazamiento.
+    """
+    default_limit = 10
+    max_limit = 100
+
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all().order_by('-created_at')
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]  # Permite lectura a todos, pero escritura solo a autenticados
+    pagination_class = PostLimitOffsetPagination
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -23,9 +32,11 @@ class PostViewSet(viewsets.ModelViewSet):
         if user_id:
             queryset = self.queryset.filter(author_id=user_id)
 
+        # Filtrar por el usuario autenticado si se pasa en la URL como ?followed=true
         followed = self.request.query_params.get("followed")
         if followed:
             queryset = queryset.filter(author__followers__in=[self.request.user])
+
 
         return queryset
 
