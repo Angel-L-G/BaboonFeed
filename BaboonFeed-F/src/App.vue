@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import Navbar from '@/components/Navbar.vue'
+import ChatList from '@/components/ChatList.vue'
 
 const route = useRoute();
 const isAuthPage = computed(() => route.name === 'login' || route.name === 'register');
@@ -19,6 +20,8 @@ const isNavbarExpanded = ref(false);
         <div :class="['content', { 'content-expanded': isNavbarExpanded }]">
             <router-view />
         </div>
+
+        <ChatList v-if="!isAuthPage"/>
     </div>
 </template>
 
@@ -57,5 +60,27 @@ const isNavbarExpanded = ref(false);
 /* Ocultar scrollbar en Edge */
 .content {
     -ms-overflow-style: none;
+}
+
+/* Panel derecho fijo */
+.right-panel {
+    width: 300px;
+    height: 100vh;
+    overflow-y: auto;
+    position: fixed;
+    right: 0;
+    top: 0;
+    padding-top: 1rem;
+}
+
+/* Ajuste del contenido para no solaparse con panel derecho */
+.content {
+    margin-right: 300px; /* Deja espacio al contenido para el panel */
+}
+
+/* Si navbar expandida */
+.content-expanded {
+    margin-left: 250px;
+    margin-right: 300px;
 }
 </style>

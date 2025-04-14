@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="align-items-end">
         <img v-if="file.type == FileTypes.IMAGE" :src="file.name" alt="post">
         <Plyr v-else>
             <video v-if="file.type == FileTypes.VIDEO" controls>
@@ -15,8 +15,8 @@
 </template>
 
 <script setup lang="ts">
-import type { File } from '../../types/File';
-import { FileTypes } from '../../types/File';
+import type { File } from '@/types/File.ts';
+import { FileTypes } from '@/types/File.ts';
 import "vue-plyr/dist/vue-plyr.css";
 import Plyr from "vue-plyr";
 

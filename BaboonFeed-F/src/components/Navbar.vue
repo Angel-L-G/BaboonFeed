@@ -5,8 +5,8 @@
         </button>
 
         <div class="ms-3 title-container">
-            <p class="text-cyan text-center title-text">
-                <router-link :to="{ name: 'home' }" class="navbar-brand text-cyan">
+            <p class="title-text">
+                <router-link :to="{ name: 'home' }" class="navbar-brand text-info-light">
                     <font-awesome-icon :icon="['fas', 'dove']" class="icon-fixed-large" />
                     <span v-show="isExpanded" class="ms-3">BaboonFeed</span>
                 </router-link>
@@ -15,14 +15,14 @@
 
         <ul class="nav flex-column">
             <li v-for="item in menuItems" :key="item.name" class="nav-item">
-                <router-link :to="item.route" class="nav-link text-light d-flex py-3 px-3">
+                <router-link :to="item.route" class="nav-link text-purple-light d-flex py-3 px-3">
                     <font-awesome-icon :icon="item.icon" class="icon-fixed-large pt-1" />
                     <span :class="['nav-text', { 'visible': isExpanded }]">{{ item.name }}</span>
                 </router-link>
             </li>
 
             <li class="nav-item">
-                <button class="nav-link text-warning d-flex py-3 px-3 border-0 bg-transparent new-post-btn"
+                <button class="nav-link text-purple-light d-flex py-3 px-3 border-0 bg-transparent new-post-btn"
                         data-bs-toggle="modal" data-bs-target="#CreatePostModal">
                     <font-awesome-icon :icon="['fas', 'circle-plus']" class="icon-fixed-large pt-1" />
                     <span :class="['nav-text', { 'visible': isExpanded }]">New Post</span>
@@ -77,7 +77,7 @@ const menuItems = [
     width: 250px;
 }
 
-/* 🎯 ANIMACIÓN FLUIDA AL DESAPARECER */
+/* ANIMACIÓN FLUIDA AL DESAPARECER */
 .nav-text {
     opacity: 0;
     width: 0;

@@ -2,7 +2,7 @@
     <div class="container-fluid text-center" >
         <h1 class="display-4 m-3 text-primary-alt">Home Page</h1>
         <div class="row justify-content-center">
-            <div class="col-md-12 col-lg-9 me-2 content">
+            <div class="col-md-12 col-lg-9 me-2 content d-flex flex-column justify-content-center align-items-center">
                 <PostView v-for="post in posts" :key="post.id" :post="post"/>
             </div>
         </div>

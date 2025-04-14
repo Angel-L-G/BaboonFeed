@@ -1,17 +1,17 @@
 <template>
-    <div class="border border-secondary rounded m-2 bg-secondary-alt">
-        <div class="d-flex align-items-center justify-content-between mx-3 p-2">
+    <div class="border border-dark-light rounded m-2 bg-secondary-alt w-75">
+        <div class="d-flex align-items-center justify-content-between px-3 p-2 border-bottom border-dark-light">
             <div class="d-flex mt-2">
-                <img class="me-2 rounded-circle" :src="post.user.file?.name" :alt="post.user.username" style="height: 35px; width: 35px;">
+                <img class="me-2 rounded-circle border border-2 border-cyan" :src="post.user.file?.name" :alt="post.user.username" style="height: 35px; width: 35px;">
                 <h2 class="text-light-alt">{{ post.user.username }}</h2>
             </div>
-            <div>
-                <small class="">{{ getTimeSince(post.created_at) }}</small>
+            <div class="p-2 border-start border-end border-3 border-purple rounded">
+                <small>{{ getTimeSince(post.created_at) }}</small>
             </div>
         </div>
-        <div class="m-3 p-2">
-            <p class="text-start">{{ post.content }}</p>
-            <div class="w-100 h-100" v-if="post.file">
+        <div class="m-3 p-2 d-flex flex-column align-items-center">
+            <p class="text-center ">{{ post.content }}</p>
+            <div class="w-75 h-50" v-if="post.file">
                 <FileHandler :file="post.file"/>
             </div>
         </div>
