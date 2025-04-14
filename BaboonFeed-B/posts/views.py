@@ -7,23 +7,15 @@ from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
 
 from shared.permissions import IsOwnerOrReadOnly
+from shared.views import CustomLimitOffsetPagination
 from .models import Post, Reply
 from .serializers import PostSerializer, ReplySerializer
-
-
-class PostLimitOffsetPagination(LimitOffsetPagination):
-    """
-    Clase de paginación para los posts.
-    Permite paginar los resultados con un límite y un desplazamiento.
-    """
-    default_limit = 10
-    max_limit = 100
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all().order_by('-created_at')
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]  # Permite lectura a todos, pero escritura solo a autenticados
-    pagination_class = PostLimitOffsetPagination
+    pagination_class = CustomLimitOffsetPagination
 
     def get_queryset(self):
         queryset = super().get_queryset()

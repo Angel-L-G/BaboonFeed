@@ -3,12 +3,12 @@ import json
 from asgiref.sync import sync_to_async
 from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
+from django.db.models.aggregates import Count
 from rest_framework_simplejwt.tokens import AccessToken
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 
-from chats.models import Message
-from groups.models import GroupChat
+from chats.models import Message, Chat
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -52,16 +52,23 @@ class ChatConsumer(AsyncWebsocketConsumer):
         if self.isPrivate:
             receiver = await self.get_user(username=message["receiver"])
             group = None
+            chat = await self.get_or_create_private_chat(self.user, receiver)
         else:
             receiver = None
             group = await self.get_user(id=self.room_name)
 
-        await sync_to_async(Message.objects.create)(
+        new_message = await sync_to_async(Message.objects.create)(
             content=message["content"],
             author=self.user,
             receiver=receiver,
             group=group
         )
+
+        if self.isPrivate:
+            # Actualizar el último mensaje del chat
+            chat.last_message = new_message
+            sync_to_async(chat.save)()
+
         # Enviar mensaje al grupo
         await self.channel_layer.group_send(
             self.room_group_name,
@@ -70,6 +77,21 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 "message": message
             }
         )
+
+    @sync_to_async
+    def get_or_create_private_chat(self, user1, user2):
+        # Buscar un chat privado con exactamente esos 2 usuarios
+        chat = Chat.objects.filter(
+            users=user1
+        ).filter(users=user2)
+
+        if chat.exists():
+            return chat.first()
+
+        # Crear el chat si no existe
+        chat = Chat.objects.create()
+        chat.users.add(user1, user2)
+        return chat
 
     async def chat_message(self, event):
         message = event["message"]
