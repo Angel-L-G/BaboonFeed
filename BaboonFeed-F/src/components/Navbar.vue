@@ -42,7 +42,7 @@
 
 <script setup>
 import CreatePost from '@/components/post/CreatePost.vue';
-import { ref, defineEmits } from 'vue';
+import { ref } from 'vue';
 
 const isExpanded = ref(false);
 const emit = defineEmits(["update:expanded"]);
