@@ -4,13 +4,23 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from accounts.models import Verify
 from accounts.serializers import RegisterSerializer
 from accounts.utils import send_confirmation_email
+from users.serializers import UserSerializer
 
 User = get_user_model()
 
+class LoginViewSet(viewsets.ViewSet):
+    @action(detail=False, methods=['post'])
+    def login(self, request):
+        serializer = TokenObtainPairSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        user = UserSerializer(User.objects.get(username=request.data['username']))
+        return Response({'refresh': serializer.validated_data['refresh'], 'access': serializer.validated_data['access'], 'user': user.data}, status=status.HTTP_200_OK)
 
 class RegisterViewSet(viewsets.ViewSet):
 

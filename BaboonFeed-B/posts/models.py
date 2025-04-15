@@ -20,6 +20,8 @@ class Reply(models.Model):
     )
     post = models.ForeignKey('posts.Post', related_name='replies', on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='replies', on_delete=models.DO_NOTHING) # se controla en la view (ponerlo al usuario 'deleted')
+    likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='liked_replies')
+    dislikes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='disliked_replies')
 
     def __str__(self):
         return self.content

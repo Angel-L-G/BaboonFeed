@@ -10,9 +10,12 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        # Permitir eliminar pero NO actualizar
+        if request.method == 'PATCH' and  hasattr(view, 'action') and view.action in ['like', 'dislike']:
+            return True
+
+        # Permitir eliminar o crear el like solo al dueño del post
         if request.method in ['DELETE', 'POST']:
             return obj.user == request.user
 
-        # Bloquear cualquier otra acción (PUT/PATCH)
+        # Bloquear cualquier otra acción (PUT)
         return False
