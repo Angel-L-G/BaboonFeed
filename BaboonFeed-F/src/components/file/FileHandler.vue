@@ -1,6 +1,6 @@
 <template>
     <div>
-        <img v-if="file.type == FileTypes.IMAGE" :src="file.name" alt="post">
+        <img v-if="file.type == FileTypes.IMAGE" :src="file.file" alt="post">
         <Plyr v-else>
             <video v-if="file.type == FileTypes.VIDEO" controls>
                 <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />

@@ -45,7 +45,7 @@ onMounted(async () => {
                 <!-- Imagen de perfil -->
                 <div class="col-md-4 d-flex align-items-center justify-content-center p-3">
                     <img
-                        :src="user.file?.name || '/default-profile.png'"
+                        :src="user.avatar"
                         class="rounded-circle img-fluid profile-img border-2 border-cyan"
                         alt="Profile Picture"
                     />

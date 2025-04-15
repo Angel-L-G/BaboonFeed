@@ -52,7 +52,7 @@ const handleRegister = async () => {
     }
     try {
         const responsePromise = await axios.post(
-            `${API_URL}api/register/`,
+            `${API_URL}register/`,
             {
                 username: username.value,
                 email: email.value,

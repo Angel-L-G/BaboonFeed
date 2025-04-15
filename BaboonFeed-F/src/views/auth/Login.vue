@@ -36,13 +36,15 @@ const errorMsg = ref('');
 const handleLogin = async () => {
     try {
         const responsePromise = await axios.post(
-            `${API_URL}api/login/`,
+            `${API_URL}login/`,
             { username: username.value,  password: password.value }
         );
         const data = responsePromise.data;
         if (data.access) {
             authStore.token = data.access;
+            authStore.user = data.user;
             localStorage.setItem('token', data.access);
+            localStorage.setItem('user', JSON.stringify(data.user));
             errorMsg.value = '';
             await router.push("/home/");
         } else {

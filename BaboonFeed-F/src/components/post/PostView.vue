@@ -2,7 +2,7 @@
     <div class="border border-secondary rounded m-2 bg-secondary-alt">
         <div class="d-flex align-items-center justify-content-between mx-3 p-2">
             <div class="d-flex mt-2">
-                <img class="me-2 rounded-circle" :src="post.user.file?.name" :alt="post.user.username" style="height: 35px; width: 35px;">
+                <img class="me-2 rounded-circle" :src="post.user.avatar" :alt="post.user.username" style="height: 35px; width: 35px;">
                 <h2 class="text-light-alt">{{ post.user.username }}</h2>
             </div>
             <div>
@@ -14,6 +14,16 @@
             <div class="w-100 h-100" v-if="post.file">
                 <FileHandler :file="post.file"/>
             </div>
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-outline-primary-alt me-3" @click="handleLike(post)">
+                    <font-awesome-icon :icon="['far', 'thumbs-up']" />
+                    {{ post.likes.length }}
+                </button>
+                <button class="btn btn-outline-primary-alt" @click="handleDislike(post)">
+                    <font-awesome-icon :icon="['far', 'thumbs-down']" />
+                    {{ post.dislikes.length }}
+                </button>
+            </div>
         </div>
     </div>
 </template>
@@ -24,6 +34,11 @@ import FileHandler from '@/components/file/FileHandler.vue';
 
 import { format, formatDistanceToNow, isToday, isYesterday } from "date-fns";
 import { enUS } from "date-fns/locale";
+import axios from 'axios'
+import { API_URL } from '@/globals.ts'
+import { useAuthStore } from '@/stores/auth.ts'
+
+const authStore = useAuthStore();
 
 const getTimeSince = (date: string) => {
     const postDate = new Date(date);
@@ -35,9 +50,53 @@ const getTimeSince = (date: string) => {
     } else {
         return format(postDate, "EEEE do MMMM", { locale: enUS });
     }
-};
+}
 
 
 const {post} = defineProps<{post: Post}>();
+
+const handleLike = async (post: Post) => {
+    await axios.patch(`${API_URL}posts/${post.id}/like/`, {}, {
+        headers: {
+            'Authorization': `Bearer ${authStore.token}`
+        }
+    }).then(() => {
+        const user = authStore.user;
+        if (user && user.id) {
+            if (post.likes.includes(user.id)) {
+                post.likes = post.likes.filter((like) => like !== user.id);
+            } else {
+                post.likes.push(user.id);
+                if (post.dislikes.includes(user.id)) {
+                    post.dislikes = post.dislikes.filter((dislike) => dislike !== user.id);
+                }
+            }
+        }
+    }).catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+const handleDislike = async (post: Post) => {
+    await axios.patch(`${API_URL}posts/${post.id}/dislike/`, {}, {
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+    }).then(() => {
+        const user = authStore.user;
+        if (user && user.id) {
+            if (post.dislikes.includes(user.id)) {
+                post.dislikes = post.dislikes.filter((dislike) => dislike !== user.id);
+            } else {
+                post.dislikes.push(user.id);
+                if (post.likes.includes(user.id)) {
+                    post.likes = post.likes.filter((like) => like !== user.id);
+                }
+            }
+        }
+    }).catch(error => {
+        console.error('Error:', error);
+    });
+}
 
 </script>
