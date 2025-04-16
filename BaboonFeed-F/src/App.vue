@@ -13,15 +13,20 @@ const isNavbarExpanded = ref(false);
 
 <template>
     <div class="layout">
-        <!-- Navbar solo si no es una página de autenticación -->
-        <Navbar v-if="!isAuthPage" @update:expanded="isNavbarExpanded = $event" />
+        <!-- Header de navegación -->
+        <header v-if="!isAuthPage" aria-label="Navegación principal">
+            <Navbar @update:expanded="isNavbarExpanded = $event" />
+        </header>
 
-        <!-- Contenido ajustando su margen según la navbar -->
-        <div :class="['content', { 'content-expanded': isNavbarExpanded }]">
+        <!-- Contenido principal -->
+        <main :class="['content', { 'content-expanded': isNavbarExpanded }]" tabindex="-1" id="main-content">
             <router-view />
-        </div>
+        </main>
 
-        <ChatList v-if="!isAuthPage"/>
+        <!-- Chat, fuera del contenido principal -->
+        <aside v-if="!isAuthPage" aria-label="Lista de chats recientes">
+            <ChatList />
+        </aside>
     </div>
 </template>
 

@@ -1,19 +1,27 @@
 <template>
-    <div class="container d-flex justify-content-center align-items-center vh-100">
-        <div class="card p-4 bg-primary" style="width: 22rem;">
+    <div class="container d-flex justify-content-center align-items-center vh-100 position-absolute top-50 start-50 translate-middle">
+        <div class="card p-4 bg-primary" style="width: 22rem;"
+             role="form" aria-label="Formulario de inicio de sesión">
             <h3 class="text-center">Login</h3>
             <form @submit.prevent="handleLogin">
                 <div class="mb-3">
                     <label for="username" class="form-label text-secondary-alt">Username</label>
-                    <input type="text" id="username" class="form-control bg-primary-subtle" v-model="username" required />
+                    <input type="text" id="username" class="form-control bg-primary-subtle"
+                           v-model="username" required autocomplete="username" aria-required="true"
+                           :aria-invalid="!!error" :aria-describedby="error ? 'login-error' : null"
+                           autofocus/>
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label text-secondary-alt">Contraseña</label>
-                    <input type="password" id="password" class="form-control bg-primary-subtle" v-model="password" required />
+                    <input type="password" id="password" class="form-control bg-primary-subtle"
+                           v-model="password" required autocomplete="current-password" aria-required="true"
+                           :aria-invalid="!!error" :aria-describedby="error ? 'login-error' : null"/>
                 </div>
                 <button type="submit" class="btn btn-primary-alt w-100">Ingresar</button>
             </form>
-            <p v-if="error" class="text-danger mt-2">{{ error }}</p>
+            <p v-if="error" class="text-danger mt-2" role="alert" aria-live="assertive">
+                {{ error }}
+            </p>
         </div>
     </div>
 </template>

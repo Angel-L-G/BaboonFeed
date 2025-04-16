@@ -27,40 +27,30 @@ onMounted(async () => {
 
 <template>
     <div class="container profile-container mt-4">
-        <!-- Mensaje de carga -->
-        <div v-if="loading" class="text-center">
+        <div v-if="loading" class="text-center" aria-live="polite" aria-busy="true">
             <div class="spinner-border text-primary" role="status">
                 <span class="visually-hidden">Cargando...</span>
             </div>
         </div>
 
-        <!-- Mensaje de error -->
-        <div v-else-if="error" class="alert alert-danger text-center">
+        <div v-else-if="error" class="alert alert-danger text-center" role="alert" aria-live="assertive">
             {{ error }}
         </div>
 
-        <!-- Perfil de usuario -->
-        <div v-else-if="user" class="card profile-card bg-dark text-light">
+        <div v-else-if="user" class="card profile-card bg-dark text-light" role="region"
+             :aria-label="`Perfil de ${user.username}`">
             <div class="row g-0">
-                <!-- Imagen de perfil -->
                 <div class="col-md-4 d-flex align-items-center justify-content-center p-3">
-                    <img
-                        :src="user.file?.name || '/default-profile.png'"
-                        class="rounded-circle img-fluid profile-img border-2 border-cyan"
-                        alt="Profile Picture"
-                    />
+                    <img :src="user.file?.name || '/default-profile.png'" alt="Profile Picture"
+                        class="rounded-circle img-fluid profile-img border-2 border-cyan"/>
                 </div>
 
-                <!-- Información del usuario -->
                 <div class="col-md-8">
                     <div class="card-body d-flex align-items-center justify-content-between gap-4">
-                        <!-- Nombre de usuario más grande -->
                         <h1 class="card-title mb-2 fw-bold fs-1 text-center">{{ user.username }}</h1>
 
-                        <!-- Sección de seguidores mejorada -->
                         <div class="d-flex gap-2 align-items-end">
-                            <!-- Badge de Followers -->
-                            <div class="badge badge-hover text-center">
+                            <div class="badge badge-hover text-center" role="group" aria-label="Seguidores">
                                 <div class="d-flex align-items-center gap-1 mb-2">
                                     <font-awesome-icon :icon="['fas', 'users']" class="fs-6" />
                                     <span class="fs-6 fw-bold">{{ user.followers }}</span>
@@ -68,7 +58,6 @@ onMounted(async () => {
                                 <span class="badge-text ">Followers</span>
                             </div>
 
-                            <!-- Badge de Following -->
                             <div class="badge badge-hover text-center">
                                 <div class="d-flex align-items-center gap-1 mb-2">
                                     <font-awesome-icon :icon="['fas', 'user-plus']" class="fs-6" />
@@ -79,7 +68,8 @@ onMounted(async () => {
                         </div>
                     </div>
 
-                    <p class="card-text bio-text mt-3 bg-dark-light border-3 border-start border-cyan rounded ps-1 pt-2 me-3 text-gold-light">
+                    <p class="card-text bio-text mt-3 bg-dark-light border-3 border-start border-cyan rounded ps-1 pt-2 me-3 text-gold-light"
+                       :aria-label="user.bio ? `Biografía: ${user.bio}` : 'Este usuario aún no tiene una biografía'">
                         {{ user.bio || "Este usuario aún no tiene una biografía." }}
                     </p>
                 </div>
