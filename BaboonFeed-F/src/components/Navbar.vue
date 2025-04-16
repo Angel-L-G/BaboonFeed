@@ -79,7 +79,8 @@ const isAuthenticated = computed(() => authStore.isAuthenticated);
 
 const menuItems = [
     { name: 'Chat', icon: ['fas', 'comment'], route: { name: 'chat' } },
-    { name: 'Profile', icon: ['fas', 'id-card'], route: { name: 'profile', params: { username: '1' } } }
+    //{ name: 'Group', icon: ['fas', 'people-group'], route: { name: 'group' } },
+    { name: 'Profile', icon: ['fas', 'id-card'], route: { name: 'profile', params: { username: '1' } } },
 ];
 
 const logout = () => {
