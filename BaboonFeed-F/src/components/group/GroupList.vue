@@ -5,15 +5,16 @@ import { API_URL } from '@/globals.ts'
 import { useAuthStore } from '@/stores/auth.ts'
 import axios from 'axios'
 import type { GroupDto } from '@/dtos/GroupDto.ts'
+import CreateGroupModal from '@/components/group/CreateGroupModal.vue'
+import GroupCard from '@/components/group/GroupCard.vue'
 
 const auth = useAuthStore()
 const groups = ref<Group[]>([])
 const errorMsg = ref<string>('')
-const showModal = ref(false)
 
 onMounted(async () => {
     await axios
-        .get(`${API_URL}groups/`, {
+        .get(`${API_URL}api/groups/`, {
             headers: { Authorization: `Bearer ${auth.token}` },
         })
         .then((response) => {
@@ -26,20 +27,26 @@ onMounted(async () => {
 })
 
 async function createGroup(data: GroupDto) {
-    const formData = new FormData();
-    if (data.avatar) formData.append('avatar', data.avatar);
-    data.members.forEach((member : string) => formData.append('member', member));
-    await axios.post(`${API_URL}groups/`, formData, {
-        headers: {
-            Authorization: `Bearer ${auth.token}`,
-            'Content-Type': 'multipart/form-data',
-        },
-    } ).then(response => {
-        groups.value.push(response.data)
-    }).catch((error) => {
-        console.log(error)
-        errorMsg.value = error.message || 'Something went wrong'
-    })
+    console.log(data)
+    const formData = new FormData()
+    formData.append('name', data.name)
+    if (data.avatar) formData.append('avatar', data.avatar)
+    data.members.forEach((member: string) => formData.append('member', member))
+    console.log(JSON.stringify(formData))
+    await axios
+        .post(`${API_URL}api/groups/`, formData, {
+            headers: {
+                Authorization: `Bearer ${auth.token}`,
+                'Content-Type': 'multipart/form-data',
+            },
+        })
+        .then((response) => {
+            groups.value.push(response.data)
+        })
+        .catch((error) => {
+            console.log(error)
+            errorMsg.value = error.message || 'Something went wrong'
+        })
 }
 </script>
 
@@ -49,7 +56,11 @@ async function createGroup(data: GroupDto) {
 
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-2xl font-bold">Tus Grupos</h2>
-            <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" @click="showModal = true">
+            <button
+                class="btn btn-warning"
+                data-bs-toggle="modal"
+                data-bs-target="#CreateGroupModal"
+            >
                 Crear Grupo
             </button>
         </div>
@@ -58,11 +69,19 @@ async function createGroup(data: GroupDto) {
             <GroupCard v-for="group in groups" :key="group.id" :group="group" />
         </div>
 
-        <CreateGroupModal
-            v-if="showModal"
-            @submit="createGroup"
-            @close="showModal = false"
-        />
+        <div
+            class="modal fade"
+            id="CreateGroupModal"
+            tabindex="-1"
+            aria-labelledby="CreateGroupModalLabel"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <div class="modal-content bg-secondary text-light p-3">
+                    <CreateGroupModal @submit="createGroup" />
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
