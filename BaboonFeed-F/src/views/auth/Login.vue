@@ -45,7 +45,7 @@ const handleLogin = () => {
         try {
             const responsePromise = await axios.post(
                 `${API_URL}login/`,
-                { username: username.value,  password: password.value }
+                {username: username.value, password: password.value}
             );
             const data = responsePromise.data;
             if (data.access) {
