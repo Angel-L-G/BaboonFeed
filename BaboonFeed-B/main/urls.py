@@ -28,6 +28,7 @@ from files.views import FileViewSet
 from accounts.views import RegisterViewSet, VerifyEmailView, LoginViewSet
 from posts.views import PostViewSet
 from groups.views import GroupChatViewSet
+from users.views import UserViewSet
 
 router = DefaultRouter()
 router.register(r'posts', PostViewSet)
@@ -35,6 +36,7 @@ router.register(r'groups', GroupChatViewSet, basename='groupchat')
 router.register(r'files', FileViewSet, basename='file')
 router.register(r'messages', MessageViewSet, basename='message')
 router.register(r'chats', ChatViewSet, basename='chat')
+router.register(r'users', UserViewSet, basename='user')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

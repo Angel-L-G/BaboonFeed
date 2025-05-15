@@ -5,7 +5,6 @@ import { API_URL } from "@/globals";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
-const username = route.params.username as string;
 
 const user = ref<User | null>(null);
 const loading = ref(true);
@@ -13,7 +12,7 @@ const error = ref<string | null>(null);
 
 onMounted(async () => {
     try {
-        const response = await fetch(`${API_URL}users/${username}`);
+        const response = await fetch(`${API_URL}posts//`);
         if (!response.ok) throw new Error("Error al cargar el perfil");
 
         user.value = await response.json();

@@ -19,3 +19,12 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
 
         # Bloquear cualquier otra acción (PUT)
         return False
+
+class UserViewsetPermission(permissions.BasePermission):
+
+    def has_permission(self, request, view):
+        # Permitir lectura solo de la url GET /users/{username}/
+        if request.method == 'GET' and  hasattr(view, 'action') and view.action in ['']:
+            return True
+
+        return False
