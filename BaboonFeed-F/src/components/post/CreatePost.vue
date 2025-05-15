@@ -1,16 +1,34 @@
 <template>
-    <div class="container mt-5">
-        <div class="row">
-            <h1 class="">Create Post</h1>
-            <form @submit.prevent="handleSubmit" enctype="multipart/form-data">
-                <input class="form-control mt-3 bg-primary-subtle" type="text" v-model="content" />
-                <div class="input-group mb-3 mt-3">
-                    <input class="form-control bg-primary-subtle" type="file" ref="fileInput" @change="handleFileChange" id="file">
-                    <button class="btn btn-warning" type="button" @click="removeFile"><font-awesome-icon :icon="['far', 'trash-can']" /></button>
-                </div>
-                <button class="btn btn-primary text-light" type="submit">Create</button>
-            </form>
-        </div>
+    <div class="container my-2" role="form" aria-label="Create Post Form">
+        <form @submit.prevent="handleSubmit" enctype="multipart/form-data" aria-labelledby="create-post-title">
+            <div class="mt-3">
+                <label for="postContent" class="form-label visually-hidden">Post Content</label>
+                <textarea id="postContent" class="form-control bg-primary-subtle" v-model="content"
+                    rows="4" required aria-required="true" placeholder="Write your post here"/>
+            </div>
+
+            <div class="input-group mb-3 mt-3">
+                <label for="file" class="input-group-text bg-secondary text-light">File</label>
+                <input id="file" class="form-control bg-primary-subtle" type="file" ref="fileInput"
+                    @change="handleFileChange" aria-describedby="fileHelp"/>
+                <button class="btn btn-purple-alt" type="button" @click="removeFile"
+                    :aria-label="selectedFile ? 'Remove selected file' : 'No file to remove'">
+                    <font-awesome-icon :icon="['far', 'trash-can']" />
+                </button>
+            </div>
+
+            <div id="fileHelp" class="form-text text-light-dark">
+                Hint: you can attach an image, video, or audio file.
+            </div>
+
+            <button class="btn btn-purple-alt text-light w-100 mt-2" type="submit">
+                Create
+            </button>
+
+            <p v-if="error" class="text-danger mt-2" role="alert" aria-live="assertive">
+                {{ error }}
+            </p>
+        </form>
     </div>
 </template>
 
@@ -39,7 +57,7 @@ const removeFile = () => {
 };
 
 const handleSubmit = () => {
-    let createPost: PostCreate = {
+    const createPost: PostCreate = {
         content: content.value,
         file: undefined
     };

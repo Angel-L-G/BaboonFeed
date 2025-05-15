@@ -1,0 +1,15 @@
+django
+djangorestframework
+djangorestframework-simplejwt
+channels
+channels-redis
+daphne
+pillow
+model-bakery
+pytest-django
+faker
+ipython
+django-rq
+prettyconf
+psycopg2
+django-cors-headers

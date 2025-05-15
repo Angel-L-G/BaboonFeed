@@ -1,30 +1,132 @@
-$primary: #f39c12;
-$secondary: #34495e;
-$success: #2ecc71;
-$info: #3498db;
-$warning: #f1c40f;
-$danger: #e74c3c;
-$light: #ecf0f1;
-$dark: #2c3e50;
+$primary: #f39c12; // Naranja intenso
+$primary-alt: #e67e22; // Naranja más quemado
+$primary-light: #f7c873; // Naranja pastel
+$primary-dark: #c07610; // Naranja profundo
+
+$secondary: #34495e; // Azul grisáceo
+$secondary-alt: #2c3e50; // Azul oscuro más frío
+$secondary-light: #5d6d7e; // Azul grisáceo más claro
+$secondary-dark: #1f2d3a; // Azul grisáceo profundo
+
+$success: #2ecc71; // Verde esmeralda
+$success-alt: #27ae60; // Verde más profundo
+$success-light: #a8e6cf; // Verde menta claro
+$success-dark: #1e8449; // Verde esmeralda oscuro
+
+$info: #3498db; // Azul vívido
+$info-alt: #2980b9; // Azul más oscuro y serio
+$info-light: #85c1e9; // Azul pastel
+$info-dark: #1b4f72; // Azul marino
+
+$warning: #f1c40f; // Amarillo dorado
+$warning-alt: #e67e22; // Naranja-ámbar para más contraste
+$warning-light: #f9e79f; // Amarillo suave
+$warning-dark: #c7a008; // Amarillo más opaco
+
+$danger: #e74c3c; // Rojo vivo
+$danger-alt: #c0392b; // Rojo sangre más oscuro
+$danger-light: #f5b7b1; // Rojo claro/salmón
+$danger-dark: #922b21; // Rojo profundo
+
+$light: #ecf0f1; // Gris muy claro
+$light-alt: #d5dbdb; // Gris claro con más contraste
+$light-soft: #f8f9fa; // Blanco grisáceo
+$light-dark: #b2babb; // Gris medio
+
+$dark: #2c3e50; // Azul oscuro
+$dark-alt: #1c2833; // Azul casi negro para más profundidad
+$dark-light: #566573; // Azul grisáceo medio
+$dark-deep: #0d1a26; // Azul noche
+
+$purple: #8e44ad; // Morado vibrante
+$purple-alt: #6c3483; // Morado oscuro
+$purple-light: #d2b4de; // Lila pastel
+$purple-dark: #4a235a; // Morado profundo
+
+$pink: #ff69b4; // Rosa fuerte
+$pink-alt: #e84393; // Fucsia oscuro
+$pink-light: #ffb6c1; // Rosa pastel
+$pink-dark: #ad1457; // Rosa profundo
+
+$cyan: #17a2b8; // Cian vibrante
+$cyan-alt: #0e6655; // Verde azulado oscuro
+$cyan-light: #76d7c4; // Verde agua claro
+$cyan-dark: #0b5345; // Verde azulado intenso
+
+$gold: #f4d03f; // Dorado brillante
+$gold-alt: #b7950b; // Dorado oscuro
+$gold-light: #f9e79f; // Amarillo dorado suave
+$gold-dark: #9a7d0a; // Oro envejecido
 
 $theme-colors: (
-  'primary': $primary,
-  'secondary': $secondary,
-  'success': $success,
-  'info': $info,
-  'warning': $warning,
-  'danger': $danger,
-  'light': $light,
-  'dark': $dark,
+        'primary': $primary,
+        'primary-alt': $primary-alt,
+        'primary-light': $primary-light,
+        'primary-dark': $primary-dark,
+
+        'secondary': $secondary,
+        'secondary-alt': $secondary-alt,
+        'secondary-light': $secondary-light,
+        'secondary-dark': $secondary-dark,
+
+        'success': $success,
+        'success-alt': $success-alt,
+        'success-light': $success-light,
+        'success-dark': $success-dark,
+
+        'info': $info,
+        'info-alt': $info-alt,
+        'info-light': $info-light,
+        'info-dark': $info-dark,
+
+        'warning': $warning,
+        'warning-alt': $warning-alt,
+        'warning-light': $warning-light,
+        'warning-dark': $warning-dark,
+
+        'danger': $danger,
+        'danger-alt': $danger-alt,
+        'danger-light': $danger-light,
+        'danger-dark': $danger-dark,
+
+        'light': $light,
+        'light-alt': $light-alt,
+        'light-soft': $light-soft,
+        'light-dark': $light-dark,
+
+        'dark': $dark,
+        'dark-alt': $dark-alt,
+        'dark-light': $dark-light,
+        'dark-deep': $dark-deep,
+
+        'purple': $purple,
+        'purple-alt': $purple-alt,
+        'purple-light': $purple-light,
+        'purple-dark': $purple-dark,
+
+        'pink': $pink,
+        'pink-alt': $pink-alt,
+        'pink-light': $pink-light,
+        'pink-dark': $pink-dark,
+
+        'cyan': $cyan,
+        'cyan-alt': $cyan-alt,
+        'cyan-light': $cyan-light,
+        'cyan-dark': $cyan-dark,
+
+        'gold': $gold,
+        'gold-alt': $gold-alt,
+        'gold-light': $gold-light,
+        'gold-dark': $gold-dark
 );
 
-$form-file-button-bg: $primary;
-$form-file-button-hover-bg: $warning;
+$form-file-button-bg: $purple-alt;
+$form-file-button-hover-bg: $purple;
+$form-file-button-color: $light;
 
 .btn-outline-primary:hover {
   color: white !important; // Cambia el color del texto en hover
 }
-
 body {
     background-color: $secondary !important;
     color: $light !important;

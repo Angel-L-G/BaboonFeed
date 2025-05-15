@@ -10,7 +10,7 @@ const router = createRouter({
         {
             path: '/home/',
             name: 'home',
-            component: () => import('@/components/HomePage.vue'),
+            component: () => import('@/views/HomePage.vue'),
         },
         {
             path: '/login/',
@@ -28,12 +28,12 @@ const router = createRouter({
             component: () => import('@/components/post/CreatePost.vue'),
         },
         {
-            path: '/chat/',
+            path: '/chat/:id?',
             name: 'chat',
-            component: () => import('@/components/Chat.vue'),
+            component: () => import('@/components/Chat/Chat.vue'),
         },
         {
-            path: '/users/profile',
+            path: '/users/profile/:username',
             name: 'profile',
             component: () => import('@/views/user/UserProfile.vue'),
         },
