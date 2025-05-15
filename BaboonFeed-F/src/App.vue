@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import Navbar from '@/components/Navbar.vue'
+import ChatList from '@/components/ChatList.vue'
 
 const route = useRoute();
 const isAuthPage = computed(() => route.name === 'login' || route.name === 'register');
@@ -12,13 +13,20 @@ const isNavbarExpanded = ref(false);
 
 <template>
     <div class="layout">
-        <!-- Navbar solo si no es una página de autenticación -->
-        <Navbar v-if="!isAuthPage" @update:expanded="isNavbarExpanded = $event" />
+        <!-- Header de navegación -->
+        <header v-if="!isAuthPage" aria-label="Navegación principal">
+            <Navbar @update:expanded="isNavbarExpanded = $event" />
+        </header>
 
-        <!-- Contenido ajustando su margen según la navbar -->
-        <div :class="['content', { 'content-expanded': isNavbarExpanded }]">
+        <!-- Contenido principal -->
+        <main :class="['content', { 'content-expanded': isNavbarExpanded }]" tabindex="-1" id="main-content">
             <router-view />
-        </div>
+        </main>
+
+        <!-- Chat, fuera del contenido principal -->
+        <aside v-if="!isAuthPage" aria-label="Lista de chats recientes">
+            <ChatList />
+        </aside>
     </div>
 </template>
 
@@ -57,5 +65,27 @@ const isNavbarExpanded = ref(false);
 /* Ocultar scrollbar en Edge */
 .content {
     -ms-overflow-style: none;
+}
+
+/* Panel derecho fijo */
+.right-panel {
+    width: 300px;
+    height: 100vh;
+    overflow-y: auto;
+    position: fixed;
+    right: 0;
+    top: 0;
+    padding-top: 1rem;
+}
+
+/* Ajuste del contenido para no solaparse con panel derecho */
+.content {
+    margin-right: 300px; /* Deja espacio al contenido para el panel */
+}
+
+/* Si navbar expandida */
+.content-expanded {
+    margin-left: 250px;
+    margin-right: 300px;
 }
 </style>

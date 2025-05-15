@@ -1,25 +1,25 @@
-from django.contrib.auth import get_user_model
-from rest_framework import viewsets
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+# users/views.py
+from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
+from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
+from .models import User
+from .serializers import PublicUserSerializer, UserDetailSerializer, UserUpdateSerializer
 
-from shared.permissions import UserViewsetPermission
-from .serializers import UserSerializer
 
-User = get_user_model()
+class UserViewSet(viewsets.ViewSet):
+    permission_classes = [permissions.IsAuthenticated]
 
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly, UserViewsetPermission]  # Permite lectura a todos, pero escritura solo a autenticados
+    # GET /users/<str:username>/
+    def retrieve(self, request, pk=None):
+        user = get_object_or_404(User, username=pk)
+        serializer = UserDetailSerializer(user, context={'request': request})
+        return Response(serializer.data)
 
-    # GET /user/username/
-    @action(methods=['get'], url_path='username')
-    def get_user_data(self, serializer, username=None):
-        """
-        Obtiene los datos del usuario.
-        """
-        user = User.objects.filter(username=username)
-        serializer = self.get_serializer(user)
+    @action(detail=False, methods=["put"], url_path="me")
+    def update_self(self, request):
+        user = request.user
+        serializer = UserUpdateSerializer(user, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
         return Response(serializer.data)
