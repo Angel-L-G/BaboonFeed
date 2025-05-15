@@ -1,91 +1,116 @@
 <template>
-    <div :class="['sidebar', 'bg-dark', { 'expanded': isExpanded }]">
-        <button class="btn btn-outline-primary toggle-btn" @click="toggleSidebar">
+    <div
+        :class="['sidebar', 'bg-dark', { expanded: isExpanded }]"
+        role="navigation"
+        aria-label="Menú lateral"
+    >
+        <!-- Botón de colapsar -->
+        <button
+            class="btn btn-outline-primary toggle-btn"
+            @click="toggleSidebar"
+            :aria-expanded="isExpanded.toString()"
+            aria-controls="sidebarMenu"
+            aria-label="Alternar menú lateral"
+        >
             <font-awesome-icon :icon="['fas', 'bars']" />
         </button>
 
+        <!-- Marca / logo -->
         <div class="ms-3 title-container">
-            <p class="text-cyan text-center title-text">
-                <router-link :to="{ name: 'home' }" class="navbar-brand text-cyan">
+            <p class="title-text">
+                <router-link
+                    :to="{ name: 'home' }"
+                    class="navbar-brand text-info-light"
+                    aria-label="Ir a la página de inicio"
+                >
                     <font-awesome-icon :icon="['fas', 'dove']" class="icon-fixed-large" />
                     <span v-show="isExpanded" class="ms-3">BaboonFeed</span>
                 </router-link>
             </p>
         </div>
 
-        <ul class="nav flex-column">
-            <li v-for="item in menuItems" :key="item.name" class="nav-item">
-                <router-link :to="item.route" class="nav-link text-light d-flex py-3 px-3" v-if="isAuthenticated">
+        <!-- Menú -->
+        <ul id="sidebarMenu" class="nav flex-column" role="menu">
+            <li v-for="item in menuItems" :key="item.name" class="nav-item" role="none">
+                <router-link
+                    :to="item.route"
+                    class="nav-link text-purple-light d-flex py-3 px-3"
+                    role="menuitem"
+                    :aria-label="`Ir a ${item.name}`"
+                >
                     <font-awesome-icon :icon="item.icon" class="icon-fixed-large pt-1" />
-                    <span :class="['nav-text', { 'visible': isExpanded }]">{{ item.name }}</span>
+                    <span :class="['nav-text', { visible: isExpanded }]">{{ item.name }}</span>
                 </router-link>
-                <button class="nav-link text-light d-flex py-3 px-3"
-                        data-bs-toggle="modal" data-bs-target="#CreatePostModal" v-else-if="!isAuthenticated">
-                    <font-awesome-icon :icon="item.icon" class="icon-fixed-large pt-1" />
-                    <span :class="['nav-text', { 'visible': isExpanded }]">{{ item.name }}</span>
-                </button>
             </li>
 
-            <li class="nav-item">
-                <button class="nav-link text-warning d-flex py-3 px-3 border-0 bg-transparent new-post-btn"
-                        data-bs-toggle="modal" data-bs-target="#CreatePostModal">
-                    <font-awesome-icon :icon="['fas', 'circle-plus']" class="icon-fixed-large pt-1" />
-                    <span :class="['nav-text', { 'visible': isExpanded }]">New Post</span>
+            <!-- Botón crear post -->
+            <li class="nav-item" role="none">
+                <button
+                    class="nav-link text-purple-light d-flex py-3 px-3 border-0 bg-transparent new-post-btn"
+                    data-bs-toggle="modal"
+                    data-bs-target="#CreatePostModal"
+                    role="menuitem"
+                    aria-label="Crear nueva publicación"
+                >
+                    <font-awesome-icon
+                        :icon="['fas', 'circle-plus']"
+                        class="icon-fixed-large pt-1"
+                    />
+                    <span :class="['nav-text', { visible: isExpanded }]">New Post</span>
                 </button>
             </li>
         </ul>
-
-        <!-- Logout -->
-        <div class="nav-item d-flex h-100 justify-content-end align-items-end">
-            <button class="nav-link text-danger d-flex py-3 px-3 border-0 bg-transparent"
-                    @click="logout" v-if="isAuthenticated">
-                <font-awesome-icon :icon="['fas', 'arrow-right-from-bracket']" class="icon-fixed-large pt-1" />
-                <span :class="['nav-text', { 'visible': isExpanded }]">Logout</span>
-            </button>
-            <router-link class="nav-link text-success d-flex py-3 px-3 border-0 bg-transparent"
-                         v-else-if="!isAuthenticated" :to="{ name: 'login' }">
-                <font-awesome-icon :icon="['fas', 'arrow-right-to-bracket']" class="icon-fixed-large pt-1" />
-                <span :class="['nav-text', { 'visible': isExpanded }]">Login/Register</span>
-            </router-link>
-        </div>
     </div>
 
-    <div class="modal fade" id="CreatePostModal" tabindex="-1" aria-labelledby="CreatePostModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+    <!-- Modal para crear post -->
+    <div
+        class="modal fade"
+        id="CreatePostModal"
+        tabindex="-1"
+        aria-labelledby="CreatePostModalLabel"
+        aria-hidden="true"
+        role="dialog"
+    >
+        <div class="modal-dialog" role="document">
             <div class="modal-content bg-secondary text-light">
-                <CreatePost v-if="isAuthenticated"/>
-                <NeedToLogin v-else-if="!isAuthenticated" />
+                <header class="modal-header">
+                    <h2 id="CreatePostModalLabel" class="modal-title text-center">Create Post</h2>
+                    <button
+                        type="button"
+                        class="btn-close text-purple"
+                        data-bs-dismiss="modal"
+                        aria-label="Cerrar modal"
+                    />
+                </header>
+                <div class="modal-body">
+                    <CreatePost />
+                </div>
             </div>
         </div>
     </div>
 </template>
 
-<script setup lang="ts">
-import CreatePost from '@/components/post/CreatePost.vue';
-import { ref, defineEmits, computed } from 'vue'
-import { useAuthStore } from '@/stores/auth.ts'
-import NeedToLogin from '@/components/NeedToLogin.vue'
+<script setup>
+import CreatePost from '@/components/post/CreatePost.vue'
+import { ref } from 'vue'
 
-const isExpanded = ref(false);
-const emit = defineEmits(["update:expanded"]);
-const authStore = useAuthStore();
+const isExpanded = ref(false)
+const emit = defineEmits(['update:expanded'])
 
 const toggleSidebar = () => {
-    isExpanded.value = !isExpanded.value;
-    emit("update:expanded", isExpanded.value);
-};
-
-const isAuthenticated = computed(() => authStore.isAuthenticated);
+    isExpanded.value = !isExpanded.value
+    emit('update:expanded', isExpanded.value)
+}
 
 const menuItems = [
     { name: 'Chat', icon: ['fas', 'comment'], route: { name: 'chat' } },
     { name: 'Group', icon: ['fas', 'people-group'], route: { name: 'groups' } },
-    { name: 'Profile', icon: ['fas', 'id-card'], route: { name: 'profile', params: { username: '1' } } },
-];
-
-const logout = () => {
-    authStore.logout();
-};
+    {
+        name: 'Profile',
+        icon: ['fas', 'id-card'],
+        route: { name: 'profile', params: { username: '1' } },
+    },
+]
 </script>
 
 <style scoped>
@@ -107,15 +132,15 @@ const logout = () => {
     width: 250px;
 }
 
-/* 🎯 ANIMACIÓN FLUIDA AL DESAPARECER */
+/* ANIMACIÓN FLUIDA AL DESAPARECER */
 .nav-text {
     opacity: 0;
     width: 0;
     overflow: hidden;
     white-space: nowrap;
     transition:
-        opacity 0.3s ease-in-out 0.2s, /* ⏳ Agregamos un pequeño delay al ocultar */
-        width 0.5s ease-in-out;
+        opacity 0.3s ease-in-out 0.2s,
+        /* ⏳ Agregamos un pequeño delay al ocultar */ width 0.5s ease-in-out;
 }
 
 /* Cuando la sidebar está expandida */
@@ -123,8 +148,8 @@ const logout = () => {
     opacity: 1;
     width: auto;
     transition:
-        opacity 0.3s ease-in-out,  /* ⚡ Sin delay al aparecer */
-        width 0.3s ease-in-out;
+        opacity 0.3s ease-in-out,
+        /* ⚡ Sin delay al aparecer */ width 0.3s ease-in-out;
 }
 
 .toggle-btn {
