@@ -1,4 +1,5 @@
 import json
+from urllib.parse import parse_qs
 
 from asgiref.sync import async_to_sync, sync_to_async
 from channels.db import database_sync_to_async
@@ -7,6 +8,7 @@ from channels.layers import get_channel_layer
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 from rest_framework_simplejwt.tokens import AccessToken
+from users.models import User
 
 from chats.models import Message
 
@@ -69,9 +71,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({'message': message}))
         if group := message.group:
             for member in group.members:
-                notify_user(member.username, message.content, group.name)
+                self.notify_user(member.username, message.content, group.name)
         else:
-            notify_user(message.receiver, message.content, message.author.username)
+            self.notify_user(message.receiver, message.content, message.author.username)
 
     @database_sync_to_async
     def get_user(self, username=None, id=None):
@@ -92,6 +94,23 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
 class NotificationConsumer(AsyncWebsocketConsumer):
     async def connect(self):
+        query_string = self.scope['query_string'].decode()
+        params = parse_qs(query_string)
+        token = params.get('token', [None])[0]
+
+        self.user = None
+        if token:
+            try:
+                access_token = AccessToken(token)
+                user_id = access_token['user_id']
+                self.user = await database_sync_to_async(User.objects.get)(id=user_id)
+            except Exception:
+                await self.close()
+                return
+        else:
+            await self.close()
+            return
+
         self.group_name = f'notifications_{self.user.username}'
         await self.channel_layer.group_add(self.group_name, self.channel_name)
         await self.accept()

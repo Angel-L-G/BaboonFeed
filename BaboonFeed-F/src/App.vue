@@ -1,14 +1,49 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted, onUnmounted } from 'vue'
+import ReconnectingWebSocket from 'reconnecting-websocket'
 import { useRoute } from 'vue-router'
 import Navbar from '@/components/Navbar.vue'
 import ChatList from '@/components/ChatList.vue'
+import { useAuthStore } from '@/stores/auth.ts'
+import { API_WEBSOCKET_URL } from '@/globals.ts'
 
-const route = useRoute();
-const isAuthPage = computed(() => route.name === 'login' || route.name === 'register');
+const route = useRoute()
+const isAuthPage = computed(() => route.name === 'login' || route.name === 'register')
+const auth = useAuthStore()
+const notificationSocket = ref<ReconnectingWebSocket | null>(null)
+
+onMounted(() => {
+    if (auth.isAuthenticated && !isAuthPage) {
+        notificationSocket.value = new ReconnectingWebSocket(
+            `${API_WEBSOCKET_URL}ws/notifications/?token=${localStorage.getItem('token')}`,
+        )
+
+        notificationSocket.value.onmessage = (event) => {
+            const data = JSON.parse(event.data)
+            console.log('Notificación recibida:', data)
+        }
+
+        // Cuando se abra la conexión, enviar el token como un primer mensaje
+        notificationSocket.value.onopen = () => {
+            // Enviar el token en el primer mensaje
+            const authMessage = { type: 'auth', token: localStorage.getItem('token') }
+            notificationSocket.value!.send(JSON.stringify(authMessage))
+
+            console.log('Conexión WebSocket establecida y token enviado')
+        }
+
+        notificationSocket.value.onclose = () => {
+            console.log('WebSocket de notificaciones cerrado')
+        }
+    }
+})
+
+onUnmounted(() => {
+    notificationSocket.value.close()
+})
 
 // Estado de la Navbar (contraída por defecto)
-const isNavbarExpanded = ref(false);
+const isNavbarExpanded = ref(false)
 </script>
 
 <template>
@@ -19,7 +54,11 @@ const isNavbarExpanded = ref(false);
         </header>
 
         <!-- Contenido principal -->
-        <main :class="['content', { 'content-expanded': isNavbarExpanded }]" tabindex="-1" id="main-content">
+        <main
+            :class="['content', { 'content-expanded': isNavbarExpanded }]"
+            tabindex="-1"
+            id="main-content"
+        >
             <router-view />
         </main>
 
@@ -44,7 +83,9 @@ const isNavbarExpanded = ref(false);
     overflow: auto;
     flex-grow: 1;
     margin-left: 100px; /* Espacio de la navbar contraída */
-    transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
+    transition:
+        margin-left 0.3s ease-in-out,
+        width 0.3s ease-in-out;
 }
 
 /* Contenido desplazado cuando la navbar está expandida */
