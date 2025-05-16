@@ -63,7 +63,7 @@ const handleSubmit = () => {
     };
     if (file.value) {
         createPost.file = {
-            name: file.value.name.split(".").pop() || "",
+            file: file.value.name.split(".").pop() || "",
             type: file.value.type.split("/").shift() as FileTypes || FileTypes.IMAGE
         };
     }

@@ -27,9 +27,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref } from 'vue'
+import { useAuthStore } from '@/stores/auth.ts';
+import { useRouter } from 'vue-router'
+import axios from 'axios'
+import { API_URL } from '@/globals.ts'
 
+const authStore = useAuthStore();
 const router = useRouter();
 
 const username = ref('');
@@ -38,30 +42,31 @@ const error = ref('');
 
 const handleLogin = () => {
     if (username.value && password.value) {
-        fetch(
-            'http://localhost:8000/api/login/',
-            {
-                method: 'POST',
-                body: JSON.stringify({
-                    username: username.value,
-                    password: password.value
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }
-        )
-        .then(response => response.json())
-        .then(data => {
+        try {
+            const responsePromise = await axios.post(
+                `${API_URL}login/`,
+                {username: username.value, password: password.value}
+            );
+            const data = responsePromise.data;
             if (data.access) {
+                authStore.token = data.access;
+                authStore.user = data.user;
                 localStorage.setItem('token', data.access);
-                router.push('/home/');
+                localStorage.setItem('user', JSON.stringify(data.user));
+                errorMsg.value = '';
+                router.push("/home/");
             } else {
-                error.value = 'Credenciales incorrectas';
+                console.log("No token received");
+                errorMsg.value = 'Credenciales incorrectas';
+                username.value = '';
+                password.value = '';
             }
-        });
-    } else {
-        error.value = 'Credenciales incorrectas';
+        } catch (error) {
+            console.error('Error:', error);
+            errorMsg.value = 'Credenciales incorrectas';
+            username.value = '';
+            password.value = '';
+        }
     }
 };
 </script>

@@ -5,7 +5,6 @@ import { API_URL } from "@/globals";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
-const username = route.params.username as string;
 
 const user = ref<User | null>(null);
 const loading = ref(true);
@@ -13,7 +12,7 @@ const error = ref<string | null>(null);
 
 onMounted(async () => {
     try {
-        const response = await fetch(`${API_URL}users/${username}`);
+        const response = await fetch(`${API_URL}posts//`);
         if (!response.ok) throw new Error("Error al cargar el perfil");
 
         user.value = await response.json();
@@ -41,8 +40,11 @@ onMounted(async () => {
              :aria-label="`Perfil de ${user.username}`">
             <div class="row g-0">
                 <div class="col-md-4 d-flex align-items-center justify-content-center p-3">
-                    <img :src="user.file?.name || '/default-profile.png'" alt="Profile Picture"
-                        class="rounded-circle img-fluid profile-img border-2 border-cyan"/>
+                    <img
+                        :src="user.avatar || '/default-profile.png'"
+                        class="rounded-circle img-fluid profile-img border-2 border-cyan"
+                        alt="Profile Picture"
+                    />
                 </div>
 
                 <div class="col-md-8">
