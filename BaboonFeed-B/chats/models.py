@@ -9,7 +9,7 @@ class Chat(models.Model):
         on_delete=models.SET_NULL,
         related_name='last_used_in_chat'
     )
-    users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='chats')
+    members = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='chats')
 
 class Message(models.Model):
     content = models.TextField()
