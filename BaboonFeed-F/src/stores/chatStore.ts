@@ -13,58 +13,53 @@ type Socket = {
     socket: ReconnectingWebSocket
 }
 
-const auth = useAuthStore()
-
 export const useChatStore = defineStore('chat', () => {
+    const auth = useAuthStore()
     const chatList = ref<Chat[]>([])
     const sockets = ref<Socket[]>([])
     const activeChatId = ref<string>('')
 
-    async function getPrivateChats() {
-        await axios
-            .get(`${API_URL}chats/`, {
-                headers: { Authorization: `Bearer ${auth.token}` },
-            })
-            .then((res) => {
-                chatList.value = res.data
-                    .map((chat: Chat) => {
-                        const otherUser = chat.members
-                            .filter((user: User) => user.username != auth.user?.username)
-                            .pop()
-                        chat.type = ChatType.PRIVATE
-                        chat.id = `${ChatType.PRIVATE}_${chat.id}`
-                        chat.avatar_url = <string>otherUser?.avatar
-                        chat.name = <string>otherUser?.username
-                    })
-                    .toArray()
-            })
-            .catch((err) => {
-                console.error(err)
-            })
-    }
-
-    async function getGroupChats() {
-        await axios
-            .get(`${API_URL}groups/`, {
-                headers: { Authorization: `Bearer ${auth.token}` },
-            })
-            .then((res) => {
-                chatList.value = res.data
-                    .map((chat: Chat) => {
-                        chat.type = ChatType.GROUP
-                        chat.id = `${ChatType.GROUP}_${chat.id}`
-                    })
-                    .toArray()
-            })
-            .catch((err) => {
-                console.error(err)
-            })
-    }
-
     async function getUserChats() {
-        await getPrivateChats()
-        await getGroupChats()
+        const privateChats = await axios
+            .get(`${API_URL}api/chats/`, {
+                headers: { Authorization: `Bearer ${auth.token}` },
+            })
+            .then((res) =>
+                res.data.map((chat: Chat) => {
+                    const otherUser = chat.members
+                        .filter((user: User) => user.username != auth.user?.username)
+                        .pop()
+                    chat.type = ChatType.PRIVATE
+                    chat.id = `${ChatType.PRIVATE}_${chat.id}`
+                    chat.avatar_url = <string>otherUser?.avatar
+                    chat.name = <string>otherUser?.username
+                    return chat
+                })
+            )
+            .catch((err) => {
+                console.error(err)
+                return []
+            })
+
+        const groupChats = await axios
+            .get(`${API_URL}api/groups/`, {
+                headers: { Authorization: `Bearer ${auth.token}` },
+            })
+            .then((res) =>
+                res.data.map((chat: Chat) => {
+                    chat.type = ChatType.GROUP
+                    chat.id = `${ChatType.GROUP}_${chat.id}`
+                    return chat
+                })
+            )
+            .catch((err) => {
+                console.error(err)
+                return []
+            })
+
+        chatList.value = [...privateChats, ...groupChats]
     }
+
 
     async function _initializeSocket(
         socket: ReconnectingWebSocket,
@@ -113,7 +108,7 @@ export const useChatStore = defineStore('chat', () => {
         sockets.value.push({ id: ChatType.PRIVATE, socket: privateSocket })
 
         for (const group of chatList.value.filter((chat: Chat) => ChatType.GROUP == chat.type)) {
-            const groupUrl = `${API_WEBSOCKET_URL}ws/chat/group/${group}`
+            const groupUrl = `${API_WEBSOCKET_URL}ws/chat/group/${group.id.split("_")[1]}/`
             const groupSocket = new ReconnectingWebSocket(groupUrl)
             await _initializeSocket(groupSocket, { type: ChatType.GROUP, id: group.id }, token)
             sockets.value.push({ id: group.id, socket: groupSocket })
@@ -162,6 +157,10 @@ export const useChatStore = defineStore('chat', () => {
         chatList.value.unshift(chat) // agregar al inicio
     }
 
+    async function disconnectAllChats(){
+        sockets.value.forEach((socket) => socket.socket.close())
+    }
+
     function setActiveChatId(chatId: string) {
         activeChatId.value = chatId
     }
@@ -170,5 +169,5 @@ export const useChatStore = defineStore('chat', () => {
         return sockets.value.find((socket) => socket.id === chatId)?.socket
     }
 
-    return { chatList, getUserChats, connectToAllChats, setActiveChatId, getSocket }
+    return { chatList, getUserChats, connectToAllChats, disconnectAllChats, setActiveChatId, getSocket }
 })

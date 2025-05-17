@@ -8,19 +8,19 @@
                     <label for="username" class="form-label text-secondary-alt">Username</label>
                     <input type="text" id="username" class="form-control bg-primary-subtle"
                            v-model="username" required autocomplete="username" aria-required="true"
-                           :aria-invalid="!!error" :aria-describedby="error ? 'login-error' : null"
+                           :aria-invalid="!!errorMsg" :aria-describedby="errorMsg ? 'login-error' : null"
                            autofocus/>
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label text-secondary-alt">Contraseña</label>
                     <input type="password" id="password" class="form-control bg-primary-subtle"
                            v-model="password" required autocomplete="current-password" aria-required="true"
-                           :aria-invalid="!!error" :aria-describedby="error ? 'login-error' : null"/>
+                           :aria-invalid="!!errorMsg" :aria-describedby="errorMsg ? 'login-error' : null"/>
                 </div>
                 <button type="submit" class="btn btn-primary-alt w-100">Ingresar</button>
             </form>
-            <p v-if="error" class="text-danger mt-2" role="alert" aria-live="assertive">
-                {{ error }}
+            <p v-if="errorMsg" class="text-danger mt-2" role="alert" aria-live="assertive">
+                {{ errorMsg }}
             </p>
         </div>
     </div>
@@ -38,13 +38,13 @@ const router = useRouter();
 
 const username = ref('');
 const password = ref('');
-const error = ref('');
+const errorMsg = ref('');
 
-const handleLogin = () => {
+const handleLogin = async () => {
     if (username.value && password.value) {
         try {
             const responsePromise = await axios.post(
-                `${API_URL}login/`,
+                `${API_URL}api/login/`,
                 {username: username.value, password: password.value}
             );
             const data = responsePromise.data;

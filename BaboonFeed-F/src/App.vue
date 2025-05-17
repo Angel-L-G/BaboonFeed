@@ -1,49 +1,27 @@
 <script setup lang="ts">
 import { computed, ref, onMounted, onUnmounted } from 'vue'
-import ReconnectingWebSocket from 'reconnecting-websocket'
 import { useRoute } from 'vue-router'
 import Navbar from '@/components/Navbar.vue'
 import ChatList from '@/components/ChatList.vue'
 import { useAuthStore } from '@/stores/auth.ts'
-import { API_WEBSOCKET_URL } from '@/globals.ts'
+import { useChatStore } from '@/stores/chatStore.ts'
 
 const route = useRoute()
 const isAuthPage = computed(() => route.name === 'login' || route.name === 'register')
 const auth = useAuthStore()
-const notificationSocket = ref<ReconnectingWebSocket | null>(null)
+const isNavbarExpanded = ref(false)
+const chat = useChatStore()
 
-onMounted(() => {
-    if (auth.isAuthenticated && !isAuthPage) {
-        notificationSocket.value = new ReconnectingWebSocket(
-            `${API_WEBSOCKET_URL}ws/notifications/?token=${localStorage.getItem('token')}`,
-        )
-
-        notificationSocket.value.onmessage = (event) => {
-            const data = JSON.parse(event.data)
-            console.log('Notificación recibida:', data)
-        }
-
-        // Cuando se abra la conexión, enviar el token como un primer mensaje
-        notificationSocket.value.onopen = () => {
-            // Enviar el token en el primer mensaje
-            const authMessage = { type: 'auth', token: localStorage.getItem('token') }
-            notificationSocket.value!.send(JSON.stringify(authMessage))
-
-            console.log('Conexión WebSocket establecida y token enviado')
-        }
-
-        notificationSocket.value.onclose = () => {
-            console.log('WebSocket de notificaciones cerrado')
-        }
+onMounted( async() => {
+    if (auth.isAuthenticated && !isAuthPage.value) {
+        await chat.getUserChats()
+        await chat.connectToAllChats()
     }
 })
 
-onUnmounted(() => {
-    notificationSocket.value.close()
+onUnmounted( async () => {
+    await chat.disconnectAllChats();
 })
-
-// Estado de la Navbar (contraída por defecto)
-const isNavbarExpanded = ref(false)
 </script>
 
 <template>

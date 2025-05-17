@@ -13,14 +13,13 @@ class ChatViewSet(viewsets.ModelViewSet):
     queryset = Chat.objects.all().order_by('-last_modified')
     serializer_class = ChatSerializer
     permission_classes = [IsAuthenticated]
-    pagination_class = CustomLimitOffsetPagination
 
     def get_queryset(self):
         """
         Filtra los chats por el usuario autenticado.
         """
         user = self.request.user
-        return Chat.objects.filter(users__in=[user])
+        return Chat.objects.filter(members__in=[user])
 
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()

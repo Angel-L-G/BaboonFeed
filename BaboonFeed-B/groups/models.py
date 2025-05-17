@@ -10,5 +10,7 @@ class GroupChat(models.Model):
         'chats.Message',
         null=True,
         on_delete=models.SET_NULL,
-        related_name='last_used_in_chat'
+        related_name='last_message'
     )
+    last_modified = models.DateTimeField(auto_now=True)
+

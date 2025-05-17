@@ -20,7 +20,7 @@ class GroupChatSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = GroupChat
-        fields = ['id', 'name','avatar_url', 'last_message']
+        fields = ['id', 'name','avatar_url', 'last_message', 'last_modified']
 
     def get_avatar_url(self, obj):
         request = self.context.get('request')

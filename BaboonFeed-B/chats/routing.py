@@ -4,5 +4,5 @@ from .consumers import PrivateChatConsumer, GroupChatConsumer
 
 websocket_urlpatterns = [
     re_path(r'ws/chat/private/(?P<room_name>\w+)/$', PrivateChatConsumer.as_asgi()),
-    re_path(r'ws/chat/group/(?P<room_name>\w+)/$', GroupChatConsumer.as_asgi()),
+    re_path(r'ws/chat/group/(?P<room_name>\d+)/$', GroupChatConsumer.as_asgi()),
 ]
