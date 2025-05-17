@@ -20,7 +20,7 @@ class ChatViewSet(viewsets.ModelViewSet):
         Filtra los chats por el usuario autenticado.
         """
         user = self.request.user
-        return user.chats.all()
+        return Chat.objects.filter(users__in=[user])
 
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()
