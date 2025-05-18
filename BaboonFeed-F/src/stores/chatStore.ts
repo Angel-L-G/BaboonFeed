@@ -165,8 +165,8 @@ export const useChatStore = defineStore('chat', () => {
         activeChatId.value = chatId
     }
 
-    function getSocket(chatId: string) {
-        return sockets.value.find((socket) => socket.id === chatId)?.socket
+    function getSocket(chatId: string): ReconnectingWebSocket {
+        return <ReconnectingWebSocket>sockets.value.find((socket) => socket.id === chatId)?.socket
     }
 
     return { chatList, getUserChats, connectToAllChats, disconnectAllChats, setActiveChatId, getSocket }
