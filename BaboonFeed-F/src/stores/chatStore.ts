@@ -18,6 +18,8 @@ export const useChatStore = defineStore('chat', () => {
     const chatList = ref<Chat[]>([])
     const sockets = ref<Socket[]>([])
     const activeChatId = ref<string>('')
+    const onMessageReceived = ref<((message: MessageReceived) => void) | null>(null)
+
 
     async function getUserChats() {
         const privateChats = await axios
@@ -58,6 +60,14 @@ export const useChatStore = defineStore('chat', () => {
             })
 
         chatList.value = [...privateChats, ...groupChats]
+    }
+
+    function registerMessageListener(fn: (message: MessageReceived) => void) {
+        onMessageReceived.value = fn
+    }
+
+    function unregisterMessageListener() {
+        onMessageReceived.value = null
     }
 
 
@@ -105,14 +115,16 @@ export const useChatStore = defineStore('chat', () => {
             { type: ChatType.PRIVATE, id: String(user.id) },
             token,
         )
-        sockets.value.push({ id: ChatType.PRIVATE, socket: privateSocket })
+        sockets.value = [ ...sockets.value, { id: ChatType.PRIVATE, socket: privateSocket }]
 
         for (const group of chatList.value.filter((chat: Chat) => ChatType.GROUP == chat.type)) {
             const groupUrl = `${API_WEBSOCKET_URL}ws/chat/group/${group.id.split("_")[1]}/`
             const groupSocket = new ReconnectingWebSocket(groupUrl)
             await _initializeSocket(groupSocket, { type: ChatType.GROUP, id: group.id }, token)
-            sockets.value.push({ id: group.id, socket: groupSocket })
+            sockets.value = [ ...sockets.value, { id: group.id, socket: groupSocket }]
         }
+
+        console.log(JSON.stringify(sockets.value))
     }
 
     async function handleIncomingMessage(
@@ -130,6 +142,10 @@ export const useChatStore = defineStore('chat', () => {
         if (chatId == null) {
             console.warn('Mensaje recibido sin identificar chat:', message)
             return
+        }
+
+        if (activeChatId.value === chatId && onMessageReceived.value) {
+            onMessageReceived.value(message)
         }
 
         // Buscar el chat en la lista de chats
@@ -166,8 +182,8 @@ export const useChatStore = defineStore('chat', () => {
     }
 
     function getSocket(chatId: string): ReconnectingWebSocket {
-        return <ReconnectingWebSocket>sockets.value.find((socket) => socket.id === chatId)?.socket
+        return <ReconnectingWebSocket>sockets.value.find((socket) => socket.id == (chatId.startsWith(ChatType.PRIVATE) ? ChatType.PRIVATE : chatId) )?.socket
     }
 
-    return { chatList, getUserChats, connectToAllChats, disconnectAllChats, setActiveChatId, getSocket }
+    return { chatList, getUserChats, connectToAllChats, disconnectAllChats, setActiveChatId, getSocket, registerMessageListener, unregisterMessageListener }
 })

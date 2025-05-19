@@ -67,7 +67,7 @@ class PrivateChatConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             {
                 "type": "chat_message",
-                "message": message
+                "message": serialize_message(new_message)
             }
         )
 
@@ -75,23 +75,21 @@ class PrivateChatConsumer(AsyncWebsocketConsumer):
             f'chat_user_{message["receiver"]}',
             {
                 "type": "chat_message",
-                "message": message
+                "message": serialize_message(new_message)
             }
         )
 
     @sync_to_async
     def get_or_create_private_chat(self, user1, user2):
         # Buscar un chat privado con exactamente esos 2 usuarios
-        chat = Chat.objects.filter(
-            users=user1
-        ).filter(users=user2)
+        chat = Chat.objects.filter(members__username__in=[user1, user2])
 
         if chat.exists():
             return chat.first()
 
         # Crear el chat si no existe
         chat = Chat.objects.create()
-        chat.users.add(user1, user2)
+        chat.members.add(user1, user2)
         return chat
 
     async def chat_message(self, event):
@@ -188,3 +186,14 @@ class GroupChatConsumer(AsyncWebsocketConsumer):
             return GroupChat.objects.get(id=id)
         except GroupChat.DoesNotExist:
             return None
+
+def serialize_message(message: Message) -> dict:
+    return {
+        "id": message.id,
+        "content": message.content,
+        "created_at": message.created_at.isoformat(),
+        "author": message.author.username,
+        "receiver": message.receiver.username if message.receiver else None,
+        "group": message.group.id if message.group else None,
+        "chat": str(message.chat.id) if message.chat else None,
+    }

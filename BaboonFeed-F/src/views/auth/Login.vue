@@ -32,8 +32,10 @@ import { useAuthStore } from '@/stores/auth.ts';
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 import { API_URL } from '@/globals.ts'
+import { useChatStore } from '@/stores/chatStore.ts'
 
 const authStore = useAuthStore();
+const chatStore = useChatStore()
 const router = useRouter();
 
 const username = ref('');
@@ -54,6 +56,8 @@ const handleLogin = async () => {
                 localStorage.setItem('token', data.access);
                 localStorage.setItem('user', JSON.stringify(data.user));
                 errorMsg.value = '';
+                await chatStore.getUserChats()
+                await chatStore.connectToAllChats()
                 router.push("/home/");
             } else {
                 console.log("No token received");

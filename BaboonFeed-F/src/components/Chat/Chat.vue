@@ -2,6 +2,7 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import type { MessageReceived, MessageSent } from '@/types/Message.ts'
+import type { Chat } from '@/types/Chat'
 import MessageComponent from '@/components/Message.vue'
 import { useRoute } from 'vue-router'
 import { useChatStore } from '@/stores/chatStore.ts'
@@ -19,8 +20,9 @@ const rawId = computed(() => chatId.value.split('_')[1])
 const newMessage = ref<string>('')
 const chatStore = useChatStore()
 const authStore = useAuthStore()
-const socket = ref<ReconnectingWebSocket>()
+const socket = ref<ReconnectingWebSocket>({} as ReconnectingWebSocket);
 const nextQuery = ref<string>('')
+const chat = computed(() => chatStore.chatList.find((chat) => chat.id === chatId.value)as Chat)
 
 watch(() => route.params.id, async () => {
     messages.value = []
@@ -35,9 +37,13 @@ onMounted(async () => {
 })
 
 async function initializeChat(){
-    socket.value = chatStore.getSocket(chatId.value)
     chatStore.setActiveChatId(chatId.value)
+    socket.value = chatStore.getSocket(chatId.value)
     await getMessages();
+    chatStore.registerMessageListener((message: MessageReceived) => {
+        messages.value = [...messages.value, message]
+        console.log(messages.value)
+    })
 }
 
 async function getMessages() {
@@ -61,14 +67,17 @@ const sendMessage = () => {
         if (isGroup.value) {
             messageData = { content: newMessage.value, group: Number(rawId.value) }
         } else {
-            messageData = { content: newMessage.value, receiver: rawId.value }
+            messageData = { content: newMessage.value, receiver: chat.value.name }
         }
+        console.log(JSON.stringify(messageData))
         socket.value.send(JSON.stringify(messageData))
     }
+    console.log(socket.value)
 }
 
 onUnmounted(() => {
     chatStore.setActiveChatId('')
+    chatStore.unregisterMessageListener()
 })
 </script>
 
