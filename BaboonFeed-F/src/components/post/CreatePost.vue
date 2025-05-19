@@ -12,7 +12,7 @@
                 <input id="file" class="form-control bg-primary-subtle" type="file" ref="fileInput"
                     @change="handleFileChange" aria-describedby="fileHelp"/>
                 <button class="btn btn-purple-alt" type="button" @click="removeFile"
-                    :aria-label="selectedFile ? 'Remove selected file' : 'No file to remove'">
+                    aria-label='Remove file'>
                     <font-awesome-icon :icon="['far', 'trash-can']" />
                 </button>
             </div>
@@ -24,18 +24,12 @@
             <button class="btn btn-purple-alt text-light w-100 mt-2" type="submit">
                 Create
             </button>
-
-            <p v-if="error" class="text-danger mt-2" role="alert" aria-live="assertive">
-                {{ error }}
-            </p>
         </form>
     </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import type {PostCreate} from "@/types/Post.ts";
-import { FileTypes } from "@/types/File.ts";
 import axios from 'axios';
 import { API_URL } from '@/globals.ts'
 import { useAuthStore } from '@/stores/auth.ts';
@@ -61,21 +55,25 @@ const removeFile = () => {
 };
 
 const handleSubmit = async () => {
-    const createPost: PostCreate = {
-        content: content.value,
-        file: undefined
-    };
-    if (file.value) {
-        createPost.file = {
-            file: file.value.name.split(".").pop() || "",
-            type: file.value.type.split("/").shift() as FileTypes || FileTypes.IMAGE
-        };
-    }
-    console.log("AAAAAAAAAAAAAAAAAAAAAAA", createPost);
     try {
-        const response = await axios.post(`${API_URL}posts/`, createPost, {
-            headers: {
+        const fileResponse = await axios.post(`${API_URL}files/`,
+            {
+                file: file.value
+            },
+            {headers: {
                 'Content-Type': 'multipart/form-data',
+                'Authorization': 'Bearer ' + authStore.token
+                }}
+        )
+        const fileId = await fileResponse.data.id;
+        console.log(fileResponse.data);
+        const response = await axios.post(`${API_URL}posts/`,
+            {
+                content: content.value,
+                file_id: fileId
+            },
+            {
+            headers: {
                 'Authorization': 'Bearer ' + authStore.token
             }
         });

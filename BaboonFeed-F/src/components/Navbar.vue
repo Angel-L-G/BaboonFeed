@@ -18,7 +18,7 @@
         </div>
 
         <!-- Menú -->
-        <ul id="sidebarMenu" class="nav flex-column" role="menu">
+        <ul id="sidebarMenu" class="nav flex-column" role="menu" v-if="isAuthenticated">
             <li v-for="item in menuItems" :key="item.name" class="nav-item" role="none">
                 <router-link :to="item.route" class="nav-link text-purple-light d-flex py-3 px-3"
                     role="menuitem" :aria-label="`Ir a ${item.name}`">
@@ -57,9 +57,9 @@
          aria-labelledby="CreatePostModalLabel" aria-hidden="true" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content bg-secondary text-light">
-                <header class="modal-header">
+                <header class="modal-header" data-bs-theme="dark">
                     <h2 id="CreatePostModalLabel" class="modal-title text-center">Create Post</h2>
-                    <button type="button" class="btn-close text-purple" data-bs-dismiss="modal"
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
                             aria-label="Cerrar modal"/>
                 </header>
                 <div class="modal-body">
@@ -84,7 +84,7 @@ const toggleSidebar = () => {
     emit("update:expanded", isExpanded.value);
 };
 
-const username = localStorage.getItem('username');
+const username = computed(() => authStore.user?.username);
 
 const menuItems = [
     { name: 'Chat', icon: ['fas', 'comment'], route: { name: 'chat' } },

@@ -2,7 +2,7 @@
     <div class="align-items-end" role="group" :aria-label="`Archivo multimedia del post`">
         <!-- Imagen -->
         <img v-if="file.type === FileTypes.IMAGE" :src="file.file"
-             :alt="`Imagen del post de ${file.author ?? 'usuario'}`" class="img-fluid rounded"/>
+             alt="Imagen del post" class="img-fluid rounded"/>
 
         <!-- Video -->
         <Plyr v-else-if="file.type === FileTypes.VIDEO">

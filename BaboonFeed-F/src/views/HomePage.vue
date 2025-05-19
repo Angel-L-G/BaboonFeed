@@ -4,7 +4,7 @@
         role="region"
         aria-label="Página de inicio"
     >
-        <div class="bg-secondary w-75 text-center position-fixed margin-right">
+        <div class="bg-secondary w-75 text-center position-fixed margin-right" style="z-index: 1;">
             <h1 class="display-4 m-3 text-primary-alt fw-bold" id="home-heading">Baboon Feed</h1>
         </div>
 

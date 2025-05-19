@@ -8,28 +8,28 @@
                 <div class="mb-3">
                     <label for="name" class="form-label text-secondary-alt">Username</label>
                     <input type="text" id="name" class="form-control bg-primary-subtle"
-                        v-model="username" required autocomplete="name" aria-required="true"
-                        :aria-invalid="!!error" :aria-describedby="error ? 'register-error' : '' "
-                        autofocus/>
+                           v-model="username" required autocomplete="name" aria-required="true"
+                           :aria-invalid="!!errorMsg" :aria-describedby="errorMsg ? 'register-error' : '' "
+                           autofocus/>
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label text-secondary-alt">Email</label>
                     <input type="email" id="email" class="form-control bg-primary-subtle"
-                        v-model="email" required autocomplete="email" aria-required="true"
-                        :aria-invalid="!!error" :aria-describedby="error ? 'register-error' : '' "/>
+                           v-model="email" required autocomplete="email" aria-required="true"
+                           :aria-invalid="!!errorMsg" :aria-describedby="errorMsg ? 'register-error' : '' "/>
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label text-secondary-alt">Password</label>
                     <input type="password" id="password" class="form-control bg-primary-subtle"
-                        v-model="password" required autocomplete="new-password" aria-required="true"
-                        :aria-invalid="!!error" :aria-describedby="error ? 'register-error' : '' "/>
+                           v-model="password" required autocomplete="new-password" aria-required="true"
+                           :aria-invalid="!!errorMsg" :aria-describedby="errorMsg ? 'register-error' : '' "/>
                 </div>
 
                 <div class="mb-3">
                     <label for="confPassword" class="form-label text-secondary-alt">Confirm Password</label>
                     <input type="password" id="confPassword" class="form-control bg-primary-subtle"
                            v-model="confPassword" required autocomplete="confirm-new-password" aria-required="true"
-                           :aria-invalid="!!error" :aria-describedby="error ? 'register-error' : '' "/>
+                           :aria-invalid="!!errorMsg" :aria-describedby="errorMsg ? 'register-error' : '' "/>
                 </div>
 
                 <button type="submit" class="btn btn-primary-alt w-100">Register</button>
@@ -43,8 +43,8 @@
             </div>
 
             <!-- Parrafo para mostrar errores -->
-            <p v-if="error" id="register-error" class="text-danger mt-2" role="alert" aria-live="assertive">
-                {{ error }}
+            <p v-if="errorMsg" id="register-error" class="text-danger mt-2" role="alert" aria-live="assertive">
+                {{ errorMsg }}
             </p>
         </div>
     </div>
@@ -52,23 +52,18 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useAuthStore } from '@/stores/auth.ts';
-import { useRouter } from 'vue-router'
 import axios from 'axios'
 import { API_URL } from '@/globals.ts'
-
-const authStore = useAuthStore();
-const router = useRouter();
 
 const username = ref('');
 const email = ref('');
 const password = ref('');
 const confPassword = ref('');
-const error = ref('');
+const errorMsg = ref('');
 
 const handleRegister = async () => {
     if (password.value !== confPassword.value) {
-        error.value = 'Las contraseñas no coinciden';
+        errorMsg.value = 'Las contraseñas no coinciden';
         password.value = '';
         confPassword.value = '';
         return;
@@ -84,14 +79,11 @@ const handleRegister = async () => {
             }
         );
         const data = responsePromise.data;
-        if (data.access) {
-            authStore.token = data.access;
-            localStorage.setItem('token', data.access);
-            error.value = '';
-            await router.push("/home/");
+        if (data) {
+            errorMsg.value = 'Please check your email to confirm your account and then login';
         } else {
-            console.log("No token received");
-            error.value = 'Error al registrar';
+            console.log("No data received");
+            errorMsg.value = 'Error al registrar';
             username.value = '';
             email.value = '';
             password.value = '';
@@ -99,7 +91,7 @@ const handleRegister = async () => {
         }
     } catch (error) {
         console.error('Error:', error);
-        error.value = 'Error al registrar';
+        errorMsg.value = 'Error al registrar';
         username.value = '';
         email.value = '';
         password.value = '';

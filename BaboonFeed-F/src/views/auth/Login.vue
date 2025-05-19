@@ -8,14 +8,14 @@
                     <label for="username" class="form-label text-secondary-alt">Username</label>
                     <input type="text" id="username" class="form-control bg-primary-subtle"
                            v-model="username" required autocomplete="username" aria-required="true"
-                           :aria-invalid="!!error" :aria-describedby="error ? 'login-error' : '' "
+                           :aria-invalid="!!errorMsg" :aria-describedby="errorMsg ? 'login-error' : '' "
                            autofocus/>
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label text-secondary-alt">Password</label>
                     <input type="password" id="password" class="form-control bg-primary-subtle"
                            v-model="password" required autocomplete="current-password" aria-required="true"
-                           :aria-invalid="!!error" :aria-describedby="error ? 'login-error' : '' "/>
+                           :aria-invalid="!!errorMsg" :aria-describedby="errorMsg ? 'login-error' : '' "/>
                 </div>
                 <button type="submit" class="btn btn-primary-alt w-100">Join</button>
             </form>
@@ -28,8 +28,8 @@
             </div>
 
             <!-- Parrafo para mostrar errores -->
-            <p v-if="error" class="text-danger mt-2" role="alert" aria-live="assertive">
-                {{ error }}
+            <p v-if="errorMsg" class="text-danger mt-2" role="alert" aria-live="assertive">
+                {{ errorMsg }}
             </p>
         </div>
     </div>
@@ -47,7 +47,7 @@ const router = useRouter();
 
 const username = ref('');
 const password = ref('');
-const error = ref('');
+const errorMsg = ref('');
 
 const handleLogin = async () => {
     if (username.value && password.value) {
@@ -62,17 +62,17 @@ const handleLogin = async () => {
                 authStore.user = data.user;
                 localStorage.setItem('token', data.access);
                 localStorage.setItem('user', JSON.stringify(data.user));
-                error.value = '';
+                errorMsg.value = '';
                 router.push("/home/");
             } else {
                 console.log("No token received");
-                error.value = 'Credenciales incorrectas';
+                errorMsg.value = 'Credenciales incorrectas';
                 username.value = '';
                 password.value = '';
             }
         } catch (error) {
             console.error('Error:', error);
-            error.value = 'Credenciales incorrectas';
+            errorMsg.value = 'Credenciales incorrectas';
             username.value = '';
             password.value = '';
         }
