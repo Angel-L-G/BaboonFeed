@@ -2,14 +2,14 @@
     <div :class="['sidebar', 'bg-dark', { 'expanded': isExpanded }]" role="navigation" aria-label="Menú lateral">
         <!-- Botón de colapsar -->
         <button class="btn btn-outline-primary toggle-btn" @click="toggleSidebar"
-            :aria-expanded="isExpanded.toString()" aria-controls="sidebarMenu" aria-label="Alternar menú lateral">
+            :aria-expanded="isExpanded" aria-controls="sidebarMenu" aria-label="Alternar menú lateral">
             <font-awesome-icon :icon="['fas', 'bars']" />
         </button>
 
         <!-- Marca / logo -->
         <div class="ms-3 title-container">
-            <p class="title-text">
-                <router-link :to="{ name: 'home' }" class="navbar-brand text-info-light"
+            <p class="title-text my-4">
+                <router-link :to="{ name: 'home' }" class="navbar-brand text-info-light py-3"
                     aria-label="Ir a la página de inicio">
                     <font-awesome-icon :icon="['fas', 'dove']" class="icon-fixed-large"/>
                     <span v-show="isExpanded" class="ms-3">BaboonFeed</span>
@@ -23,7 +23,7 @@
                 <router-link :to="item.route" class="nav-link text-purple-light d-flex py-3 px-3"
                     role="menuitem" :aria-label="`Ir a ${item.name}`">
                     <font-awesome-icon :icon="item.icon" class="icon-fixed-large pt-1"/>
-                    <span :class="['nav-text', { 'visible': isExpanded }]">{{ item.name }}</span>
+                    <span :class="['nav-text', 'ms-3', { 'visible': isExpanded }]">{{ item.name }}</span>
                 </router-link>
             </li>
 
@@ -33,10 +33,23 @@
                     data-bs-toggle="modal" data-bs-target="#CreatePostModal" role="menuitem"
                     aria-label="Crear nueva publicación">
                     <font-awesome-icon :icon="['fas', 'circle-plus']" class="icon-fixed-large pt-1"/>
-                    <span :class="['nav-text', { 'visible': isExpanded }]">New Post</span>
+                    <span :class="['nav-text', 'ms-3', { 'visible': isExpanded }]">New Post</span>
                 </button>
             </li>
         </ul>
+
+        <div class="nav-item d-flex h-100 justify-content-end align-items-end">
+            <button class="nav-link text-danger d-flex py-3 px-3 border-0 bg-transparent"
+                    @click="logout" v-if="isAuthenticated">
+                <font-awesome-icon :icon="['fas', 'arrow-right-from-bracket']" class="icon-fixed-large pt-1" />
+                <span :class="['nav-text', 'ms-3', { 'visible': isExpanded }]">Logout</span>
+            </button>
+            <router-link class="nav-link text-success d-flex py-3 px-3 border-0 bg-transparent"
+                         v-if="!isAuthenticated" :to="{ name: 'login' }">
+                <font-awesome-icon :icon="['fas', 'arrow-right-to-bracket']" class="icon-fixed-large pt-1" />
+                <span :class="['nav-text', 'ms-3', { 'visible': isExpanded }]">Login/Register</span>
+            </router-link>
+        </div>
     </div>
 
     <!-- Modal para crear post -->
@@ -57,22 +70,32 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CreatePost from '@/components/post/CreatePost.vue';
-import { ref } from 'vue';
+import { computed, ref } from 'vue'
+import { useAuthStore } from '@/stores/auth.ts'
 
 const isExpanded = ref(false);
 const emit = defineEmits(["update:expanded"]);
+const authStore = useAuthStore();
 
 const toggleSidebar = () => {
     isExpanded.value = !isExpanded.value;
     emit("update:expanded", isExpanded.value);
 };
 
+const username = localStorage.getItem('username');
+
 const menuItems = [
     { name: 'Chat', icon: ['fas', 'comment'], route: { name: 'chat' } },
-    { name: 'Profile', icon: ['fas', 'id-card'], route: { name: 'profile', params: { username: '1' } } }
+    { name: 'Profile', icon: ['fas', 'id-card'], route: { name: 'profile', params: { username: username } } }
 ];
+
+const isAuthenticated = computed(() => authStore.isAuthenticated);
+
+const logout = () => {
+    authStore.logout();
+};
 </script>
 
 <style scoped>

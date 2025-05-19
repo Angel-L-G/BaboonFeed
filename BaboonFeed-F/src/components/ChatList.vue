@@ -86,6 +86,18 @@ const chatList = [
 </template>
 
 <style scoped>
+/* Panel derecho fijo */
+.right-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 300px;
+  height: 100vh;
+  overflow-y: auto;
+  padding-top: 1rem;
+}
+
 .chatImage{
     width: 45px;
     height: 45px;

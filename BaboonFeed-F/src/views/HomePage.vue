@@ -1,11 +1,13 @@
 <template>
-    <div class="container-fluid text-center" role="region" aria-label="Página de inicio">
-        <h1 class="display-4 m-3 text-primary-alt" tabindex="-1" id="home-heading">
-            Baboon Feed
-        </h1>
+    <div class="container-fluid text-center overflow-hidden" role="region" aria-label="Página de inicio">
+        <div class="bg-secondary w-75 text-center position-fixed margin-right">
+            <h1 class="display-4 m-3 text-primary-alt fw-bold" id="home-heading">
+                Baboon Feed
+            </h1>
+        </div>
 
-        <div class="row justify-content-center">
-            <div class="col-md-12 col-lg-9 me-2 content d-flex flex-column justify-content-center align-items-center"  role="list" aria-labelledby="home-heading">
+        <div class="row justify-content-center scroll-content">
+            <div class="col-md-12 col-lg-9 me-2 content d-flex w-100 flex-column justify-content-center align-items-center overflow-hidden"  role="list" aria-labelledby="home-heading">
                 <PostView v-for="post in posts" :key="post.id" :post="post" role="listitem" />
             </div>
         </div>
@@ -21,7 +23,7 @@
     const posts = reactive<Post[]>([]);
 
     onMounted( async () => {
-        await fetch(`${API_URL}posts/`, {
+        await fetch(`${API_URL}api/posts/`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -38,8 +40,12 @@
 </script>
 
 <style scoped>
-.content {
-    flex: 1;
-    overflow: auto;
+.scroll-content {
+    overflow-x: hidden;
+    margin-top: 100px;
+}
+
+.margin-right {
+    width: 100vh;
 }
 </style>

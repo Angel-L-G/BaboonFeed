@@ -36,10 +36,14 @@
 import { ref } from 'vue';
 import type {PostCreate} from "@/types/Post.ts";
 import { FileTypes } from "@/types/File.ts";
+import axios from 'axios';
+import { API_URL } from '@/globals.ts'
+import { useAuthStore } from '@/stores/auth.ts';
 
 const content = ref('');
 const file = ref<File | null>(null);
 const fileInput = ref<HTMLInputElement | null>(null);
+const authStore = useAuthStore();
 
 const handleFileChange = (e: Event) => {
     const target = e.target as HTMLInputElement;
@@ -56,7 +60,7 @@ const removeFile = () => {
     }
 };
 
-const handleSubmit = () => {
+const handleSubmit = async () => {
     const createPost: PostCreate = {
         content: content.value,
         file: undefined
@@ -67,13 +71,17 @@ const handleSubmit = () => {
             type: file.value.type.split("/").shift() as FileTypes || FileTypes.IMAGE
         };
     }
-    console.log(createPost);
-    /*
-    Cuando el server funcione
-    fetch('/api/posts/add/', { method: 'POST', body: createPost })
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.error(error));
-        */
+
+    try {
+        const response = await axios.post(`${API_URL}api/posts/`, createPost, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': 'Bearer ' + authStore.token
+            }
+        });
+        console.log(response.data);
+    } catch (error) {
+        console.error('Error creating post:', error);
+    }
 };
 </script>

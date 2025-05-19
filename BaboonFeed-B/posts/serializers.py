@@ -1,9 +1,12 @@
 from rest_framework import serializers
+
+from files.serializers import FileSerializer
 from .models import Post, Reply
 
 class PostSerializer(serializers.ModelSerializer):
     likes_count = serializers.SerializerMethodField()
     dislikes_count = serializers.SerializerMethodField()
+    file = FileSerializer()
 
     class Meta:
         model = Post
