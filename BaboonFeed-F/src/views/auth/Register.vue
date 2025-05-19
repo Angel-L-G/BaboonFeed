@@ -61,13 +61,10 @@ const handleRegister = async () => {
             }
         );
         const data = responsePromise.data;
-        if (data.access) {
-            authStore.token = data.access;
-            localStorage.setItem('token', data.access);
-            errorMsg.value = '';
-            await router.push("/home/");
+        if (data) {
+            errorMsg.value = 'Please check your email and verify it';
         } else {
-            console.log("No token received");
+            console.log("No data received");
             errorMsg.value = 'Error al registrar';
             username.value = '';
             email.value = '';

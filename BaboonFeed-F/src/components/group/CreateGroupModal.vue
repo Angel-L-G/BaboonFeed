@@ -2,11 +2,8 @@
 import { ref, watch } from 'vue'
 import axios from 'axios'
 import { API_URL } from '@/globals.ts'
-
-interface SelectedUser {
-    username: string
-    avatar_url: string
-}
+import { useUsers } from '@/composables/useUsers.ts'
+import type { PublicUserDto } from '@/dtos/PublicUserDto.ts'
 
 const emit = defineEmits<{
     (e: 'submit', data: { name: string; avatar: File | null; users: string[] }): void
@@ -16,11 +13,12 @@ const emit = defineEmits<{
 const groupData = ref({
     name: '',
     avatar: null as File | null,
-    users: [] as SelectedUser[],
+    users: [] as PublicUserDto[],
 })
 
+const users = useUsers();
 const search = ref('')
-const searchResults = ref<SelectedUser[]>([])
+const searchResults = ref<PublicUserDto[]>([])
 const isSearching = ref(false)
 
 watch(search, async (value) => {
@@ -30,14 +28,7 @@ watch(search, async (value) => {
     }
 
     isSearching.value = true
-    try {
-        const response = await axios.get(`${API_URL}users/search/?q=${value}`)
-        searchResults.value = response.data
-    } catch (error) {
-        console.error('Error buscando usuarios:', error)
-    } finally {
-        isSearching.value = false
-    }
+    searchResults.value = (await users).value.filter(u => u.username.toLowerCase().match(value.toLowerCase()));
 })
 
 function handleFileChange(event: Event) {
@@ -47,7 +38,7 @@ function handleFileChange(event: Event) {
     }
 }
 
-function selectUser(user: SelectedUser) {
+function selectUser(user: PublicUserDto) {
     const alreadySelected = groupData.value.users.some((u) => u.username === user.username)
     if (!alreadySelected) {
         groupData.value.users.push(user)
@@ -99,7 +90,7 @@ function handleSubmit() {
                             class="flex items-center gap-2 py-1 cursor-pointer hover:bg-gray-100 px-2"
                             @click="selectUser(user)"
                         >
-                            <img :src="user.avatar_url" class="w-6 h-6 rounded-full object-cover" />
+                            <img :src="user.avatar" class="w-6 h-6 rounded-full object-cover" />
                             <span>{{ user.username }}</span>
                         </li>
                     </ul>
@@ -109,7 +100,7 @@ function handleSubmit() {
                             :key="user.username"
                             class="flex items-center gap-2 bg-gray-100 rounded-full px-3 py-1 text-sm"
                         >
-                            <img :src="user.avatar_url" class="w-5 h-5 rounded-full" />
+                            <img :src="user.avatar" class="w-5 h-5 rounded-full" />
                             {{ user.username }}
                             <button @click.prevent="removeUser(user.username)" class="ml-1 text-red-600 font-bold">×</button>
                         </div>
