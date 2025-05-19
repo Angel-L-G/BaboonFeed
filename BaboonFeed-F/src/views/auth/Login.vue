@@ -47,33 +47,35 @@ const router = useRouter();
 
 const username = ref('');
 const password = ref('');
-const errorMsg = ref('');
+const error = ref('');
 
 const handleLogin = async () => {
-    try {
-        const responsePromise = await axios.post(
-            `${API_URL}api/login/`,
-            { username: username.value,  password: password.value }
-        );
-
-        const data = responsePromise.data;
-        if (data.access) {
-            authStore.token = data.access;
-            localStorage.setItem('token', data.access);
-            localStorage.setItem('username', username.value);
-            errorMsg.value = '';
-            await router.push("/home/");
-        } else {
-            console.log("No token received");
-            errorMsg.value = 'Credenciales incorrectas';
+    if (username.value && password.value) {
+        try {
+            const responsePromise = await axios.post(
+                `${API_URL}login/`,
+                {username: username.value, password: password.value}
+            );
+            const data = responsePromise.data;
+            if (data.access) {
+                authStore.token = data.access;
+                authStore.user = data.user;
+                localStorage.setItem('token', data.access);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                error.value = '';
+                router.push("/home/");
+            } else {
+                console.log("No token received");
+                error.value = 'Credenciales incorrectas';
+                username.value = '';
+                password.value = '';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            error.value = 'Credenciales incorrectas';
             username.value = '';
             password.value = '';
         }
-    } catch (error) {
-        console.error('Error:', error);
-        errorMsg.value = 'Credenciales incorrectas';
-        username.value = '';
-        password.value = '';
     }
 };
 </script>

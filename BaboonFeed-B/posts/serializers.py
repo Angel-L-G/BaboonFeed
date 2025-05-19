@@ -1,17 +1,20 @@
 from rest_framework import serializers
 
 from files.serializers import FileSerializer
+from users.serializers import UserSerializer
 from .models import Post, Reply
 
 class PostSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)  # Serializador anidado
+    file = FileSerializer()
+
     likes_count = serializers.SerializerMethodField()
     dislikes_count = serializers.SerializerMethodField()
-    file = FileSerializer()
 
     class Meta:
         model = Post
-        fields = '__all__'  # Puedes personalizar los campos si prefieres
-        read_only_fields = ['user', 'likes', 'dislikes']  # No se pueden modificar estos campos
+        fields = '__all__'  # Incluye todos los campos del modelo
+        read_only_fields = ['user']  # No se pueden modificar estos campos
 
     def get_likes_count(self, obj):
         return obj.likes.count()  # Cuenta la cantidad de likes
@@ -21,6 +24,8 @@ class PostSerializer(serializers.ModelSerializer):
 
 class ReplySerializer(serializers.ModelSerializer):
     replies = serializers.SerializerMethodField()  # Campo para anidar respuestas
+    likes_count = serializers.SerializerMethodField()
+    dislikes_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Reply

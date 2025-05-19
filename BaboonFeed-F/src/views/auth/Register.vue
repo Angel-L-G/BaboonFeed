@@ -12,14 +12,12 @@
                         :aria-invalid="!!error" :aria-describedby="error ? 'register-error' : '' "
                         autofocus/>
                 </div>
-
                 <div class="mb-3">
                     <label for="email" class="form-label text-secondary-alt">Email</label>
                     <input type="email" id="email" class="form-control bg-primary-subtle"
                         v-model="email" required autocomplete="email" aria-required="true"
                         :aria-invalid="!!error" :aria-describedby="error ? 'register-error' : '' "/>
                 </div>
-
                 <div class="mb-3">
                     <label for="password" class="form-label text-secondary-alt">Password</label>
                     <input type="password" id="password" class="form-control bg-primary-subtle"
@@ -66,18 +64,18 @@ const username = ref('');
 const email = ref('');
 const password = ref('');
 const confPassword = ref('');
-const errorMsg = ref('');
+const error = ref('');
 
 const handleRegister = async () => {
     if (password.value !== confPassword.value) {
-        errorMsg.value = 'Las contraseñas no coinciden';
+        error.value = 'Las contraseñas no coinciden';
         password.value = '';
         confPassword.value = '';
         return;
     }
     try {
         const responsePromise = await axios.post(
-            `${API_URL}api/register/`,
+            `${API_URL}register/`,
             {
                 username: username.value,
                 email: email.value,
@@ -89,11 +87,11 @@ const handleRegister = async () => {
         if (data.access) {
             authStore.token = data.access;
             localStorage.setItem('token', data.access);
-            errorMsg.value = '';
+            error.value = '';
             await router.push("/home/");
         } else {
             console.log("No token received");
-            errorMsg.value = 'Error al registrar';
+            error.value = 'Error al registrar';
             username.value = '';
             email.value = '';
             password.value = '';
@@ -101,7 +99,7 @@ const handleRegister = async () => {
         }
     } catch (error) {
         console.error('Error:', error);
-        errorMsg.value = 'Error al registrar';
+        error.value = 'Error al registrar';
         username.value = '';
         email.value = '';
         password.value = '';

@@ -67,13 +67,13 @@ const handleSubmit = async () => {
     };
     if (file.value) {
         createPost.file = {
-            name: file.value.name.split(".").pop() || "",
+            file: file.value.name.split(".").pop() || "",
             type: file.value.type.split("/").shift() as FileTypes || FileTypes.IMAGE
         };
     }
-
+    console.log("AAAAAAAAAAAAAAAAAAAAAAA", createPost);
     try {
-        const response = await axios.post(`${API_URL}api/posts/`, createPost, {
+        const response = await axios.post(`${API_URL}posts/`, createPost, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'Authorization': 'Bearer ' + authStore.token

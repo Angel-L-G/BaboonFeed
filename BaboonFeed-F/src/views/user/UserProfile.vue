@@ -7,7 +7,6 @@ import { useAuthStore } from '@/stores/auth.ts'
 import axios from 'axios'
 
 const route = useRoute();
-//const username = route.params.username as string;
 const username = localStorage.getItem('username');
 const authStore = useAuthStore();
 
@@ -17,7 +16,7 @@ const error = ref<string | null>(null);
 
 onMounted(async () => {
     try {
-        const response = await axios.get(`${API_URL}api/users/${username}`, {
+        const response = await axios.get(`${API_URL}users/${username}`, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'Authorization': 'Bearer ' + authStore.token
@@ -50,7 +49,7 @@ onMounted(async () => {
              :aria-label="`Perfil de ${user.username}`">
             <div class="row g-0">
                 <div class="col-md-4 d-flex align-items-center justify-content-center p-3">
-                    <img :src="user.file?.file || '/default-profile.png'" alt="Profile Picture"
+                    <img :src="user.avatar || '/default-profile.png'" alt="Profile Picture"
                         class="rounded-circle img-fluid profile-img border-2 border-cyan"/>
                 </div>
 
