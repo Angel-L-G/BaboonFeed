@@ -6,17 +6,15 @@ import { useRoute } from "vue-router";
 import { useAuthStore } from '@/stores/auth.ts'
 import axios from 'axios'
 
-const route = useRoute();
-const username = localStorage.getItem('username');
+const user = localStorage.getItem('user');
 const authStore = useAuthStore();
 
-const user = ref<User | null>(null);
 const loading = ref(true);
 const error = ref<string | null>(null);
 
 onMounted(async () => {
     try {
-        const response = await axios.get(`${API_URL}users/${username}`, {
+        const response = await axios.get(`${API_URL}users/${user.name}`, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'Authorization': 'Bearer ' + authStore.token
@@ -24,7 +22,7 @@ onMounted(async () => {
         });
         //if (response.status != 200) throw new Error("Error al cargar el perfil");
 
-        user.value = response.data;
+        user.name = response.data;
     } catch (err) {
         error.value = (err as Error).message;
     } finally {
@@ -49,8 +47,11 @@ onMounted(async () => {
              :aria-label="`Perfil de ${user.username}`">
             <div class="row g-0">
                 <div class="col-md-4 d-flex align-items-center justify-content-center p-3">
-                    <img :src="user.avatar || '/default-profile.png'" alt="Profile Picture"
-                        class="rounded-circle img-fluid profile-img border-2 border-cyan"/>
+                    <img
+                        :src="user.avatar || '/default-profile.png'"
+                        class="rounded-circle img-fluid profile-img border-2 border-cyan"
+                        alt="Profile Picture"
+                    />
                 </div>
 
                 <div class="col-md-8">

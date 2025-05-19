@@ -3,7 +3,7 @@
         <div class="d-flex align-items-center justify-content-between px-3 p-2 border-bottom border-dark-light">
             <div class="d-flex mt-2 align-items-center">
                 <img class="me-2 rounded-circle border border-2 border-cyan"
-                     :src="post.user.avatar" :alt="`Foto de perfil de ${post.user.username}`"
+                     :src="post.user.file?.name" :alt="`Foto de perfil de ${post.user.username}`"
                      style="height: 35px; width: 35px;" />
                 <h2 class="text-light-alt h5 mb-0" :id="`post-title-${post.id}`">
                     {{ post.user.username }}
