@@ -23,7 +23,7 @@ export const useChatStore = defineStore('chat', () => {
 
     async function getUserChats() {
         const privateChats = await axios
-            .get(`${API_URL}api/chats/`, {
+            .get(`${API_URL}chats/`, {
                 headers: { Authorization: `Bearer ${auth.token}` },
             })
             .then((res) =>
@@ -44,7 +44,7 @@ export const useChatStore = defineStore('chat', () => {
             })
 
         const groupChats = await axios
-            .get(`${API_URL}api/groups/`, {
+            .get(`${API_URL}groups/`, {
                 headers: { Authorization: `Bearer ${auth.token}` },
             })
             .then((res) =>

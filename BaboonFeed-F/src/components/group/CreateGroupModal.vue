@@ -88,7 +88,7 @@ const searchResults = ref<UserPreview[]>([])
 
 watch(search, async (value) => {
     if (value.length < 2) return (searchResults.value = [])
-    const res = await axios.get(`${API_URL}api/users/?username=${value}`, {
+    const res = await axios.get(`${API_URL}users/?username=${value}`, {
         headers: {
             Authorization: `Bearer ${authStore.token}`,
         },

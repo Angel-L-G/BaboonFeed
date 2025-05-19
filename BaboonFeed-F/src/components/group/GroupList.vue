@@ -14,7 +14,7 @@ const errorMsg = ref<string>('')
 
 onMounted(async () => {
     await axios
-        .get(`${API_URL}api/groups/`, {
+        .get(`${API_URL}groups/`, {
             headers: { Authorization: `Bearer ${auth.token}` },
         })
         .then((response) => {
@@ -34,7 +34,7 @@ async function createGroup(data: GroupDto) {
     data.members.forEach((member: string) => formData.append('member', member))
     console.log(JSON.stringify(formData))
     await axios
-        .post(`${API_URL}api/groups/`, formData, {
+        .post(`${API_URL}groups/`, formData, {
             headers: {
                 Authorization: `Bearer ${auth.token}`,
                 'Content-Type': 'multipart/form-data',

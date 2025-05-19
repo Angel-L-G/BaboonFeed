@@ -1,21 +1,28 @@
 from rest_framework import serializers
-from .models import Message, Chat
-
 from users.models import User
+
+from .models import Chat, Message
+
 
 class ChatUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['username', 'avatar']
 
+
 class ChatSerializer(serializers.ModelSerializer):
     members = ChatUserSerializer(many=True, read_only=True)
+    last_message = serializers.SerializerMethodField()
 
     class Meta:
         model = Chat
-        fields = "__all__"
+        fields = '__all__'
+
+    def get_last_message(self, obj):
+        return obj.last_message.content if obj.last_message else None
+
 
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
-        fields = "__all__"
+        fields = '__all__'

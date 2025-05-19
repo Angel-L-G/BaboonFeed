@@ -1,21 +1,27 @@
-from rest_framework import viewsets, status
-from rest_framework.response import Response
+from chats.serializers import MessageSerializer
+from django.shortcuts import get_object_or_404
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
-from django.shortcuts import get_object_or_404
-
-from chats.serializers import MessageSerializer
+from rest_framework.response import Response
 from shared.views import CustomLimitOffsetPagination
+
 from .models import GroupChat
-from .serializers import GroupChatSerializer, GroupChatCreateUpdateSerializer, GroupUserSerializer
 from .permissions import IsGroupLeader
+from .serializers import GroupChatCreateUpdateSerializer, GroupChatSerializer, GroupUserSerializer
+
 
 class GroupChatViewSet(viewsets.ViewSet):
-    permission_classes = [IsAuthenticated, IsGroupLeader]  # Se requiere estar autenticado y ser líder para hacer modificaciones
+    permission_classes = [
+        IsAuthenticated,
+        IsGroupLeader,
+    ]  # Se requiere estar autenticado y ser líder para hacer modificaciones
 
     # GET /groups/
     def list(self, request):
-        groups = GroupChat.objects.filter(members=request.user).union(GroupChat.objects.filter(leader=request.user))
+        groups = GroupChat.objects.filter(members=request.user).union(
+            GroupChat.objects.filter(leader=request.user)
+        )
         serializer = GroupChatSerializer(groups, many=True, context={'request': request})
         return Response(serializer.data)
 
@@ -28,7 +34,9 @@ class GroupChatViewSet(viewsets.ViewSet):
 
     # POST /groups/
     def create(self, request):
-        serializer = GroupChatCreateUpdateSerializer(data=request.data, context={'request': request})
+        serializer = GroupChatCreateUpdateSerializer(
+            data=request.data, context={'request': request}
+        )
         if serializer.is_valid():
             group = serializer.save()
             output_serializer = GroupChatSerializer(group, context={'request': request})
@@ -38,7 +46,9 @@ class GroupChatViewSet(viewsets.ViewSet):
     # PUT /groups/<pk>/
     def update(self, request, pk=None):
         group = get_object_or_404(GroupChat, pk=pk)
-        serializer = GroupChatCreateUpdateSerializer(group, data=request.data, context={'request': request})
+        serializer = GroupChatCreateUpdateSerializer(
+            group, data=request.data, context={'request': request}
+        )
         self.check_object_permissions(request, group)
         if serializer.is_valid():
             group = serializer.save()
@@ -68,25 +78,38 @@ class GroupChatViewSet(viewsets.ViewSet):
         user = request.user
         if not group.leader == user:
             group.members.remove(user)
-            return Response({'detail': f'Member {user.username} has left the group.'}, status=status.HTTP_200_OK)
+            return Response(
+                {'detail': f'Member {user.username} has left the group.'}, status=status.HTTP_200_OK
+            )
 
         remaining_members = group.members.all()
         if remaining_members.exists():
             import random
+
             new_leader = random.choice(remaining_members)
             group.leader = new_leader
             group.save()
-            return Response({"detail": f'Leader {user.username} has left the group. Assigned {new_leader.username} as Leader'}, status=status.HTTP_200_OK)
+            return Response(
+                {
+                    'detail': f'Leader {user.username} has left the group. Assigned {new_leader.username} as Leader'
+                },
+                status=status.HTTP_200_OK,
+            )
 
         group.delete()
-        return Response({'detail': f'Group {group.name} has been deleted because the leader left and there are no remaining members.'}, status=status.HTTP_200_OK)
+        return Response(
+            {
+                'detail': f'Group {group.name} has been deleted because the leader left and there are no remaining members.'
+            },
+            status=status.HTTP_200_OK,
+        )
 
-    #GET /api/chats/<id>/messages/?limit=20&offset=0/
-    @action(detail=True, methods=["get"], url_path="messages")
+    # GET /api/chats/<id>/messages/?limit=20&offset=0/
+    @action(detail=True, methods=['get'], url_path='messages')
     def messages(self, request, pk=None):
         group = get_object_or_404(GroupChat, pk=pk)
         self.check_object_permissions(request, group)
-        messages = group.messages.all().order_by("-created_at")
+        messages = group.messages.all().order_by('created_at')
 
         paginator = CustomLimitOffsetPagination()
         paginated_qs = paginator.paginate_queryset(messages, request)

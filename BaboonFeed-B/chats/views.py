@@ -2,16 +2,17 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-
 from shared.views import CustomLimitOffsetPagination
-from .models import Message, Chat
-from .serializers import MessageSerializer, ChatSerializer
+
+from .models import Chat, Message
+from .serializers import ChatSerializer, MessageSerializer
 
 
 class ChatViewSet(viewsets.ModelViewSet):
     """
     Vista para manejar los chats entre usuarios.
     """
+
     queryset = Chat.objects.all().order_by('-last_modified')
     serializer_class = ChatSerializer
     permission_classes = [IsAuthenticated]
@@ -23,7 +24,7 @@ class ChatViewSet(viewsets.ModelViewSet):
         user = self.request.user
         return Chat.objects.filter(members__in=[user])
 
-    @action(detail=True, methods=["get"], url_path="messages")
+    @action(detail=True, methods=['get'], url_path='messages')
     def messages(self, request, pk=None):
         """
         GET /api/chats/<id>/messages/?limit=20&offset=0
@@ -32,9 +33,9 @@ class ChatViewSet(viewsets.ModelViewSet):
         chat = self.get_object()
 
         if request.user not in chat.members.all():
-            return Response({"detail": "No autorizado."}, status=403)
+            return Response({'detail': 'No autorizado.'}, status=403)
 
-        messages = chat.messages.all().order_by("-created_at")
+        messages = chat.messages.all().order_by('created_at')
 
         paginator = CustomLimitOffsetPagination()
         paginated_qs = paginator.paginate_queryset(messages, request)
@@ -49,4 +50,6 @@ class MessageViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Message.objects.filter(author=self.request.user) | Message.objects.filter(receiver=self.request.user)
+        return Message.objects.filter(author=self.request.user) | Message.objects.filter(
+            receiver=self.request.user
+        )

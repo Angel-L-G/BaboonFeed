@@ -20,26 +20,27 @@ const rawId = computed(() => chatId.value.split('_')[1])
 const newMessage = ref<string>('')
 const chatStore = useChatStore()
 const authStore = useAuthStore()
-const socket = ref<ReconnectingWebSocket>({} as ReconnectingWebSocket);
+const socket = ref<ReconnectingWebSocket>({} as ReconnectingWebSocket)
 const nextQuery = ref<string>('')
-const chat = computed(() => chatStore.chatList.find((chat) => chat.id === chatId.value)as Chat)
+const chat = computed(() => chatStore.chatList.find((chat) => chat.id === chatId.value) as Chat)
 
-watch(() => route.params.id, async () => {
-    messages.value = []
-    newMessage.value = ''
+watch(
+    () => route.params.id,
+    async () => {
+        messages.value = []
+        newMessage.value = ''
+        await initializeChat()
+    },
+)
+
+onMounted(async () => {
     await initializeChat()
 })
 
-
-
-onMounted(async () => {
-    await initializeChat();
-})
-
-async function initializeChat(){
+async function initializeChat() {
     chatStore.setActiveChatId(chatId.value)
     socket.value = chatStore.getSocket(chatId.value)
-    await getMessages();
+    await getMessages()
     chatStore.registerMessageListener((message: MessageReceived) => {
         messages.value = [...messages.value, message]
         console.log(messages.value)
@@ -47,15 +48,15 @@ async function initializeChat(){
 }
 
 async function getMessages() {
-    const url = `${API_URL}api/${isGroup.value ? 'groups' : 'chats'}/${rawId.value}/messages/`
+    const url = `${API_URL}${isGroup.value ? 'groups' : 'chats'}/${rawId.value}/messages/`
     await axios
         .get(url, {
             headers: {
                 Authorization: `Bearer ${authStore.token}`,
             },
         })
-        .then((res) =>{
-            (messages.value.unshift(...res.data.results))
+        .then((res) => {
+            messages.value.unshift(...res.data.results)
             nextQuery.value = res.data.next
         })
         .catch((err) => console.log(err))
@@ -71,6 +72,7 @@ const sendMessage = () => {
         }
         console.log(JSON.stringify(messageData))
         socket.value.send(JSON.stringify(messageData))
+        newMessage.value = ''
     }
     console.log(socket.value)
 }
