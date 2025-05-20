@@ -8,6 +8,6 @@ defineProps<{
 <template>
     <div class="flex items-center gap-4 p-4 rounded shadow border">
         <img :src="group.avatar_url" alt="Avatar" class="w-12 h-12 rounded-full object-cover" />
-        <h2 class="text-lg font-semibold">{{ group.name }}</h2>
+        <h2 class="text-lg font-semibold"><slot></slot></h2>
     </div>
 </template>

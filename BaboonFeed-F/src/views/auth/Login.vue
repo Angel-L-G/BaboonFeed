@@ -2,7 +2,7 @@
     <div class="container d-flex justify-content-center align-items-center vh-100 position-absolute top-50 start-50 translate-middle">
         <div class="card p-4 bg-primary" style="width: 22rem;"
              role="form" aria-label="Formulario de inicio de sesión">
-            <h3 class="text-center">Log in</h3>
+            <h3 class="text-center">Login</h3>
             <form @submit.prevent="handleLogin">
                 <div class="mb-3">
                     <label for="username" class="form-label text-secondary-alt">Username</label>

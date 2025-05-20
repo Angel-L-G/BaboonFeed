@@ -6,9 +6,9 @@
 
             <form @submit.prevent="handleRegister" novalidate>
                 <div class="mb-3">
-                    <label for="name" class="form-label text-secondary-alt">Username</label>
-                    <input type="text" id="name" class="form-control bg-primary-subtle"
-                           v-model="username" required autocomplete="name" aria-required="true"
+                    <label for="username" class="form-label text-secondary-alt">Username</label>
+                    <input type="text" id="username" class="form-control bg-primary-subtle"
+                           v-model="username" required autocomplete="username" aria-required="true"
                            :aria-invalid="!!errorMsg" :aria-describedby="errorMsg ? 'register-error' : '' "
                            autofocus/>
                 </div>

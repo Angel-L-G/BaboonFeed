@@ -5,6 +5,8 @@ import { API_URL } from '@/globals.ts'
 import { useAuthStore } from '@/stores/auth.ts'
 import axios from 'axios'
 import type { GroupDto } from '@/dtos/GroupDto.ts'
+import CreateGroupModal from '@/components/group/CreateGroupModal.vue'
+import GroupCard from '@/components/group/GroupCard.vue'
 
 const auth = useAuthStore()
 const groups = ref<Group[]>([])
@@ -55,7 +57,9 @@ async function createGroup(data: GroupDto) {
         </div>
 
         <div class="grid gap-4">
-            <GroupCard v-for="group in groups" :key="group.id" :group="group" />
+            <GroupCard v-for="group in groups" :key="group.id" :group="group" >
+                {{ group.name }}
+            </GroupCard>
         </div>
 
         <CreateGroupModal
