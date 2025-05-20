@@ -7,6 +7,9 @@ import type { User } from '@/types/User.ts'
 import { useRoute } from 'vue-router'
 import type { Post } from '@/types/Post.ts'
 import PostView from '@/components/post/PostView.vue'
+import EditBio from '@/components/EditUser.vue'
+import EditAvatar from '@/components/EditAvatar.vue'
+import EditUser from '@/components/EditUser.vue'
 
 const authStore = useAuthStore();
 const route = useRoute();
@@ -91,6 +94,9 @@ onMounted(async () => {
                                 </div>
                                 <span class="badge-text">Following</span>
                             </div>
+                            <button class="btn btn-purple-alt" data-bs-toggle="modal" v-if="authStore.user!.username === username" data-bs-target="#EditUserModal">
+                                <font-awesome-icon :icon="['fas', 'pencil']" />
+                            </button>
                         </div>
                     </div>
 
@@ -112,6 +118,22 @@ onMounted(async () => {
             </div>
             <div v-else class="text-center mt-3">
                 <p class="text-primary-alt">{{ authStore.user!.username === username ? "You don't" : "This user doesn't"}} have any posts</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="EditUserModal" tabindex="-1"
+         aria-labelledby="EditUserModalLabel" aria-hidden="true" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content bg-secondary text-light">
+                <header class="modal-header" data-bs-theme="dark">
+                    <h2 id="EditUserModalLabel" class="modal-title text-center">Edit User</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Cerrar modal"/>
+                </header>
+                <div class="modal-body">
+                    <EditUser :username="username"/>
+                </div>
             </div>
         </div>
     </div>
