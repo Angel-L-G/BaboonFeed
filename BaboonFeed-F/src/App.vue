@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import Navbar from '@/components/Navbar.vue'
-import ChatList from '@/components/ChatList.vue'
+import ChatList from '@/components/Chat/ChatList.vue'
 
 const route = useRoute();
 const isAuthPage = computed(() => route.name === 'login' || route.name === 'register');
@@ -24,7 +24,7 @@ const isNavbarExpanded = ref(false);
         </main>
 
         <!-- Chat, fuera del contenido principal -->
-        <aside v-if="!isAuthPage" class="d-none d-lg-block" aria-label="Lista de chats recientes">
+        <aside v-if="!isAuthPage" class="d-none d-lg-block" aria-label="Lista de chats recientes" style="z-index: 2;">
             <ChatList />
         </aside>
     </div>

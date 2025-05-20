@@ -6,5 +6,5 @@ export interface User {
   bio: string;
   avatar?: string;
   followers: number;
-  follows: number;
+  following: number;
 }

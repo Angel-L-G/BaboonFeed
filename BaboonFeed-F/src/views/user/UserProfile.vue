@@ -1,30 +1,49 @@
 <script setup lang="ts">
-import type { User } from "@/types/User.ts";
 import { onMounted, ref } from "vue";
 import { API_URL } from "@/globals";
 import { useAuthStore } from '@/stores/auth.ts'
 import axios from 'axios'
+import type { User } from '@/types/User.ts'
+import { useRoute } from 'vue-router'
+import type { Post } from '@/types/Post.ts'
+import PostView from '@/components/post/PostView.vue'
 
 const authStore = useAuthStore();
+const route = useRoute();
+const username = route.params.username as string;
 
 const loading = ref(true);
-const error = ref<string | null>(null);
+const errorMsg = ref<string | null>(null);
+const user = ref<User | null>(null);
+const posts = ref<Post[]>([]);
 
 onMounted(async () => {
-    try {
-        const response = await axios.get(`${API_URL}users/${authStore.user!.username}`, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-                'Authorization': 'Bearer ' + authStore.token
-            }
-        });
-        //if (response.status != 200) throw new Error("Error al cargar el perfil");
-
-        user.name = response.data;
-    } catch (err) {
-        error.value = (err as Error).message;
-    } finally {
+    if (authStore.user!.username === username) {
+        user.value = authStore.user;
         loading.value = false;
+    } else {
+        try {
+            const response = await axios.get(`${API_URL}users/${username}`, {
+                headers: {
+                    'Authorization': 'Bearer ' + authStore.token
+                }
+            });
+
+            user.value = await response.data;
+        } catch (err) {
+            errorMsg.value = (err as Error).message;
+        } finally {
+            loading.value = false;
+        }
+    }
+    if (user.value) {
+        const response = await axios.get(`${API_URL}posts/?user_id=${user.value.id}`,
+            {
+                headers: {
+                    'Authorization': 'Bearer ' + authStore.token
+                }
+            });
+        posts.value = await response.data.results;
     }
 });
 </script>
@@ -37,8 +56,8 @@ onMounted(async () => {
             </div>
         </div>
 
-        <div v-else-if="error" class="alert alert-danger text-center" role="alert" aria-live="assertive">
-            {{ error }}
+        <div v-else-if="errorMsg" class="alert alert-danger text-center" role="alert" aria-live="assertive">
+            {{ errorMsg }}
         </div>
 
         <div v-else-if="user" class="card profile-card bg-dark text-light" role="region"
@@ -46,7 +65,7 @@ onMounted(async () => {
             <div class="row g-0">
                 <div class="col-md-4 d-flex align-items-center justify-content-center p-3">
                     <img
-                        :src="user.avatar || '/default-profile.png'"
+                        :src="user.avatar"
                         class="rounded-circle img-fluid profile-img border-2 border-cyan"
                         alt="Profile Picture"
                     />
@@ -68,7 +87,7 @@ onMounted(async () => {
                             <div class="badge badge-hover text-center">
                                 <div class="d-flex align-items-center gap-1 mb-2">
                                     <font-awesome-icon :icon="['fas', 'user-plus']" class="fs-6" />
-                                    <span class="fs-6 fw-bold">{{ user.follows }}</span>
+                                    <span class="fs-6 fw-bold">{{ user.following }}</span>
                                 </div>
                                 <span class="badge-text">Following</span>
                             </div>
@@ -82,8 +101,17 @@ onMounted(async () => {
                 </div>
             </div>
 
-            <div>
-                <!-- Add posts here -->
+            <div class="row justify-content-center scroll-content" v-if="posts.length > 0">
+                <div
+                    class="col-md-12 col-lg-9 me-2 content d-flex w-100 flex-column justify-content-center align-items-center overflow-hidden"
+                    role="list"
+                    aria-labelledby="home-heading"
+                >
+                    <PostView v-for="post in posts" :key="post.id" :post="post" role="listitem" />
+                </div>
+            </div>
+            <div v-else class="text-center mt-3">
+                <p class="text-primary-alt">{{ authStore.user!.username === username ? "You don't" : "This user doesn't"}} have any posts</p>
             </div>
         </div>
     </div>

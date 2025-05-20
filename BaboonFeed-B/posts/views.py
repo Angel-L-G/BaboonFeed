@@ -21,7 +21,7 @@ class PostViewSet(viewsets.ModelViewSet):
         # Filtrar por usuario si se pasa en la URL como ?user_id=1
         user_id = self.request.query_params.get("user_id")
         if user_id:
-            queryset = self.queryset.filter(author_id=user_id)
+            queryset = self.queryset.filter(user_id=user_id)
 
         # Filtrar por el usuario autenticado si se pasa en la URL como ?followed=true
         followed = self.request.query_params.get("followed")
