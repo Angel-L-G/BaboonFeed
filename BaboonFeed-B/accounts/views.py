@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.shortcuts import render
 from django.utils.http import urlsafe_base64_decode
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
@@ -56,4 +57,4 @@ class VerifyEmailView(APIView):
         user.is_active = True
         user.save()
         Verify.objects.filter(user=user).delete()
-        return Response({"message": "Activated account correctly."}, status=status.HTTP_200_OK)
+        return render(request, 'accounts/verification_success.html')
