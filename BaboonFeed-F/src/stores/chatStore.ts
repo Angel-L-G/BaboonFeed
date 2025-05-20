@@ -173,6 +173,7 @@ export const useChatStore = defineStore('chat', () => {
 
     async function disconnectAllChats(){
         sockets.value.forEach((socket) => socket.socket.close())
+        chatList.value = [];
     }
 
     function setActiveChatId(chatId: string) {
