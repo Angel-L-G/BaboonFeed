@@ -11,11 +11,6 @@ export interface Post {
     dislikes: number[]
 }
 
-export interface PostCreate {
-    content: string
-    file?: File
-}
-
 export interface Reply {
     id: number
     content: string

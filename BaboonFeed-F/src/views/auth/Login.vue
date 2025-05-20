@@ -12,35 +12,28 @@
             <form @submit.prevent="handleLogin">
                 <div class="mb-3">
                     <label for="username" class="form-label text-secondary-alt">Username</label>
-                    <input
-                        type="text"
-                        id="username"
-                        class="form-control bg-primary-subtle"
-                        v-model="username"
-                        required
-                        autocomplete="username"
-                        aria-required="true"
-                        :aria-invalid="!!errorMsg"
-                        :aria-describedby="errorMsg ? 'login-error' : null"
-                        autofocus
-                    />
+                    <input type="text" id="username" class="form-control bg-primary-subtle"
+                           v-model="username" required autocomplete="username" aria-required="true"
+                           :aria-invalid="!!errorMsg" :aria-describedby="errorMsg ? 'login-error' : '' "
+                           autofocus/>
                 </div>
                 <div class="mb-3">
-                    <label for="password" class="form-label text-secondary-alt">Contraseña</label>
-                    <input
-                        type="password"
-                        id="password"
-                        class="form-control bg-primary-subtle"
-                        v-model="password"
-                        required
-                        autocomplete="current-password"
-                        aria-required="true"
-                        :aria-invalid="!!errorMsg"
-                        :aria-describedby="errorMsg ? 'login-error' : null"
-                    />
+                    <label for="password" class="form-label text-secondary-alt">Password</label>
+                    <input type="password" id="password" class="form-control bg-primary-subtle"
+                           v-model="password" required autocomplete="current-password" aria-required="true"
+                           :aria-invalid="!!errorMsg" :aria-describedby="errorMsg ? 'login-error' : '' "/>
                 </div>
-                <button type="submit" class="btn btn-primary-alt w-100">Ingresar</button>
+                <button type="submit" class="btn btn-primary-alt w-100">Join</button>
             </form>
+
+            <!-- Enlace a registro -->
+            <div class="text-center mt-3">
+                <router-link to="/register" class="text-purple" aria-label="Go to registration page">
+                    Don’t have an account? <strong>Register</strong>
+                </router-link>
+            </div>
+
+            <!-- Parrafo para mostrar errores -->
             <p v-if="errorMsg" class="text-danger mt-2" role="alert" aria-live="assertive">
                 {{ errorMsg }}
             </p>
@@ -60,9 +53,9 @@ const authStore = useAuthStore()
 const chatStore = useChatStore()
 const router = useRouter()
 
-const username = ref('')
-const password = ref('')
-const errorMsg = ref('')
+const username = ref('');
+const password = ref('');
+const errorMsg = ref('');
 
 const handleLogin = async () => {
     if (username.value && password.value) {

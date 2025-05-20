@@ -2,7 +2,7 @@
 import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import Navbar from '@/components/Navbar.vue'
-import ChatList from '@/components/ChatList.vue'
+import ChatList from '@/components/Chat/ChatList.vue'
 import { useAuthStore } from '@/stores/auth.ts'
 import { useChatStore } from '@/stores/chatStore.ts'
 
@@ -32,16 +32,12 @@ onUnmounted( async () => {
         </header>
 
         <!-- Contenido principal -->
-        <main
-            :class="['content', { 'content-expanded': isNavbarExpanded }]"
-            tabindex="-1"
-            id="main-content"
-        >
+        <main :class="['content', { 'content-expanded': isNavbarExpanded }]" id="main-content">
             <router-view />
         </main>
 
         <!-- Chat, fuera del contenido principal -->
-        <aside v-if="!isAuthPage" aria-label="Lista de chats recientes">
+        <aside v-if="!isAuthPage" class="d-none d-lg-block" aria-label="Lista de chats recientes" style="z-index: 2;">
             <ChatList />
         </aside>
     </div>
@@ -58,17 +54,16 @@ onUnmounted( async () => {
 
 /* Contenido cuando la navbar está contraída */
 .content {
-    overflow: auto;
-    flex-grow: 1;
-    margin-left: 100px; /* Espacio de la navbar contraída */
-    transition:
-        margin-left 0.3s ease-in-out,
-        width 0.3s ease-in-out;
+  width: 100%;
+  flex-grow: 1;
+  margin-left: 100px; /* Espacio de la navbar contraída */
+  margin-right: 250px;
+  transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
 }
 
 /* Contenido desplazado cuando la navbar está expandida */
 .content-expanded {
-    margin-left: 250px;
+  margin-left: 250px;
 }
 
 /* Ocultar scrollbar en navegadores WebKit */
@@ -84,27 +79,5 @@ onUnmounted( async () => {
 /* Ocultar scrollbar en Edge */
 .content {
     -ms-overflow-style: none;
-}
-
-/* Panel derecho fijo */
-.right-panel {
-    width: 300px;
-    height: 100vh;
-    overflow-y: auto;
-    position: fixed;
-    right: 0;
-    top: 0;
-    padding-top: 1rem;
-}
-
-/* Ajuste del contenido para no solaparse con panel derecho */
-.content {
-    margin-right: 300px; /* Deja espacio al contenido para el panel */
-}
-
-/* Si navbar expandida */
-.content-expanded {
-    margin-left: 250px;
-    margin-right: 300px;
 }
 </style>

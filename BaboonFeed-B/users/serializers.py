@@ -12,7 +12,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'avatar', 'bio', 'followers', 'following']
+        fields = ['id', 'username', 'email', 'avatar', 'bio', 'followers', 'following']
 
     def get_followers(self, obj):
         return [f.followed_by.username for f in obj.followed_by.all()]

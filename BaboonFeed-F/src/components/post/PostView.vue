@@ -3,7 +3,7 @@
         <div class="d-flex align-items-center justify-content-between px-3 p-2 border-bottom border-dark-light">
             <div class="d-flex mt-2 align-items-center">
                 <img class="me-2 rounded-circle border border-2 border-cyan"
-                     :src="post.user.file?.name" :alt="`Foto de perfil de ${post.user.username}`"
+                     :src="post.user.avatar" :alt="`Foto de perfil de ${post.user.username}`"
                      style="height: 35px; width: 35px;" />
                 <h2 class="text-light-alt h5 mb-0" :id="`post-title-${post.id}`">
                     {{ post.user.username }}
@@ -19,7 +19,7 @@
 
         <div class="m-3 p-2 d-flex flex-column align-items-center">
             <p class="text-center">{{ post.content }}</p>
-            <div class="w-75 h-50" v-if="post.file">
+            <div :class="post.file.type === FileTypes.VIDEO ? `w-75 h-50 mb-3 me-5 me-md-0` : `w-75 h-50 mb-3`" v-if="post.file">
                 <FileHandler :file="post.file" />
             </div>
             <div class="d-flex justify-content-end">
@@ -40,30 +40,20 @@
 import type { Post } from '@/types/Post.ts';
 import FileHandler from '@/components/file/FileHandler.vue';
 
-import { format, formatDistanceToNow, isToday, isYesterday } from "date-fns";
-import { enUS } from "date-fns/locale";
 import axios from 'axios'
 import { API_URL } from '@/globals.ts'
 import { useAuthStore } from '@/stores/auth.ts'
+import { formatDate } from '@/plugins/daysjs/Daysjs.ts'
+import { FileTypes } from '@/types/File.ts'
 
 const authStore = useAuthStore();
-
-const getTimeSince = (date: string) => {
-    const postDate = new Date(date);
-
-    if (isToday(postDate)) {
-        return formatDistanceToNow(postDate, { addSuffix: true, locale: enUS });
-    } else if (isYesterday(postDate)) {
-        return "Yesterday";
-    } else {
-        return format(postDate, "EEEE do MMMM", { locale: enUS });
-    }
-}
-
-
 const {post} = defineProps<{post: Post}>();
 
 const handleLike = async (post: Post) => {
+    if (!authStore.isAuthenticated) {
+        alert('You need to login to like/dislike a post');
+        return;
+    }
     await axios.patch(`${API_URL}posts/${post.id}/like/`, {}, {
         headers: {
             'Authorization': `Bearer ${authStore.token}`
@@ -86,6 +76,10 @@ const handleLike = async (post: Post) => {
 }
 
 const handleDislike = async (post: Post) => {
+    if (!authStore.isAuthenticated) {
+        alert('You need to login to like/dislike a post');
+        return;
+    }
     await axios.patch(`${API_URL}posts/${post.id}/dislike/`, {}, {
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`

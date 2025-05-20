@@ -12,34 +12,32 @@
                 <input id="file" class="form-control bg-primary-subtle" type="file" ref="fileInput"
                     @change="handleFileChange" aria-describedby="fileHelp"/>
                 <button class="btn btn-purple-alt" type="button" @click="removeFile"
-                    :aria-label="selectedFile ? 'Remove selected file' : 'No file to remove'">
+                    aria-label='Remove file'>
                     <font-awesome-icon :icon="['far', 'trash-can']" />
                 </button>
             </div>
 
             <div id="fileHelp" class="form-text text-light-dark">
-                Hint: you can attach an image, video, or audio file.
+                Hint: you can attach an image, video, or audio file, formats are: jpeg, jpg, png, gif, mpeg, wav, mp3, mp4, webm and ogg.
             </div>
 
-            <button class="btn btn-purple-alt text-light w-100 mt-2" type="submit">
+            <button class="btn btn-purple-alt text-light w-100 mt-2" type="submit" data-bs-dismiss="modal">
                 Create
             </button>
-
-            <p v-if="error" class="text-danger mt-2" role="alert" aria-live="assertive">
-                {{ error }}
-            </p>
         </form>
     </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import type {PostCreate} from "@/types/Post.ts";
-import { FileTypes } from "@/types/File.ts";
+import axios from 'axios';
+import { API_URL } from '@/globals.ts'
+import { useAuthStore } from '@/stores/auth.ts';
 
 const content = ref('');
 const file = ref<File | null>(null);
 const fileInput = ref<HTMLInputElement | null>(null);
+const authStore = useAuthStore();
 
 const handleFileChange = (e: Event) => {
     const target = e.target as HTMLInputElement;
@@ -56,24 +54,31 @@ const removeFile = () => {
     }
 };
 
-const handleSubmit = () => {
-    const createPost: PostCreate = {
-        content: content.value,
-        file: undefined
-    };
-    if (file.value) {
-        createPost.file = {
-            file: file.value.name.split(".").pop() || "",
-            type: file.value.type.split("/").shift() as FileTypes || FileTypes.IMAGE
-        };
+const handleSubmit = async () => {
+    try {
+        const fileResponse = await axios.post(`${API_URL}files/`,
+            {
+                file: file.value
+            },
+            {headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': 'Bearer ' + authStore.token
+                }}
+        )
+        const fileId = await fileResponse.data.id;
+        const response = await axios.post(`${API_URL}posts/`,
+            {
+                content: content.value,
+                file_id: fileId
+            },
+            {
+            headers: {
+                'Authorization': 'Bearer ' + authStore.token
+            }
+        });
+        console.log(response.data);
+    } catch (error) {
+        console.error('Error creating post:', error);
     }
-    console.log(createPost);
-    /*
-    Cuando el server funcione
-    fetch('/api/posts/add/', { method: 'POST', body: createPost })
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.error(error));
-        */
 };
 </script>

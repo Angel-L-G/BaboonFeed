@@ -123,8 +123,6 @@ export const useChatStore = defineStore('chat', () => {
             await _initializeSocket(groupSocket, { type: ChatType.GROUP, id: group.id }, token)
             sockets.value = [ ...sockets.value, { id: group.id, socket: groupSocket }]
         }
-
-        console.log(JSON.stringify(sockets.value))
     }
 
     async function handleIncomingMessage(

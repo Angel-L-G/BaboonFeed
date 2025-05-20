@@ -6,7 +6,7 @@ const router = createRouter({
     routes: [
         {
             path: '/',
-            redirect: '/login/',
+            redirect: '/home/',
         },
         {
             path: '/home/',
@@ -22,12 +22,6 @@ const router = createRouter({
             path: '/register/',
             name: 'register',
             component: () => import('@/views/auth/Register.vue'),
-        },
-        {
-            path: '/posts/add/',
-            name: 'createPost',
-            component: () => import('@/components/post/CreatePost.vue'),
-            meta: { requiresAuth: true },
         },
         {
             path: '/chat/:id?',

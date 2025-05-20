@@ -65,7 +65,9 @@ async function createGroup(data: GroupDto) {
         </div>
 
         <div class="grid gap-4">
-            <GroupCard v-for="group in groups" :key="group.id" :group="group" />
+            <GroupCard v-for="group in groups" :key="group.id" :group="group" >
+                {{ group.name }}
+            </GroupCard>
         </div>
 
         <div

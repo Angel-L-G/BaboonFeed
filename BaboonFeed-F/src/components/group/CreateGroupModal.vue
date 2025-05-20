@@ -39,7 +39,7 @@
 
         <div class="mb-3">
             <span v-if="group.users.length === 0" class="text-muted"
-                >No hay usuarios seleccionados</span
+            >No hay usuarios seleccionados</span
             >
             <div
                 v-for="user in group.users"

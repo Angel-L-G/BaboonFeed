@@ -7,7 +7,8 @@ class FileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = File
-        fields = ['id', 'file', 'type']
+        fields = '__all__'  # Incluye todos los campos del modelo
+        read_only_fields = ['id', 'type']
 
     def get_file(self, obj):
         request = self.context.get('request')
@@ -17,9 +18,9 @@ class FileSerializer(serializers.ModelSerializer):
 
     def validate_file(self, value):
         allowed_types = [
-            'image/jpeg', 'image/png', 'image/gif',
-            'audio/mpeg', 'audio/mp3', 'audio/wav',
-            'video/mp4', 'video/webm', 'video/ogg'
+        'image/jpeg', 'image/png', 'image/gif', 'image/jpg',
+        'audio/mpeg', 'audio/mp3', 'audio/wav',
+        'video/mp4', 'video/webm', 'video/ogg'
         ]
         content_type = value.content_type
         if content_type not in allowed_types:
