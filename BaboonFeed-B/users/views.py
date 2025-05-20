@@ -38,3 +38,16 @@ class UserViewSet(viewsets.ViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
+
+    # PATCH /users/<str:username>/follow/
+    @action(detail=True, methods=['patch'])
+    def follow(self, request, pk=None):
+        user_to_follow = get_object_or_404(User, username=pk)
+        logged_user = request.user
+        if logged_user == user_to_follow:
+            return Response({"error": "You cannot follow yourself."}, status=status.HTTP_400_BAD_REQUEST)
+        if user_to_follow in logged_user.follows.all():
+            logged_user.follows.remove(user_to_follow)
+        else:
+            logged_user.follows.add(user_to_follow)
+        return Response({"message": f"You are now following {user_to_follow.username}."}, status=status.HTTP_200_OK)
