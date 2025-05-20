@@ -40,7 +40,7 @@ class ChatViewSet(viewsets.ModelViewSet):
         paginator = CustomLimitOffsetPagination()
         paginated_qs = paginator.paginate_queryset(messages, request)
 
-        serializer = MessageSerializer(paginated_qs, many=True)
+        serializer = MessageSerializer(paginated_qs, many=True, context={'request': request})
         return paginator.get_paginated_response(serializer.data)
 
 

@@ -49,8 +49,11 @@ class GroupChatCreateUpdateSerializer(serializers.ModelSerializer):
         members_data = validated_data.pop('members', [])
         user = self.context['request'].user
         group = GroupChat.objects.create(leader=user, **validated_data)
-        for member in members_data:
-            group.members.add(member)
+        for username in members_data:
+            member = User.objects.filter(username=username).first()
+            if member:
+                group.members.add(member)
+
         return group
 
     def update(self, instance, validated_data):

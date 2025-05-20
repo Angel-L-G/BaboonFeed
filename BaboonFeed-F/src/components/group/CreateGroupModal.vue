@@ -87,13 +87,14 @@ const search = ref('')
 const searchResults = ref<UserPreview[]>([])
 
 watch(search, async (value) => {
-    if (value.length < 2) return (searchResults.value = [])
-    const res = await axios.get(`${API_URL}users/?username=${value}`, {
+    if (value.length < 1) return (searchResults.value = [])
+    await axios.get(`${API_URL}users/?username=${value}`, {
         headers: {
             Authorization: `Bearer ${authStore.token}`,
         },
     })
-    searchResults.value = res.data
+        .then(res => searchResults.value = res.data)
+        .catch(err => console.log(err))
 })
 
 const handleFileChange = (e: Event) => {

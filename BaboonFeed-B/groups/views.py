@@ -20,7 +20,7 @@ class GroupChatViewSet(viewsets.ViewSet):
     # GET /groups/
     def list(self, request):
         groups = GroupChat.objects.filter(members=request.user).union(
-            GroupChat.objects.filter(leader=request.user)
+            GroupChat.objects.filter(leader=request.user).order_by('-last_modified')
         )
         serializer = GroupChatSerializer(groups, many=True, context={'request': request})
         return Response(serializer.data)
@@ -114,5 +114,5 @@ class GroupChatViewSet(viewsets.ViewSet):
         paginator = CustomLimitOffsetPagination()
         paginated_qs = paginator.paginate_queryset(messages, request)
 
-        serializer = MessageSerializer(paginated_qs, many=True)
+        serializer = MessageSerializer(paginated_qs, many=True, context={'request': request})
         return paginator.get_paginated_response(serializer.data)

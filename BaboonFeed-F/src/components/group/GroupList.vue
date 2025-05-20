@@ -27,11 +27,10 @@ onMounted(async () => {
 })
 
 async function createGroup(data: GroupDto) {
-    console.log(data)
     const formData = new FormData()
     formData.append('name', data.name)
     if (data.avatar) formData.append('avatar', data.avatar)
-    data.members.forEach((member: string) => formData.append('member', member))
+    data.members.forEach((member: string) => formData.append('members', member))
     console.log(JSON.stringify(formData))
     await axios
         .post(`${API_URL}groups/`, formData, {

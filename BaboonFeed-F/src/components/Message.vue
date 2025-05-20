@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import type { MessageReceived } from '@/types/Message.ts'
-import { computed, type PropType, ref, toRaw, watch } from 'vue'
-import { useAuthStore} from '@/stores/auth.ts';
+import { computed, type PropType, toRaw, watch } from 'vue'
+import { useAuthStore } from '@/stores/auth.ts'
 import { formatDate } from '@/plugins/daysjs/Daysjs.ts'
+import FileHandler from '@/components/file/FileHandler.vue'
 
-const authStore = useAuthStore();
+const authStore = useAuthStore()
 const props = defineProps({
     message: {
         type: Object as PropType<MessageReceived>,
@@ -35,9 +36,17 @@ watch(
         >
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-1">
-                    <p v-if="props.message.group && props.message.author != author" class="mb-0 fw-bold me-1">{{ props.message.author }}</p>
-                    <small class="text-muted mb-0">{{ formatDate(props.message.created_at) }}</small>
+                    <p
+                        v-if="props.message.group && props.message.author != author"
+                        class="mb-0 fw-bold me-1"
+                    >
+                        {{ props.message.author }}
+                    </p>
+                    <small class="text-muted mb-0">{{
+                        formatDate(props.message.created_at)
+                    }}</small>
                 </div>
+                <FileHandler v-if="message.file" :file="message.file" />
                 <p class="card-text text-break">{{ props.message.content }}</p>
             </div>
         </div>
