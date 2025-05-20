@@ -52,15 +52,17 @@ class PrivateChatConsumer(AsyncWebsocketConsumer):
         chat.last_message = new_message
         await sync_to_async(chat.save)()
 
+        serialzed_message = serialize_message(new_message)
+
         # Enviar mensaje al grupo
         await self.channel_layer.group_send(
             self.room_group_name,
-            {'type': 'chat_message', 'message': serialize_message(new_message)},
+            {'type': 'chat_message', 'message': serialzed_message},
         )
 
         await self.channel_layer.group_send(
             f'chat_user_{message["receiver"]}',
-            {'type': 'chat_message', 'message': serialize_message(new_message)},
+            {'type': 'chat_message', 'message': serialzed_message},
         )
 
     @sync_to_async
@@ -135,7 +137,7 @@ class GroupChatConsumer(AsyncWebsocketConsumer):
         await sync_to_async(group_chat.save)()
 
         await self.channel_layer.group_send(
-            self.room_group_name, {'type': 'chat_message', 'message': message}
+            self.room_group_name, {'type': 'chat_message', 'message': serialize_message(new_message)}
         )
 
     async def chat_message(self, event):

@@ -29,12 +29,15 @@ watch(
         <div
             class="card"
             :class="{
-                'bg-success float-start ms-2 me-5': props.message.author === author,
-                'bg-info float-end me-2 ms-5': props.message.author !== author,
+                'bg-primary float-end ms-2 me-5': props.message.author == author,
+                'bg-success float-start me-2 ms-5': props.message.author != author,
             }"
         >
             <div class="card-body">
-                <small class="text-muted">{{ formatDate(props.message.created_at) }}</small>
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <p v-if="props.message.group && props.message.author != author" class="mb-0 fw-bold me-1">{{ props.message.author }}</p>
+                    <small class="text-muted mb-0">{{ formatDate(props.message.created_at) }}</small>
+                </div>
                 <p class="card-text text-break">{{ props.message.content }}</p>
             </div>
         </div>

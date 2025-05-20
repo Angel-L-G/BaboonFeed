@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import type { MessageReceived, MessageSent } from '@/types/Message.ts'
 import type { Chat } from '@/types/Chat'
@@ -10,7 +10,6 @@ import { useAuthStore } from '@/stores/auth.ts'
 import { ChatType } from '@/types/Chat.ts'
 import axios from 'axios'
 import { API_URL } from '@/globals.ts'
-import { watch } from 'vue'
 
 const route = useRoute()
 const chatId = computed(() => route.params.id as string)
@@ -39,11 +38,15 @@ onMounted(async () => {
 
 async function initializeChat() {
     chatStore.setActiveChatId(chatId.value)
-    socket.value = chatStore.getSocket(chatId.value)
+    try {
+        await waitForSocket(chatId.value)
+        socket.value = chatStore.getSocket(chatId.value)
+    } catch (e) {
+        console.error('No se pudo obtener el socket:', e)
+    }
     await getMessages()
     chatStore.registerMessageListener((message: MessageReceived) => {
         messages.value = [...messages.value, message]
-        console.log(messages.value)
     })
 }
 
@@ -56,10 +59,27 @@ async function getMessages() {
             },
         })
         .then((res) => {
-            messages.value.unshift(...res.data.results)
+            messages.value.push(...res.data.results)
+            messages.value = messages.value.reverse()
             nextQuery.value = res.data.next
         })
         .catch((err) => console.log(err))
+}
+
+async function waitForSocket(chatId: string, interval = 100, maxAttempts = 50): Promise<void> {
+    return new Promise((resolve, reject) => {
+        let attempts = 0
+        const timer = setInterval(() => {
+            const s = chatStore.getSocket(chatId)
+            if (s) {
+                clearInterval(timer)
+                resolve()
+            } else if (++attempts >= maxAttempts) {
+                clearInterval(timer)
+                reject(new Error('Socket not available'))
+            }
+        }, interval)
+    })
 }
 
 const sendMessage = () => {
@@ -70,11 +90,9 @@ const sendMessage = () => {
         } else {
             messageData = { content: newMessage.value, receiver: chat.value.name }
         }
-        console.log(JSON.stringify(messageData))
         socket.value.send(JSON.stringify(messageData))
         newMessage.value = ''
     }
-    console.log(socket.value)
 }
 
 onUnmounted(() => {

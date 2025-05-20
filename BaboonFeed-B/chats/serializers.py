@@ -23,6 +23,15 @@ class ChatSerializer(serializers.ModelSerializer):
 
 
 class MessageSerializer(serializers.ModelSerializer):
+    author = serializers.SerializerMethodField()
+    receiver = serializers.SerializerMethodField()
+
     class Meta:
         model = Message
         fields = '__all__'
+
+    def get_author(self, obj):
+        return obj.author.username if obj.author else None
+
+    def get_receiver(self, obj):
+        return obj.receiver.username if obj.receiver else None

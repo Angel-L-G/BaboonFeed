@@ -35,7 +35,7 @@ class ChatViewSet(viewsets.ModelViewSet):
         if request.user not in chat.members.all():
             return Response({'detail': 'No autorizado.'}, status=403)
 
-        messages = chat.messages.all().order_by('created_at')
+        messages = chat.messages.all().order_by('-created_at')
 
         paginator = CustomLimitOffsetPagination()
         paginated_qs = paginator.paginate_queryset(messages, request)

@@ -109,7 +109,7 @@ class GroupChatViewSet(viewsets.ViewSet):
     def messages(self, request, pk=None):
         group = get_object_or_404(GroupChat, pk=pk)
         self.check_object_permissions(request, group)
-        messages = group.messages.all().order_by('created_at')
+        messages = group.messages.all().order_by('-created_at')
 
         paginator = CustomLimitOffsetPagination()
         paginated_qs = paginator.paginate_queryset(messages, request)
