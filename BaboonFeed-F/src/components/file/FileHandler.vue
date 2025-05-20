@@ -25,11 +25,10 @@
 </template>
 
 <script setup lang="ts">
-import type { File } from '@/types/File.ts';
-import { FileTypes } from '@/types/File.ts';
-import "vue-plyr/dist/vue-plyr.css";
-import Plyr from "vue-plyr";
+import type { File } from '@/types/File.ts'
+import { FileTypes } from '@/types/File.ts'
+import 'vue-plyr/dist/vue-plyr.css'
+import Plyr from 'vue-plyr'
 
-const { file } = defineProps<{file: File}>();
-
+const { file } = defineProps<{ file: File }>()
 </script>

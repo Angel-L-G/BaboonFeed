@@ -55,18 +55,18 @@ import { ref } from 'vue';
 import axios from 'axios'
 import { API_URL } from '@/globals.ts'
 
-const username = ref('');
-const email = ref('');
-const password = ref('');
-const confPassword = ref('');
-const errorMsg = ref('');
+const username = ref('')
+const email = ref('')
+const password = ref('')
+const confPassword = ref('')
+const errorMsg = ref('')
 
 const handleRegister = async () => {
     if (password.value !== confPassword.value) {
-        errorMsg.value = 'Las contraseñas no coinciden';
-        password.value = '';
-        confPassword.value = '';
-        return;
+        errorMsg.value = 'Las contraseñas no coinciden'
+        password.value = ''
+        confPassword.value = ''
+        return
     }
     try {
         const responsePromise = await axios.post(
@@ -90,12 +90,12 @@ const handleRegister = async () => {
             confPassword.value = '';
         }
     } catch (error) {
-        console.error('Error:', error);
-        errorMsg.value = 'Error al registrar';
-        username.value = '';
-        email.value = '';
-        password.value = '';
-        confPassword.value = '';
+        console.error('Error:', error)
+        errorMsg.value = 'Error al registrar'
+        username.value = ''
+        email.value = ''
+        password.value = ''
+        confPassword.value = ''
     }
-};
+}
 </script>

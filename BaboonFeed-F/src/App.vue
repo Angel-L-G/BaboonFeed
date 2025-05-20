@@ -1,14 +1,27 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import Navbar from '@/components/Navbar.vue'
 import ChatList from '@/components/Chat/ChatList.vue'
+import { useAuthStore } from '@/stores/auth.ts'
+import { useChatStore } from '@/stores/chatStore.ts'
 
-const route = useRoute();
-const isAuthPage = computed(() => route.name === 'login' || route.name === 'register');
+const route = useRoute()
+const isAuthPage = computed(() => route.name === 'login' || route.name === 'register')
+const auth = useAuthStore()
+const isNavbarExpanded = ref(false)
+const chat = useChatStore()
 
-// Estado de la Navbar (contraída por defecto)
-const isNavbarExpanded = ref(false);
+onMounted( async() => {
+    if (auth.isAuthenticated && !isAuthPage.value) {
+        await chat.getUserChats()
+        await chat.connectToAllChats()
+    }
+})
+
+onUnmounted( async () => {
+    await chat.disconnectAllChats();
+})
 </script>
 
 <template>

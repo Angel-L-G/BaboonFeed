@@ -108,7 +108,7 @@ const isFollowing = () => {
                             <div class="badge badge-hover text-center" role="group" aria-label="Seguidores">
                                 <div class="d-flex align-items-center gap-1 mb-2">
                                     <font-awesome-icon :icon="['fas', 'users']" class="fs-6" />
-                                    <span class="fs-6 fw-bold">{{ user.followers.length }}</span>
+                                    <span class="fs-6 fw-bold">{{ user.followers?.length || 0 }}</span>
                                 </div>
                                 <span class="badge-text ">Followers</span>
                             </div>
@@ -116,7 +116,7 @@ const isFollowing = () => {
                             <div class="badge badge-hover text-center">
                                 <div class="d-flex align-items-center gap-1 mb-2">
                                     <font-awesome-icon :icon="['fas', 'user-plus']" class="fs-6" />
-                                    <span class="fs-6 fw-bold">{{ user.following.length }}</span>
+                                    <span class="fs-6 fw-bold">{{ user.following?.length || 0 }}</span>
                                 </div>
                                 <span class="badge-text">Following</span>
                             </div>

@@ -7,6 +7,7 @@ export interface MessageReceived {
   author: string;
   receiver?: string;
   group?: number;
+  chat?: string;
   file?: File;
 }
 
