@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import type { MessageReceived, MessageSent } from '@/types/Message.ts'
 import type { Chat } from '@/types/Chat'
@@ -22,8 +22,10 @@ const selectedFile = ref<File | null>(null)
 const chatStore = useChatStore()
 const authStore = useAuthStore()
 const socket = ref<ReconnectingWebSocket>({} as ReconnectingWebSocket)
-const nextQuery = ref<string>('')
+const hasMore = ref<boolean>(false)
+const isLoadingMore = ref(false)
 const chat = computed(() => chatStore.chatList.find((chat) => chat.id === chatId.value) as Chat)
+const chatContainer = ref<HTMLElement | null>(null)
 
 watch(
     () => route.params.id,
@@ -50,7 +52,11 @@ async function initializeChat() {
     await getMessages()
     chatStore.registerMessageListener((message: MessageReceived) => {
         messages.value = [...messages.value, message]
+        if (isNearBottom()) {
+            scrollToBottom()
+        }
     })
+    scrollToBottom()
 }
 
 async function getMessages() {
@@ -64,7 +70,7 @@ async function getMessages() {
         .then((res) => {
             messages.value.push(...res.data.results)
             messages.value = messages.value.reverse()
-            nextQuery.value = res.data.next
+            hasMore.value = res.data.has_more
         })
         .catch((err) => console.log(err))
 }
@@ -154,7 +160,54 @@ const sendMessage = async () => {
 
     newMessage.value = ''
     selectedFile.value = null
+
+    scrollToBottom()
 }
+
+function scrollToBottom() {
+    nextTick(() => {
+        // Asegúrate de que el elemento exista y tenga altura
+        if (chatContainer.value && chatContainer.value.scrollHeight > 0) {
+            chatContainer.value.scrollTop = chatContainer.value.scrollHeight
+        }
+    })
+}
+
+async function loadOlderMessages() {
+    if (!messages.value.length) return
+
+    const oldestDate = messages.value[0].created_at
+    const url = `${API_URL}${isGroup.value ? 'groups' : 'chats'}/${rawId.value}/messages/?before=${encodeURIComponent(oldestDate)}&limit=20`
+
+    try {
+        const res = await axios.get(url, {
+            headers: { Authorization: `Bearer ${authStore.token}` },
+        })
+        if (res.data.results.length > 0) {
+            messages.value = [...res.data.results.reverse(), ...messages.value]
+            hasMore.value = res.data.has_more
+        }
+    } catch (err) {
+        console.error(err)
+    }
+}
+
+const onScroll = async (e: Event) => {
+    if (!hasMore.value) return
+    const container = e.target as HTMLElement
+    if (container.scrollTop <= 100 && !isLoadingMore.value) {
+        isLoadingMore.value = true
+        await loadOlderMessages()
+        isLoadingMore.value = false
+    }
+}
+
+function isNearBottom(): boolean {
+    if (!chatContainer.value) return false
+    const { scrollTop, scrollHeight, clientHeight } = chatContainer.value
+    return scrollTop + clientHeight >= scrollHeight - 150
+}
+
 
 onUnmounted(() => {
     messages.value = []
@@ -167,7 +220,11 @@ onUnmounted(() => {
 
 <template>
     <div class="container d-flex flex-column justify-content-between my-3" style="height: 90vh">
-        <div class="flex-grow-1 overflow-auto overflow-x-hidden" ref="chatContainer">
+        <div
+            class="flex-grow-1 overflow-auto overflow-x-hidden"
+            ref="chatContainer"
+            @scroll.passive="onScroll"
+        >
             <div v-for="message in messages" :key="message.id" class="row mt-3">
                 <MessageComponent :message="message" />
             </div>
@@ -198,11 +255,8 @@ onUnmounted(() => {
                 class="text-muted small mt-1 d-flex align-items-center bg-primary rounded"
             >
                 <span class="me-2">Archivo: {{ selectedFile.name }}</span>
-                <button
-                    @click="selectedFile = null"
-                    class="btn btn-sm btn-outline-danger py-0 px-2"
-                >
-                    ✖
+                <button @click="selectedFile = null" class="btn btn-sm btn-danger py-0 px-2">
+                    <font-awesome-icon :icon="['fas', 'square-xmark']" />
                 </button>
             </div>
         </div>

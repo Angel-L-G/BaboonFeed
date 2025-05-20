@@ -46,7 +46,7 @@ watch(
                         formatDate(props.message.created_at)
                     }}</small>
                 </div>
-                <FileHandler v-if="message.file" :file="message.file" />
+                <FileHandler v-if="message.file" :file="message.file" class="mb-2"/>
                 <p class="card-text text-break">{{ props.message.content }}</p>
             </div>
         </div>

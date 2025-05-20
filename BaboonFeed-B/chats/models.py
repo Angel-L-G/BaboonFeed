@@ -19,3 +19,4 @@ class Message(models.Model):
     receiver = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='messages_received', on_delete=models.CASCADE, null=True)
     chat = models.ForeignKey('chats.Chat', related_name='messages', on_delete=models.CASCADE, null=True, blank=True)
     group = models.ForeignKey('groups.GroupChat', related_name='messages', on_delete=models.CASCADE, null=True, blank=True)
+    file = models.ForeignKey('files.File', related_name='messages', on_delete=models.CASCADE, null=True, blank=True)
