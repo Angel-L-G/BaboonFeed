@@ -80,7 +80,7 @@ const handleRegister = async () => {
         );
         const data = responsePromise.data;
         if (data) {
-            errorMsg.value = 'Please check your email to confirm your account and then login';
+            alert('Please check your email to confirm your account and then login');
         } else {
             console.log("No data received");
             errorMsg.value = 'Error al registrar';
