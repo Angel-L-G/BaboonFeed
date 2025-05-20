@@ -87,7 +87,7 @@ const toggleSidebar = () => {
 const username = computed(() => authStore.user?.username);
 
 const menuItems = [
-    { name: 'Chat', icon: ['fas', 'comment'], route: { name: 'chat' } },
+    { name: 'Chat', icon: ['fas', 'comment'], route: { name: 'chatFilter' } },
     { name: 'Profile', icon: ['fas', 'id-card'], route: { name: 'profile', params: { username: username.value } } }
 ];
 
@@ -100,7 +100,6 @@ const logout = () => {
 
 <style scoped>
 .sidebar {
-    position: fixed;
     top: 0;
     left: 0;
     bottom: 0;
@@ -111,10 +110,44 @@ const logout = () => {
     flex-direction: column;
     align-items: flex-start;
     overflow: hidden;
+    background-color: #fff; /* O el color de fondo de tu sidebar */
+    z-index: 1030; /* Asegura que esté por encima */
 }
 
+/* Sidebar expandida */
 .sidebar.expanded {
     width: 250px;
+}
+
+@media (min-width: 992px) {
+    .sidebar {
+        position: fixed;
+        transform: none !important;
+        width: 80px;
+    }
+
+    .sidebar.expanded {
+        width: 250px;
+    }
+}
+
+@media (max-width: 991px) {
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 250px;
+        height: 100vh;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+        background-color: #111; /* Asegura que tenga fondo oscuro */
+        z-index: 1050; /* Que esté por encima del contenido */
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3); /* opcional */
+    }
+
+    .sidebar.expanded {
+        transform: translateX(0);
+    }
 }
 
 /* ANIMACIÓN FLUIDA AL DESAPARECER */

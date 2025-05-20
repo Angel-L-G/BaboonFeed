@@ -24,6 +24,12 @@ const router = createRouter({
             component: () => import('@/views/auth/Register.vue'),
         },
         {
+            path: '/chat/',
+            name: 'chatFilter',
+            component: () => import('@/views/chat/ChatFilter.vue'),
+            meta: { requiresAuth: true },
+        },
+        {
             path: '/chat/:id?',
             name: 'chat',
             component: () => import('@/components/Chat/Chat.vue'),

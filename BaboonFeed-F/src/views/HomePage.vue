@@ -1,19 +1,12 @@
 <template>
-    <div
-        class="container-fluid text-center overflow-hidden"
-        role="region"
-        aria-label="Página de inicio"
-    >
-        <div class="bg-secondary w-75 text-center position-fixed margin-right" style="z-index: 1;">
+    <div class="container-fluid text-center overflow-hidden" role="region" aria-label="Página de inicio">
+        <div class="bg-secondary text-center position-fixed margin-right" style="z-index: 1;">
             <h1 class="display-4 m-3 text-primary-alt fw-bold" id="home-heading">Baboon Feed</h1>
         </div>
 
         <div class="row justify-content-center scroll-content">
-            <div
-                class="col-md-12 col-lg-9 me-2 content d-flex w-100 flex-column justify-content-center align-items-center overflow-hidden"
-                role="list"
-                aria-labelledby="home-heading"
-            >
+            <div class="col-md-12 col-lg-9 me-2 content d-flex w-100 flex-column justify-content-center align-items-center overflow-hidden"
+                role="list" aria-labelledby="home-heading" >
                 <PostView v-for="post in posts" :key="post.id" :post="post" role="listitem" />
             </div>
         </div>
@@ -71,5 +64,17 @@ onMounted(async () => {
 
 .margin-right {
     width: 100vh;
+}
+
+@media (min-width: 992px) {
+    .margin-right {
+        width: 75%;
+    }
+}
+
+@media (max-width: 991px) {
+    .margin-right {
+        width: 100%;
+    }
 }
 </style>
