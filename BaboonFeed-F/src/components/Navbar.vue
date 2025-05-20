@@ -11,7 +11,7 @@
             <p class="title-text my-4">
                 <router-link :to="{ name: 'home' }" class="navbar-brand text-info-light py-3"
                     aria-label="Ir a la página de inicio">
-                    <font-awesome-icon :icon="['fas', 'dove']" class="icon-fixed-large"/>
+                    <font-awesome-icon :icon="['fas', 'home']" class="icon-fixed-large"/>
                     <span v-show="isExpanded" class="ms-3">BaboonFeed</span>
                 </router-link>
             </p>

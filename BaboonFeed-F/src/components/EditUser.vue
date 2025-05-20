@@ -65,6 +65,8 @@ const handleSubmit = async () => {
 
     if (changedBio) {
         formData.append("bio", bio.value);
+    } else {
+        formData.append("bio", originalBio.value);
     }
     if (changedAvatar && file.value) {
         formData.append("avatar", file.value);
@@ -81,6 +83,9 @@ const handleSubmit = async () => {
         if (changedBio) authStore.user!.bio = response.data.bio;
         if (changedAvatar) authStore.user!.avatar = response.data.avatar;
         localStorage.setItem('user', JSON.stringify(authStore.user));
+        if (changedAvatar) {
+            location.reload();
+        }
     } catch (error) {
         console.error('Error updating user:', error);
     }
