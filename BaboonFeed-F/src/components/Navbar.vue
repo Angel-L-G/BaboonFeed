@@ -88,7 +88,7 @@ const username = computed(() => authStore.user?.username);
 
 const menuItems = [
     { name: 'Chat', icon: ['fas', 'comment'], route: { name: 'chat' } },
-    { name: 'Profile', icon: ['fas', 'id-card'], route: { name: 'profile', params: { username: username } } }
+    { name: 'Profile', icon: ['fas', 'id-card'], route: { name: 'profile', params: { username: username.value } } }
 ];
 
 const isAuthenticated = computed(() => authStore.isAuthenticated);

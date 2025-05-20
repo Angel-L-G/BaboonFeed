@@ -2,11 +2,9 @@
 import type { User } from "@/types/User.ts";
 import { onMounted, ref } from "vue";
 import { API_URL } from "@/globals";
-import { useRoute } from "vue-router";
 import { useAuthStore } from '@/stores/auth.ts'
 import axios from 'axios'
 
-const user = localStorage.getItem('user');
 const authStore = useAuthStore();
 
 const loading = ref(true);
@@ -14,7 +12,7 @@ const error = ref<string | null>(null);
 
 onMounted(async () => {
     try {
-        const response = await axios.get(`${API_URL}users/${user.name}`, {
+        const response = await axios.get(`${API_URL}users/${authStore.user!.username}`, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'Authorization': 'Bearer ' + authStore.token
