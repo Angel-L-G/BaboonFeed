@@ -1,7 +1,7 @@
 export interface File {
   id?: number;
-  name: string;
-  type: FileTypes;
+  file: string;
+  type: string;
 }
 
 export enum FileTypes {

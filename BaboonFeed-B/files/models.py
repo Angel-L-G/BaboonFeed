@@ -6,6 +6,7 @@ def validate_file_type(file):
     mime_type, _ = mimetypes.guess_type(file.name)
     allowed_types = [
         'image/jpeg', 'image/png', 'image/gif',
+        'image/jpg',
         'audio/mpeg', 'audio/ogg', 'audio/wav',
         'video/mp4', 'video/webm', 'video/ogg'
     ]

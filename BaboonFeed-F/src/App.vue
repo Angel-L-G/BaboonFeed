@@ -1,30 +1,45 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import Navbar from '@/components/Navbar.vue'
-import ChatList from '@/components/ChatList.vue'
+import ChatList from '@/components/Chat/ChatList.vue'
+import { useAuthStore } from '@/stores/auth.ts'
+import { useChatStore } from '@/stores/chatStore.ts'
+import { useLayoutStore } from '@/stores/layoutStore.ts'
 
-const route = useRoute();
-const isAuthPage = computed(() => route.name === 'login' || route.name === 'register');
+const route = useRoute()
+const isAuthPage = computed(() => route.name === 'login' || route.name === 'register')
+const auth = useAuthStore()
+const layout = useLayoutStore();
+const isNavbarExpanded = computed(() => layout.isNavbarExpanded);
+const chat = useChatStore()
 
-// Estado de la Navbar (contraída por defecto)
-const isNavbarExpanded = ref(false);
+onMounted( async() => {
+    if (auth.isAuthenticated && !isAuthPage.value) {
+        await chat.getUserChats()
+        await chat.connectToAllChats()
+    }
+})
+
+onUnmounted( async () => {
+    await chat.disconnectAllChats();
+})
 </script>
 
 <template>
     <div class="layout">
         <!-- Header de navegación -->
         <header v-if="!isAuthPage" aria-label="Navegación principal">
-            <Navbar @update:expanded="isNavbarExpanded = $event" />
+            <Navbar />
         </header>
 
         <!-- Contenido principal -->
-        <main :class="['content', { 'content-expanded': isNavbarExpanded }]" tabindex="-1" id="main-content">
+        <main :class="['content', { 'content-expanded': isNavbarExpanded }]" id="main-content">
             <router-view />
         </main>
 
         <!-- Chat, fuera del contenido principal -->
-        <aside v-if="!isAuthPage" aria-label="Lista de chats recientes">
+        <aside v-if="!isAuthPage" class="d-none d-lg-block" aria-label="Lista de chats recientes" style="z-index: 2;">
             <ChatList />
         </aside>
     </div>
@@ -41,15 +56,16 @@ const isNavbarExpanded = ref(false);
 
 /* Contenido cuando la navbar está contraída */
 .content {
-    overflow: auto;
-    flex-grow: 1;
-    margin-left: 100px; /* Espacio de la navbar contraída */
-    transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
+  width: 100%;
+  flex-grow: 1;
+  margin-left: 100px; /* Espacio de la navbar contraída */
+  margin-right: 250px;
+  transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
 }
 
 /* Contenido desplazado cuando la navbar está expandida */
 .content-expanded {
-    margin-left: 250px;
+  margin-left: 250px;
 }
 
 /* Ocultar scrollbar en navegadores WebKit */
@@ -65,27 +81,5 @@ const isNavbarExpanded = ref(false);
 /* Ocultar scrollbar en Edge */
 .content {
     -ms-overflow-style: none;
-}
-
-/* Panel derecho fijo */
-.right-panel {
-    width: 300px;
-    height: 100vh;
-    overflow-y: auto;
-    position: fixed;
-    right: 0;
-    top: 0;
-    padding-top: 1rem;
-}
-
-/* Ajuste del contenido para no solaparse con panel derecho */
-.content {
-    margin-right: 300px; /* Deja espacio al contenido para el panel */
-}
-
-/* Si navbar expandida */
-.content-expanded {
-    margin-left: 250px;
-    margin-right: 300px;
 }
 </style>
