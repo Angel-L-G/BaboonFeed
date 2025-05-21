@@ -1,15 +1,20 @@
 <script setup lang="ts">
 import { formatDate } from '@/plugins/daysjs/Daysjs.ts'
 import { useChatStore } from '@/stores/chatStore.ts'
+import { useAuthStore } from '@/stores/auth.ts'
 
 const chatStore = useChatStore()
+const authStore = useAuthStore();
 </script>
 
 <template>
     <div class="right-panel bg-dark" role="complementary" aria-label="Panel de chats activos">
-        <h2 class="text-center text-info-light p-3 fs-5">Chats activos</h2>
+        <h2 class="text-center text-info-light p-3 fs-5">Active Chats</h2>
 
-        <ul class="list-group list-group-flush px-3" role="list">
+        <ul class="list-group list-group-flush px-3" role="list" v-if="authStore.isAuthenticated">
+            <li v-show="chatStore.chatList.length === 0" class="list-group-item bg-dark border-bottom border-purple-light">
+                <p class="fs-6 text-light">No active chats available.</p>
+            </li>
             <li
                 v-for="chatItem in chatStore.chatList"
                 :key="chatItem.id"
@@ -52,6 +57,12 @@ const chatStore = useChatStore()
                 </router-link>
             </li>
         </ul>
+        <div v-else class="text-center text-light-dark mt-3">
+            <p class="fs-6">No active chats available.</p>
+            <router-link :to="{name: 'login'}" class="btn btn-primary-alt" aria-label="Iniciar sesión">
+                Login
+            </router-link>
+        </div>
     </div>
 </template>
 

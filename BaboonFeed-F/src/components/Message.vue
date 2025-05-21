@@ -30,9 +30,10 @@ watch(
         <div
             class="card"
             :class="{
-                'bg-primary float-end ms-2 me-5': props.message.author == author,
+                'bg-primary float-end ms-5 me-3': props.message.author == author,
                 'bg-success float-start me-2 ms-5': props.message.author != author,
             }"
+            style="max-width: 85%;"
         >
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-1">
@@ -52,6 +53,6 @@ watch(
         </div>
     </div>
     <div v-else>
-        <p class="text-muted">Esperando mensaje...</p>
+        <p class="text-muted">Waiting message...</p>
     </div>
 </template>

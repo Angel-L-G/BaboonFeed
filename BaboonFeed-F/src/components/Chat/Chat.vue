@@ -11,6 +11,7 @@ import type { File as FileCustom } from '@/types/File.ts'
 import { ChatType } from '@/types/Chat.ts'
 import axios from 'axios'
 import { API_URL } from '@/globals.ts'
+import { useLayoutStore } from '@/stores/layoutStore.ts'
 
 const route = useRoute()
 const chatId = computed(() => route.params.id as string)
@@ -26,6 +27,8 @@ const hasMore = ref<boolean>(false)
 const isLoadingMore = ref(false)
 const chat = computed(() => chatStore.chatList.find((chat) => chat.id === chatId.value) as Chat)
 const chatContainer = ref<HTMLElement | null>(null)
+const layout = useLayoutStore();
+const isNavbarExpanded = computed(() => layout.isNavbarExpanded);
 
 watch(
     () => route.params.id,
@@ -219,7 +222,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="container d-flex flex-column justify-content-between my-3" style="height: 90vh">
+    <div class="container d-flex flex-column justify-content-between my-3" style="height: 90vh" :class="['content', { 'content-expanded': isNavbarExpanded }]">
         <div
             class="flex-grow-1 overflow-auto overflow-x-hidden"
             ref="chatContainer"
@@ -262,3 +265,17 @@ onUnmounted(() => {
         </div>
     </div>
 </template>
+
+<style scoped>
+.content {
+    width: 100%;
+    flex-grow: 1;
+    transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
+}
+
+/* Cuando el navbar está expandido */
+.content-expanded {
+    margin-left: 5rem; /* ajusta según el ancho de tu navbar */
+    width: calc(100% - 8rem); /* ajusta según el ancho de tu navbar */
+}
+</style>

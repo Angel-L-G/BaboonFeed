@@ -82,16 +82,16 @@
 
 <script setup lang="ts">
 import CreatePost from '@/components/post/CreatePost.vue';
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { useAuthStore } from '@/stores/auth.ts'
+import { useLayoutStore } from '@/stores/layoutStore.ts'
 
-const isExpanded = ref(false);
-const emit = defineEmits(["update:expanded"]);
+const layout = useLayoutStore();
+const isExpanded = computed(() => layout.isNavbarExpanded);
 const authStore = useAuthStore();
 
 const toggleSidebar = () => {
-    isExpanded.value = !isExpanded.value;
-    emit("update:expanded", isExpanded.value);
+    layout.toggleNavbar();
 };
 
 const username = computed(() => authStore.user?.username);

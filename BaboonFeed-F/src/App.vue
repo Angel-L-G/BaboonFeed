@@ -1,15 +1,17 @@
 <script setup lang="ts">
-import { computed, ref, onMounted, onUnmounted } from 'vue'
+import { computed, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import Navbar from '@/components/Navbar.vue'
 import ChatList from '@/components/Chat/ChatList.vue'
 import { useAuthStore } from '@/stores/auth.ts'
 import { useChatStore } from '@/stores/chatStore.ts'
+import { useLayoutStore } from '@/stores/layoutStore.ts'
 
 const route = useRoute()
 const isAuthPage = computed(() => route.name === 'login' || route.name === 'register')
 const auth = useAuthStore()
-const isNavbarExpanded = ref(false)
+const layout = useLayoutStore();
+const isNavbarExpanded = computed(() => layout.isNavbarExpanded);
 const chat = useChatStore()
 
 onMounted( async() => {
@@ -28,7 +30,7 @@ onUnmounted( async () => {
     <div class="layout">
         <!-- Header de navegación -->
         <header v-if="!isAuthPage" aria-label="Navegación principal">
-            <Navbar @update:expanded="isNavbarExpanded = $event" />
+            <Navbar />
         </header>
 
         <!-- Contenido principal -->
