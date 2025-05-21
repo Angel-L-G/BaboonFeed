@@ -7,6 +7,7 @@ import type { User } from '@/types/User.ts'
 import { useRoute } from 'vue-router'
 import type { Post } from '@/types/Post.ts'
 import PostView from '@/components/post/PostView.vue'
+import EditUser from '@/components/EditUser.vue'
 
 const authStore = useAuthStore();
 const route = useRoute();
@@ -46,6 +47,31 @@ onMounted(async () => {
         posts.value = await response.data.results;
     }
 });
+
+const followUser = async () => {
+    if (!authStore.isAuthenticated) {
+        alert('You need to login to follow/unfollow a user');
+        return;
+    }
+    try {
+        await axios.patch(`${API_URL}users/${username}/follow/`, {}, {
+            headers: {
+                'Authorization': `Bearer ${authStore.token}`
+            }
+        });
+        if (user.value!.followers.includes(authStore.user!.username)) {
+            user.value!.followers = user.value!.followers.filter(follower => follower !== authStore.user!.username);
+        } else {
+            user.value!.followers.push(authStore.user!.username);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+};
+
+const isFollowing = () => {
+    return user.value?.followers.includes(authStore.user!.username);
+};
 </script>
 
 <template>
@@ -76,10 +102,13 @@ onMounted(async () => {
                         <h1 class="card-title mb-2 fw-bold fs-1 text-center">{{ user.username }}</h1>
 
                         <div class="d-flex gap-2 align-items-end">
+                            <button class="btn btn-purple-alt" v-if="authStore.user!.username !== username" @click="followUser()">
+                                {{ isFollowing() ? 'Unfollow' : 'Follow' }}
+                            </button>
                             <div class="badge badge-hover text-center" role="group" aria-label="Seguidores">
                                 <div class="d-flex align-items-center gap-1 mb-2">
                                     <font-awesome-icon :icon="['fas', 'users']" class="fs-6" />
-                                    <span class="fs-6 fw-bold">{{ user.followers }}</span>
+                                    <span class="fs-6 fw-bold">{{ user.followers?.length || 0 }}</span>
                                 </div>
                                 <span class="badge-text ">Followers</span>
                             </div>
@@ -87,16 +116,19 @@ onMounted(async () => {
                             <div class="badge badge-hover text-center">
                                 <div class="d-flex align-items-center gap-1 mb-2">
                                     <font-awesome-icon :icon="['fas', 'user-plus']" class="fs-6" />
-                                    <span class="fs-6 fw-bold">{{ user.following }}</span>
+                                    <span class="fs-6 fw-bold">{{ user.following?.length || 0 }}</span>
                                 </div>
                                 <span class="badge-text">Following</span>
                             </div>
+                            <button class="btn btn-purple-alt" data-bs-toggle="modal" v-if="authStore.user!.username === username" data-bs-target="#EditUserModal">
+                                <font-awesome-icon :icon="['fas', 'pencil']" />
+                            </button>
                         </div>
                     </div>
 
                     <p class="card-text bio-text mt-3 bg-dark-light border-3 border-start border-cyan rounded ps-1 pt-2 me-3 text-gold-light"
-                       :aria-label="user.bio ? `Biografía: ${user.bio}` : 'Este usuario aún no tiene una biografía'">
-                        {{ user.bio || "Este usuario aún no tiene una biografía." }}
+                       :aria-label="user.bio ? `Biografía: ${user.bio}` : 'This user doesn\'t have a bio'">
+                        {{ user.bio || "This user doesn't have a bio." }}
                     </p>
                 </div>
             </div>
@@ -112,6 +144,22 @@ onMounted(async () => {
             </div>
             <div v-else class="text-center mt-3">
                 <p class="text-primary-alt">{{ authStore.user!.username === username ? "You don't" : "This user doesn't"}} have any posts</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="EditUserModal" tabindex="-1"
+         aria-labelledby="EditUserModalLabel" aria-hidden="true" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content bg-secondary text-light">
+                <header class="modal-header" data-bs-theme="dark">
+                    <h2 id="EditUserModalLabel" class="modal-title text-center">Edit User</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Cerrar modal"/>
+                </header>
+                <div class="modal-body">
+                    <EditUser :username="username"/>
+                </div>
             </div>
         </div>
     </div>

@@ -1,5 +1,9 @@
 <template>
-    <div :class="['sidebar', 'bg-dark', { 'expanded': isExpanded }]" role="navigation" aria-label="Menú lateral">
+    <div
+        :class="['sidebar', 'bg-dark', { expanded: isExpanded }]"
+        role="navigation"
+        aria-label="Menú lateral"
+    >
         <!-- Botón de colapsar -->
         <button class="btn btn-outline-primary toggle-btn" @click="toggleSidebar"
             :aria-expanded="isExpanded" aria-controls="sidebarMenu" aria-label="Alternar menú lateral">
@@ -11,7 +15,7 @@
             <p class="title-text my-4">
                 <router-link :to="{ name: 'home' }" class="navbar-brand text-info-light py-3"
                     aria-label="Ir a la página de inicio">
-                    <font-awesome-icon :icon="['fas', 'dove']" class="icon-fixed-large"/>
+                    <font-awesome-icon :icon="['fas', 'home']" class="icon-fixed-large"/>
                     <span v-show="isExpanded" class="ms-3">BaboonFeed</span>
                 </router-link>
             </p>
@@ -53,8 +57,14 @@
     </div>
 
     <!-- Modal para crear post -->
-    <div class="modal fade" id="CreatePostModal" tabindex="-1"
-         aria-labelledby="CreatePostModalLabel" aria-hidden="true" role="dialog">
+    <div
+        class="modal fade"
+        id="CreatePostModal"
+        tabindex="-1"
+        aria-labelledby="CreatePostModalLabel"
+        aria-hidden="true"
+        role="dialog"
+    >
         <div class="modal-dialog" role="document">
             <div class="modal-content bg-secondary text-light">
                 <header class="modal-header" data-bs-theme="dark">
@@ -72,24 +82,29 @@
 
 <script setup lang="ts">
 import CreatePost from '@/components/post/CreatePost.vue';
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { useAuthStore } from '@/stores/auth.ts'
+import { useLayoutStore } from '@/stores/layoutStore.ts'
 
-const isExpanded = ref(false);
-const emit = defineEmits(["update:expanded"]);
+const layout = useLayoutStore();
+const isExpanded = computed(() => layout.isNavbarExpanded);
 const authStore = useAuthStore();
 
 const toggleSidebar = () => {
-    isExpanded.value = !isExpanded.value;
-    emit("update:expanded", isExpanded.value);
+    layout.toggleNavbar();
 };
 
 const username = computed(() => authStore.user?.username);
 
 const menuItems = [
     { name: 'Chat', icon: ['fas', 'comment'], route: { name: 'chatFilter' } },
-    { name: 'Profile', icon: ['fas', 'id-card'], route: { name: 'profile', params: { username: username.value } } }
-];
+    { name: 'Group', icon: ['fas', 'people-group'], route: { name: 'groups' } },
+    {
+        name: 'Profile',
+        icon: ['fas', 'id-card'],
+        route: { name: 'profile', params: { username: username.value } },
+    },
+]
 
 const isAuthenticated = computed(() => authStore.isAuthenticated);
 
@@ -161,8 +176,8 @@ const logout = () => {
     overflow: hidden;
     white-space: nowrap;
     transition:
-        opacity 0.3s ease-in-out 0.2s, /* ⏳ Agregamos un pequeño delay al ocultar */
-        width 0.5s ease-in-out;
+        opacity 0.3s ease-in-out 0.2s,
+        /* ⏳ Agregamos un pequeño delay al ocultar */ width 0.5s ease-in-out;
 }
 
 /* Cuando la sidebar está expandida */
@@ -170,8 +185,8 @@ const logout = () => {
     opacity: 1;
     width: auto;
     transition:
-        opacity 0.3s ease-in-out,  /* ⚡ Sin delay al aparecer */
-        width 0.3s ease-in-out;
+        opacity 0.3s ease-in-out,
+        /* ⚡ Sin delay al aparecer */ width 0.3s ease-in-out;
 }
 
 .toggle-btn {

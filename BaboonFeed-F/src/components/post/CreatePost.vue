@@ -18,10 +18,10 @@
             </div>
 
             <div id="fileHelp" class="form-text text-light-dark">
-                Hint: you can attach an image, video, or audio file.
+                Hint: you can attach an image, video, or audio file, formats are: jpeg, jpg, png, gif, mpeg, wav, mp3, mp4, webm and ogg.
             </div>
 
-            <button class="btn btn-purple-alt text-light w-100 mt-2" type="submit">
+            <button class="btn btn-purple-alt text-light w-100 mt-2" type="submit" data-bs-dismiss="modal">
                 Create
             </button>
         </form>
@@ -66,7 +66,6 @@ const handleSubmit = async () => {
                 }}
         )
         const fileId = await fileResponse.data.id;
-        console.log(fileResponse.data);
         const response = await axios.post(`${API_URL}posts/`,
             {
                 content: content.value,

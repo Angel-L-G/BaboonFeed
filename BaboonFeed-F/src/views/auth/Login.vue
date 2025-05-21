@@ -1,7 +1,13 @@
 <template>
-    <div class="container d-flex justify-content-center align-items-center vh-100 position-absolute top-50 start-50 translate-middle">
-        <div class="card p-4 bg-primary" style="width: 22rem;"
-             role="form" aria-label="Formulario de inicio de sesión">
+    <div
+        class="container d-flex justify-content-center align-items-center vh-100 position-absolute top-50 start-50 translate-middle"
+    >
+        <div
+            class="card p-4 bg-primary"
+            style="width: 22rem"
+            role="form"
+            aria-label="Formulario de inicio de sesión"
+        >
             <h3 class="text-center">Login</h3>
             <form @submit.prevent="handleLogin">
                 <div class="mb-3">
@@ -37,13 +43,15 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useAuthStore } from '@/stores/auth.ts';
+import { useAuthStore } from '@/stores/auth.ts'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 import { API_URL } from '@/globals.ts'
+import { useChatStore } from '@/stores/chatStore.ts'
 
-const authStore = useAuthStore();
-const router = useRouter();
+const authStore = useAuthStore()
+const chatStore = useChatStore()
+const router = useRouter()
 
 const username = ref('');
 const password = ref('');
@@ -52,30 +60,32 @@ const errorMsg = ref('');
 const handleLogin = async () => {
     if (username.value && password.value) {
         try {
-            const responsePromise = await axios.post(
-                `${API_URL}login/`,
-                {username: username.value, password: password.value}
-            );
-            const data = responsePromise.data;
+            const responsePromise = await axios.post(`${API_URL}login/`, {
+                username: username.value,
+                password: password.value,
+            })
+            const data = responsePromise.data
             if (data.access) {
-                authStore.token = data.access;
-                authStore.user = data.user;
-                localStorage.setItem('token', data.access);
-                localStorage.setItem('user', JSON.stringify(data.user));
-                errorMsg.value = '';
-                router.push("/home/");
+                authStore.token = data.access
+                authStore.user = data.user
+                localStorage.setItem('token', data.access)
+                localStorage.setItem('user', JSON.stringify(data.user))
+                errorMsg.value = ''
+                await chatStore.getUserChats()
+                await chatStore.connectToAllChats()
+                router.push('/home/')
             } else {
-                console.log("No token received");
-                errorMsg.value = 'Credenciales incorrectas';
-                username.value = '';
-                password.value = '';
+                console.log('No token received')
+                errorMsg.value = 'Credenciales incorrectas'
+                username.value = ''
+                password.value = ''
             }
         } catch (error) {
-            console.error('Error:', error);
-            errorMsg.value = 'Credenciales incorrectas';
-            username.value = '';
-            password.value = '';
+            console.error('Error:', error)
+            errorMsg.value = 'Credenciales incorrectas'
+            username.value = ''
+            password.value = ''
         }
     }
-};
+}
 </script>
