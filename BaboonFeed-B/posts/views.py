@@ -31,6 +31,15 @@ class PostViewSet(viewsets.ModelViewSet):
 
         return queryset
 
+    # GET /posts/<id>/
+    def retrieve(self, request, *args, **kwargs):
+        """
+        Retorna un post específico.
+        """
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+
     # POST /posts/
     def perform_create(self, serializer):
         """
@@ -94,14 +103,14 @@ class PostViewSet(viewsets.ModelViewSet):
             Retorna todas las respuestas de un post, incluyendo respuestas anidadas.
             """
             replies = post.replies.filter(parent_reply__isnull=True)  # Solo respuestas principales
-            serializer = ReplySerializer(replies, many=True)
+            serializer = ReplySerializer(replies, many=True, context={'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         elif request.method == 'POST':
             """
             Crea una respuesta a un post o dentro de otra respuesta.
             """
-            serializer = ReplySerializer(data=request.data)
+            serializer = ReplySerializer(data=request.data, context={'request': request})
             serializer.is_valid(raise_exception=True)
 
             # Obtener la respuesta padre si se envió un parent_reply
@@ -112,6 +121,45 @@ class PostViewSet(viewsets.ModelViewSet):
 
             serializer.save(user=request.user, post=post, parent_reply=parent_reply)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response({"message": "Invalid request"}, status=status.HTTP_400_BAD_REQUEST)
+
+    # PATCH /posts/<id>/replies/<reply_id>/like/
+    @action(detail=True, methods=['patch'], url_path='replies/(?P<reply_pk>[^/.]+)/like')
+    def like_reply(self, request, pk=None, reply_pk=None):
+        """
+        Permite a un usuario dar like a una respuesta.
+        Si ya ha dado dislike, lo elimina.
+        """
+        post = self.get_object()
+        reply = get_object_or_404(post.replies, pk=reply_pk)
+        user = request.user
+
+        if user in reply.likes.all():
+            reply.likes.remove(user)
+            return Response({"message": "Like deleted"}, status=status.HTTP_200_OK)
+
+        reply.dislikes.remove(user)  # Si el usuario ya dio dislike, lo eliminamos
+        reply.likes.add(user)
+        return Response({"message": "Reply liked"}, status=status.HTTP_200_OK)
+
+    # PATCH /posts/<id>/replies/<reply_id>/dislike/
+    @action(detail=True, methods=['patch'], url_path='replies/(?P<reply_pk>[^/.]+)/dislike')
+    def dislike_reply(self, request, pk=None, reply_pk=None):
+        """
+        Permite a un usuario dar dislike a una respuesta.
+        Si ya ha dado like, lo elimina.
+        """
+        post = self.get_object()
+        reply = get_object_or_404(post.replies, pk=reply_pk)
+        user = request.user
+
+        if user in reply.dislikes.all():
+            reply.dislikes.remove(user)
+            return Response({"message": "Dislike deleted"}, status=status.HTTP_200_OK)
+
+        reply.likes.remove(user)  # Si el usuario ya dio like, lo eliminamos
+        reply.dislikes.add(user)
+        return Response({"message": "Reply disliked"}, status=status.HTTP_200_OK)
 
     @action(detail=True, methods=['delete'], url_path='replies/(?P<reply_pk>[^/.]+)')
     def delete_reply(self, request, pk=None, reply_pk=None):
