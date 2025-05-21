@@ -4,6 +4,7 @@ import type { Reply } from '@/types/Post.ts'
 import { useAuthStore } from '@/stores/auth.ts'
 import { API_URL } from '@/globals.ts'
 import axios from 'axios'
+import { RouterLinkStub } from '@vue/test-utils'
 
 const authStore = useAuthStore()
 const { reply } = defineProps<{ reply: Reply }>();
@@ -65,14 +66,14 @@ const handleDislike = async (reply: Reply) => {
 <template>
     <div class="rounded m-2 w-75" role="article" :aria-labelledby="`post-title-${reply.id}`">
         <div class="d-flex align-items-center justify-content-between px-3 p-2 border-bottom border-dark-light">
-            <div class="d-flex mt-2 align-items-center">
+            <router-link :to="{ name: 'profile', params: { username: reply.user.username } }" class="d-flex mt-2 align-items-center link-underline link-underline-opacity-0">
                 <img class="me-2 rounded-circle border border-2 border-cyan"
                      :src="reply.user.avatar" :alt="`Foto de perfil de ${reply.user.username}`"
                      style="height: 35px; width: 35px;" />
                 <h2 class="text-light-alt h5 mb-0" :id="`post-title-${reply.id}`">
                     {{ reply.user.username }}
                 </h2>
-            </div>
+            </router-link>
 
             <div class="p-2 border-start border-end border-3 border-purple rounded">
                 <time :datetime="reply.created_at">
