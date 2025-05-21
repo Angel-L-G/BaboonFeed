@@ -184,5 +184,23 @@ export const useChatStore = defineStore('chat', () => {
         return <ReconnectingWebSocket>sockets.value.find((socket) => socket.id == (chatId.startsWith(ChatType.PRIVATE) ? ChatType.PRIVATE : chatId) )?.socket
     }
 
-    return { chatList, getUserChats, connectToAllChats, disconnectAllChats, setActiveChatId, getSocket, registerMessageListener, unregisterMessageListener }
+    async function removeGroup(groupId: string) {
+        const id = `${ChatType.GROUP}_${groupId}`
+        const chatIndex = chatList.value.findIndex((c: Chat) => c.id === id)
+        if (chatIndex === -1) {
+            console.warn('Group not found in store:', groupId)
+            return
+        }
+        chatList.value.splice(chatIndex, 1)
+
+        sockets.value.find((socket) => socket.id == groupId)?.socket.close()
+        const socketIndex = sockets.value.findIndex((socket) => socket.id == id)
+        if (socketIndex === -1) {
+            console.warn('Socket not found in store:', groupId)
+            return
+        }
+        sockets.value.splice(socketIndex, 1)
+    }
+
+    return { chatList, getUserChats, connectToAllChats, disconnectAllChats, setActiveChatId, getSocket, registerMessageListener, unregisterMessageListener, removeGroup }
 })

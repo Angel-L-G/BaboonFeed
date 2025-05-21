@@ -24,12 +24,8 @@ import type { Post } from '../types/Post'
 import { API_URL } from '@/globals'
 import PostView from '@/components/post/PostView.vue'
 import axios from 'axios'
-import type { Chat } from '@/types/Chat.ts'
-import { useAuthStore } from '@/stores/auth.ts'
 
-const authStore = useAuthStore();
 const posts = reactive<Post[]>([]);
-const chats = reactive<Chat[]>([]);
 const bottomSentinel = ref<HTMLElement | null>(null);
 
 const nextUrl = ref<string | null>(`${API_URL}posts/?limit=10`);
@@ -53,17 +49,6 @@ const loadPosts = async () => {
 
 onMounted(async () => {
     await loadPosts();
-
-    if (authStore.user) {
-        try {
-            const response = await axios.get(`${API_URL}chats/?limit=10&offset=0`, {
-                headers: { Authorization: `Bearer ${authStore.token}` },
-            });
-            response.data.results.forEach((chat: Chat) => chats.push(chat));
-        } catch (error) {
-            console.error(error);
-        }
-    }
 
     // Scroll infinito con IntersectionObserver
     const observer = new IntersectionObserver((entries) => {

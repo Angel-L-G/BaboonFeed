@@ -4,7 +4,7 @@ import ReconnectingWebSocket from 'reconnecting-websocket'
 import type { MessageReceived, MessageSent } from '@/types/Message.ts'
 import type { Chat } from '@/types/Chat'
 import MessageComponent from '@/components/Message.vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useChatStore } from '@/stores/chatStore.ts'
 import { useAuthStore } from '@/stores/auth.ts'
 import type { File as FileCustom } from '@/types/File.ts'
@@ -14,6 +14,7 @@ import { API_URL } from '@/globals.ts'
 import { useLayoutStore } from '@/stores/layoutStore.ts'
 
 const route = useRoute()
+const router = useRouter()
 const chatId = computed(() => route.params.id as string)
 const messages = ref<MessageReceived[]>([])
 const isGroup = computed(() => chatId.value.startsWith(ChatType.GROUP))
@@ -211,6 +212,14 @@ function isNearBottom(): boolean {
     return scrollTop + clientHeight >= scrollHeight - 150
 }
 
+function goToChatInfo() {
+    if (!chat.value) return
+    if (isGroup.value) {
+        router.push(`/groups/${rawId.value}`)
+    } else {
+        router.push(`/users/profile/${chat.value.name}`)
+    }
+}
 
 onUnmounted(() => {
     messages.value = []
@@ -223,6 +232,25 @@ onUnmounted(() => {
 
 <template>
     <div class="container d-flex flex-column justify-content-between my-3" style="height: 90vh" :class="['content', { 'content-expanded': isNavbarExpanded }]">
+        <!-- Encabezado del chat -->
+        <div
+            class="d-flex align-items-center justify-content-between px-3 py-2 border-bottom border-primary bg-dark"
+            role="banner"
+            style="position: sticky; top: 0; z-index: 1000"
+            @click="goToChatInfo"
+        >
+            <img
+                :src="chat?.avatar_url"
+                alt="avatar"
+                class="rounded-circle border border-2"
+                style="width: 40px; height: 40px; object-fit: cover; cursor: pointer"
+            />
+            <h5 class="mb-0 flex-grow-1 text-center text-light" style="cursor: pointer">
+                {{ chat?.name }}
+            </h5>
+            <span style="width: 40px"></span>
+        </div>
+
         <div
             class="flex-grow-1 overflow-auto overflow-x-hidden"
             ref="chatContainer"

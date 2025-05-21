@@ -1,3 +1,4 @@
+from django.template.context_processors import request
 from rest_framework import serializers
 
 from files.models import File
@@ -43,13 +44,14 @@ class PostSerializer(serializers.ModelSerializer):
         return obj.dislikes.count()  # Cuenta la cantidad de dislikes
 
 class ReplySerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)  # Serializador anidado
     replies = serializers.SerializerMethodField()  # Campo para anidar respuestas
     likes_count = serializers.SerializerMethodField()
     dislikes_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Reply
-        fields = ['id', 'content', 'created_at', 'user', 'post', 'parent_reply', 'replies']
+        fields = ['id', 'content', 'created_at', 'user', 'post', 'parent_reply', 'replies', 'likes', 'dislikes', 'likes_count', 'dislikes_count',]
         read_only_fields = ['user', 'post', 'likes', 'dislikes']  # No se pueden modificar estos campos
 
     def get_replies(self, obj):

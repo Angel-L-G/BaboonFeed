@@ -1,14 +1,14 @@
 <template>
     <div class="border border-dark-light rounded m-2 bg-secondary-alt w-75" role="article" :aria-labelledby="`post-title-${post.id}`">
         <div class="d-flex align-items-center justify-content-between px-3 p-2 border-bottom border-dark-light">
-            <div class="d-flex mt-2 align-items-center">
+            <router-link :to="{ name: 'profile', params: { username: post.user.username } }" class="d-flex mt-2 align-items-center link-underline link-underline-opacity-0">
                 <img class="me-2 rounded-circle border border-2 border-cyan"
                      :src="post.user.avatar" :alt="`Foto de perfil de ${post.user.username}`"
                      style="height: 35px; width: 35px;" />
                 <h2 class="text-light-alt h5 mb-0" :id="`post-title-${post.id}`">
                     {{ post.user.username }}
                 </h2>
-            </div>
+            </router-link>
 
             <div class="p-2 border-start border-end border-3 border-purple rounded">
                 <time :datetime="post.created_at">

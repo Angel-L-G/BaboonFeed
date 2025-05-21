@@ -10,7 +10,7 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        if request.method == 'PATCH' and  hasattr(view, 'action') and view.action in ['like', 'dislike']:
+        if request.method == 'PATCH' and  hasattr(view, 'action') and view.action in ['like', 'dislike', 'like_reply', 'dislike_reply']:
             return True
 
         # Permitir eliminar o crear el like solo al dueño del post
