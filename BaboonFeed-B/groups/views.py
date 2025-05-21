@@ -19,7 +19,7 @@ class GroupChatViewSet(viewsets.ViewSet):
 
     # GET /groups/
     def list(self, request):
-        groups = GroupChat.objects.filter(members=request.user).union(
+        groups = GroupChat.objects.filter(members=request.user).order_by('-last_modified').union(
             GroupChat.objects.filter(leader=request.user).order_by('-last_modified')
         )
         serializer = GroupChatSerializer(groups, many=True, context={'request': request})

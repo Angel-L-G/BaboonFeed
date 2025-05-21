@@ -51,6 +51,12 @@ const router = createRouter({
             name: 'groups',
             component: () => import('@/components/group/GroupList.vue'),
             meta: { requiresAuth: true },
+        },
+        {
+            path: '/groups/:id',
+            name: 'groupInfo',
+            component: () => import('@/components/group/GroupInfo.vue'),
+            meta: { requiresAuth: true },
         }
     ],
 })

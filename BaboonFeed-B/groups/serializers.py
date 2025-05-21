@@ -5,13 +5,13 @@ from .models import GroupChat
 
 
 class GroupUserSerializer(serializers.ModelSerializer):
-    avatar_url = serializers.SerializerMethodField()
+    avatar = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ['username', 'avatar_url']
+        fields = ['username', 'avatar']
 
-    def get_avatar_url(self, obj):
+    def get_avatar(self, obj):
         request = self.context.get('request')
         if obj.avatar and request:
             return request.build_absolute_uri(obj.avatar.url)
@@ -21,10 +21,12 @@ class GroupUserSerializer(serializers.ModelSerializer):
 class GroupChatSerializer(serializers.ModelSerializer):
     avatar_url = serializers.SerializerMethodField()
     last_message = serializers.SerializerMethodField()
+    leader = GroupUserSerializer(read_only=True)
+    members = GroupUserSerializer(many=True, read_only=True)
 
     class Meta:
         model = GroupChat
-        fields = ['id', 'name', 'avatar_url', 'last_message', 'last_modified']
+        fields = ['id', 'name', 'avatar_url', 'last_message', 'last_modified', 'leader', 'members']
 
     def get_avatar_url(self, obj):
         request = self.context.get('request')
