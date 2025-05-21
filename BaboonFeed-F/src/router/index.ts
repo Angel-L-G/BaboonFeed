@@ -14,6 +14,11 @@ const router = createRouter({
             component: () => import('@/views/HomePage.vue'),
         },
         {
+            path: '/posts/:id/replies/',
+            name: 'replies',
+            component: () => import('@/components/post/Replies.vue'),
+        },
+        {
             path: '/login/',
             name: 'login',
             component: () => import('@/views/auth/Login.vue'),
@@ -41,6 +46,12 @@ const router = createRouter({
             component: () => import('@/views/user/UserProfile.vue'),
             meta: { requiresAuth: true },
         },
+        {
+            path: '/groups/',
+            name: 'groups',
+            component: () => import('@/components/group/GroupList.vue'),
+            meta: { requiresAuth: true },
+        }
     ],
 })
 

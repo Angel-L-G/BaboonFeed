@@ -1,21 +1,36 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import Navbar from '@/components/Navbar.vue'
 import ChatList from '@/components/Chat/ChatList.vue'
+import { useAuthStore } from '@/stores/auth.ts'
+import { useChatStore } from '@/stores/chatStore.ts'
+import { useLayoutStore } from '@/stores/layoutStore.ts'
 
-const route = useRoute();
-const isAuthPage = computed(() => route.name === 'login' || route.name === 'register');
+const route = useRoute()
+const isAuthPage = computed(() => route.name === 'login' || route.name === 'register')
+const auth = useAuthStore()
+const layout = useLayoutStore();
+const isNavbarExpanded = computed(() => layout.isNavbarExpanded);
+const chat = useChatStore()
 
-// Estado de la Navbar (contraída por defecto)
-const isNavbarExpanded = ref(false);
+onMounted( async() => {
+    if (auth.isAuthenticated && !isAuthPage.value) {
+        await chat.getUserChats()
+        await chat.connectToAllChats()
+    }
+})
+
+onUnmounted( async () => {
+    await chat.disconnectAllChats();
+})
 </script>
 
 <template>
     <div class="layout">
         <!-- Header de navegación -->
         <header v-if="!isAuthPage" aria-label="Navegación principal">
-            <Navbar @update:expanded="isNavbarExpanded = $event" />
+            <Navbar />
         </header>
 
         <!-- Contenido principal -->

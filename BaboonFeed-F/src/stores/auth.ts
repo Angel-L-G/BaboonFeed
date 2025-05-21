@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { computed, ref } from 'vue'
 import type { User } from '@/types/User.ts'
+import { useChatStore } from '@/stores/chatStore.ts'
 
 export const useAuthStore = defineStore('auth', () => {
     const token = ref<string | null>(localStorage.getItem('token') || null)
@@ -13,6 +14,7 @@ export const useAuthStore = defineStore('auth', () => {
         localStorage.removeItem('token')
         user.value = null
         localStorage.removeItem('user')
+        useChatStore().disconnectAllChats()
     }
 
     return { token, user, isAuthenticated, logout }

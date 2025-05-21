@@ -5,6 +5,6 @@ export interface User {
   created_at: string;
   bio: string;
   avatar?: string;
-  followers: number;
-  following: number;
+  followers: string[];
+  following: string[];
 }
