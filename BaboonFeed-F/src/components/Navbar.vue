@@ -136,19 +136,23 @@ const logout = () => {
         position: fixed;
         top: 0;
         left: 0;
-        width: 250px;
         height: 100vh;
-        transform: translateX(-100%);
-        transition: transform 0.3s ease-in-out;
-        background-color: #111; /* Asegura que tenga fondo oscuro */
-        z-index: 1050; /* Que esté por encima del contenido */
-        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3); /* opcional */
+        width: 80px;
+        z-index: 1050;
+        display: flex;
+        flex-direction: column;
+        background-color: #111;
+        transition: width 0.3s ease-in-out;
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
     }
 
     .sidebar.expanded {
-        transform: translateX(0);
+        width: 250px;
+        /* Importante: sigue siendo fixed, para que flote sobre el contenido */
+        z-index: 1050;
     }
 }
+
 
 /* ANIMACIÓN FLUIDA AL DESAPARECER */
 .nav-text {

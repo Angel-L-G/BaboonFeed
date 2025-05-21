@@ -1,6 +1,6 @@
 <template>
     <div class="container-fluid text-center overflow-hidden" role="region" aria-label="Página de inicio">
-        <div class="bg-secondary text-center position-fixed margin-right" style="z-index: 1;">
+        <div class="bg-secondary position-fixed margin-right" style="z-index: 1;">
             <h1 class="display-4 m-3 text-primary-alt fw-bold" id="home-heading">Baboon Feed</h1>
         </div>
 
@@ -69,12 +69,15 @@ onMounted(async () => {
 @media (min-width: 992px) {
     .margin-right {
         width: 75%;
+        text-align: center;
     }
 }
 
 @media (max-width: 991px) {
     .margin-right {
         width: 100%;
+        margin-inline-start: 15px;
+        text-align: start;
     }
 }
 </style>

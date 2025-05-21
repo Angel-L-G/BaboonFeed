@@ -46,6 +46,11 @@ const isNavbarExpanded = ref(false);
     transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
 }
 
+/* Contenido desplazado cuando la navbar está expandida */
+.content-expanded {
+    margin-left: 250px;
+}
+
 /* Aplicar márgenes solo en pantallas grandes (≥ 992px) */
 @media (min-width: 992px) {
     .content {
@@ -59,18 +64,11 @@ const isNavbarExpanded = ref(false);
 }
 
 @media (max-width: 991px) {
-    .content {
-        margin: 0 !important;
-    }
-
+    /* El contenido principal NO se debe mover en móviles */
+    .content,
     .content-expanded {
-        margin: 0 !important;
+        margin-left: 80px !important; /* Siempre dejar espacio solo para la sidebar contraída */
     }
-}
-
-/* Contenido desplazado cuando la navbar está expandida */
-.content-expanded {
-  margin-left: 250px;
 }
 
 /* Ocultar scrollbar en navegadores WebKit */

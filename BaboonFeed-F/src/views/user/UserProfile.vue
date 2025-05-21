@@ -169,4 +169,58 @@ onMounted(async () => {
     color: rgba(255, 255, 255, 0.8);
 }
 
+@media (max-width: 991px) {
+    .profile-container {
+        position: relative;
+        left: auto;
+        transform: none;
+        top: 35px;
+        width: 100%;
+        padding-right: 10px;
+    }
+
+    .profile-card {
+        flex-direction: column;
+    }
+
+    .row.g-0 {
+        flex-direction: column;
+    }
+
+    .col-md-4,
+    .col-md-8 {
+        width: 100%;
+        text-align: center;
+    }
+
+    .profile-img {
+        width: 120px;
+        height: 120px;
+        margin: 0 auto;
+    }
+
+    .card-body {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        padding: 10px;
+    }
+
+    .bio-text {
+        font-size: 0.9rem;
+        margin: 0 1rem;
+        max-height: none;
+        min-height: auto;
+        padding: 10px;
+    }
+
+    .scroll-content {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .content {
+        margin-left: 0 !important;
+    }
+}
 </style>
