@@ -6,71 +6,148 @@ import { useAuthStore } from '@/stores/auth.ts'
 import axios from 'axios'
 import type { GroupDto } from '@/dtos/GroupDto.ts'
 import CreateGroupModal from '@/components/group/CreateGroupModal.vue'
-import GroupCard from '@/components/group/GroupCard.vue'
+import { useRouter } from 'vue-router'
+import { ChatType } from '@/types/Chat.ts'
+import { useChatStore } from '@/stores/chatStore.ts'
 
 const auth = useAuthStore()
+const chatStore = useChatStore()
 const groups = ref<Group[]>([])
 const errorMsg = ref<string>('')
+const showConfirmModal = ref(false)
+const selectedGroup = ref<Group | null>(null)
+const router = useRouter()
 
 onMounted(async () => {
-    await axios
-        .get(`${API_URL}groups/`, {
+    await fetchGroups()
+})
+
+async function fetchGroups() {
+    try {
+        const response = await axios.get(`${API_URL}groups/`, {
             headers: { Authorization: `Bearer ${auth.token}` },
         })
-        .then((response) => {
-            groups.value = response.data
-        })
-        .catch((error) => {
-            console.log(error)
-            errorMsg.value = error
-        })
-})
+        groups.value = response.data
+    } catch (error) {
+        console.log(error)
+        errorMsg.value = 'Error fetching groups'
+    }
+}
 
 async function createGroup(data: GroupDto) {
     const formData = new FormData()
     formData.append('name', data.name)
     if (data.avatar) formData.append('avatar', data.avatar)
     data.members.forEach((member: string) => formData.append('members', member))
-    console.log(JSON.stringify(formData))
-    await axios
-        .post(`${API_URL}groups/`, formData, {
+
+    try {
+        const response = await axios.post(`${API_URL}groups/`, formData, {
             headers: {
                 Authorization: `Bearer ${auth.token}`,
                 'Content-Type': 'multipart/form-data',
             },
         })
-        .then((response) => {
-            groups.value.push(response.data)
+        groups.value.push(response.data)
+    } catch (error) {
+        console.log(error)
+        errorMsg.value = 'Error creating group'
+    }
+}
+
+function goToChat(group: Group) {
+    const chatId = `${ChatType.GROUP}_${group.id}`
+    router.push(`/chat/${chatId}`)
+}
+
+function confirmLeave(group: Group) {
+    selectedGroup.value = group
+    showConfirmModal.value = true
+}
+
+async function leaveGroup() {
+    if (!selectedGroup.value) return
+
+    try {
+        await axios.delete(`${API_URL}groups/${selectedGroup.value.id}/leave/`, {
+            headers: { Authorization: `Bearer ${auth.token}` },
         })
-        .catch((error) => {
-            console.log(error)
-            errorMsg.value = error.message || 'Something went wrong'
-        })
+        chatStore.removeGroup(selectedGroup.value.id)
+        groups.value = groups.value.filter(g => g.id !== selectedGroup.value?.id)
+    } catch (error) {
+        console.error('Error al salir del grupo:', error)
+    } finally {
+        showConfirmModal.value = false
+        selectedGroup.value = null
+    }
 }
 </script>
 
 <template>
     <div class="p-4 group-container">
-        <p v-if="errorMsg" class="text-red-500 mb-4">{{ errorMsg }}</p>
+        <p v-if="errorMsg" class="text-danger mb-4">{{ errorMsg }}</p>
 
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-2xl font-bold">Your Groups</h2>
-            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#CreateGroupModal">
-                Crear Grupo
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fs-3 fw-bold">Your Groups</h2>
+            <button
+                class="btn btn-warning"
+                data-bs-toggle="modal"
+                data-bs-target="#CreateGroupModal"
+            >
+                Create Group
             </button>
         </div>
 
-        <div class="grid gap-4">
-            <GroupCard v-for="group in groups" :key="group.id" :group="group" >
-                {{ group.name }}
-            </GroupCard>
+        <div class="d-grid gap-3">
+            <div
+                v-for="group in groups"
+                :key="group.id"
+                class="d-flex justify-content-between align-items-center p-3 bg-dark text-light rounded shadow-sm group-card"
+                role="button"
+                @click="goToChat(group)"
+            >
+                <div class="d-flex align-items-center gap-3">
+                    <img :src="group.avatar_url" class="rounded-circle" width="48" height="48" />
+                    <strong>{{ group.name }}</strong>
+                </div>
+                <button class="btn btn-danger btn-sm text-white" @click.stop="confirmLeave(group)">
+                    Leave
+                </button>
+            </div>
         </div>
 
-        <div class="modal fade" id="CreateGroupModal" tabindex="-1" aria-labelledby="CreateGroupModalLabel"
-            aria-hidden="true">
+        <div
+            class="modal fade"
+            id="CreateGroupModal"
+            tabindex="-1"
+            aria-labelledby="CreateGroupModalLabel"
+            aria-hidden="true"
+        >
             <div class="modal-dialog">
                 <div class="modal-content bg-secondary text-light p-3">
-                    <CreateGroupModal @submit="createGroup"/>
+                    <CreateGroupModal @submit="createGroup" />
+                </div>
+            </div>
+        </div>
+
+        <div
+            v-if="showConfirmModal"
+            class="modal fade show d-block"
+            tabindex="-1"
+            role="dialog"
+        >
+            <div class="modal-dialog" role="document">
+                <div class="modal-content bg-secondary text-light">
+                    <div class="modal-header">
+                        <h5 class="modal-title">¿Seguro que quieres salir del grupo?</h5>
+                        <button type="button" class="btn-close" @click="showConfirmModal = false"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Ya no podrás enviar ni recibir mensajes en este grupo.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" @click="showConfirmModal = false">Cancelar</button>
+                        <button class="btn btn-danger" @click="leaveGroup">Salir</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -78,17 +155,15 @@ async function createGroup(data: GroupDto) {
 </template>
 
 <style scoped>
-@media (min-width: 992px) {
-    .group-container {
-        margin-left: 40px;
-        margin-right: 100px;
-    }
+.group-container {
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-@media (max-width: 991px) {
-    /* El contenido principal NO se debe mover en móviles */
-    .group-container{
-        margin-left: 0px !important; /* Siempre dejar espacio solo para la sidebar contraída */
-    }
+.group-card:hover {
+    background-color: #1a1a1a;
+    transition: background-color 0.2s;
+    cursor: pointer;
 }
 </style>
