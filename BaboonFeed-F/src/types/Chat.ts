@@ -8,6 +8,7 @@ export interface Chat {
     last_message: string;
     members: User[];
     type: ChatType;
+    newMessages: number;
 }
 
 export enum ChatType{

@@ -35,6 +35,7 @@ export const useChatStore = defineStore('chat', () => {
                     chat.id = `${ChatType.PRIVATE}_${chat.id}`
                     chat.avatar_url = <string>otherUser?.avatar
                     chat.name = <string>otherUser?.username
+                    chat.newMessages = 0;
                     return chat
                 })
             )
@@ -51,6 +52,7 @@ export const useChatStore = defineStore('chat', () => {
                 res.data.map((chat: Chat) => {
                     chat.type = ChatType.GROUP
                     chat.id = `${ChatType.GROUP}_${chat.id}`
+                    chat.newMessages = 0;
                     return chat
                 })
             )
@@ -162,8 +164,7 @@ export const useChatStore = defineStore('chat', () => {
 
         // Notificar visualmente si este chat no es el que el usuario está viendo actualmente
         if (activeChatId.value !== chatId) {
-            // Marcar como nuevo mensaje no leído
-            //chat.hasNew = true
+            chat.newMessages++;
             console.log('its different')
         }
 

@@ -47,6 +47,9 @@ onMounted(async () => {
 
 async function initializeChat() {
     chatStore.setActiveChatId(chatId.value)
+
+    chat.value.newMessages = 0;
+
     try {
         await waitForSocket(chatId.value)
         socket.value = chatStore.getSocket(chatId.value)

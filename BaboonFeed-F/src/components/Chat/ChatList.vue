@@ -23,7 +23,7 @@ const authStore = useAuthStore();
             >
                 <router-link
                     :to="`/chat/${chatItem.id}`"
-                    class="nav-link text-purple-light d-flex pt-1"
+                    class="nav-link text-purple-light d-flex pt-1 justify-content-between align-items-center"
                     :aria-label="`Abrir chat con ${chatItem.name}`"
                 >
                     <div class="d-flex flex-column w-100">
@@ -36,6 +36,13 @@ const authStore = useAuthStore();
                             <h3 class="ms-1 text-light-dark fw-bold fs-6 mb-0">
                                 {{ chatItem.name }}
                             </h3>
+                            <span
+                                v-if="chatItem.newMessages > 0"
+                                class="badge bg-danger ms-2"
+                                aria-label="Mensajes sin leer"
+                            >
+                    {{ chatItem.newMessages }}
+                </span>
                         </div>
 
                         <div class="d-flex flex-column" style="max-width: 100%">
