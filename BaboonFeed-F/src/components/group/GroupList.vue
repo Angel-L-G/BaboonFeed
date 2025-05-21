@@ -50,16 +50,12 @@ async function createGroup(data: GroupDto) {
 </script>
 
 <template>
-    <div class="p-4">
+    <div class="p-4 group-container">
         <p v-if="errorMsg" class="text-red-500 mb-4">{{ errorMsg }}</p>
 
         <div class="flex justify-between items-center mb-4">
-            <h2 class="text-2xl font-bold">Tus Grupos</h2>
-            <button
-                class="btn btn-warning"
-                data-bs-toggle="modal"
-                data-bs-target="#CreateGroupModal"
-            >
+            <h2 class="text-2xl font-bold">Your Groups</h2>
+            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#CreateGroupModal">
                 Crear Grupo
             </button>
         </div>
@@ -70,20 +66,29 @@ async function createGroup(data: GroupDto) {
             </GroupCard>
         </div>
 
-        <div
-            class="modal fade"
-            id="CreateGroupModal"
-            tabindex="-1"
-            aria-labelledby="CreateGroupModalLabel"
-            aria-hidden="true"
-        >
+        <div class="modal fade" id="CreateGroupModal" tabindex="-1" aria-labelledby="CreateGroupModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content bg-secondary text-light p-3">
-                    <CreateGroupModal @submit="createGroup" />
+                    <CreateGroupModal @submit="createGroup"/>
                 </div>
             </div>
         </div>
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+@media (min-width: 992px) {
+    .group-container {
+        margin-left: 40px;
+        margin-right: 100px;
+    }
+}
+
+@media (max-width: 991px) {
+    /* El contenido principal NO se debe mover en móviles */
+    .group-container{
+        margin-left: 0px !important; /* Siempre dejar espacio solo para la sidebar contraída */
+    }
+}
+</style>
