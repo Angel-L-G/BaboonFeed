@@ -1,9 +1,6 @@
-from django.template.context_processors import request
 from rest_framework import serializers
 
-from files.serializers import FileSerializer
 from users.models import User
-
 from .models import Chat, Message
 
 
