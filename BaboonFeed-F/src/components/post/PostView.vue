@@ -27,10 +27,13 @@
                     <font-awesome-icon :icon="['far', 'thumbs-up']" />
                     {{ post.likes.length }}
                 </button>
-                <button class="btn btn-outline-primary-alt" @click="handleDislike(post)">
+                <button class="btn btn-outline-primary-alt me-3" @click="handleDislike(post)">
                     <font-awesome-icon :icon="['far', 'thumbs-down']" />
                     {{ post.dislikes.length }}
                 </button>
+                <router-link :to="{ name: 'replies', params: { id: post.id }}" class="btn btn-outline-primary-alt">
+                    <font-awesome-icon :icon="['far', 'comment']" />
+                </router-link>
             </div>
         </div>
     </div>

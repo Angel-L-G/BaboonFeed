@@ -18,6 +18,6 @@ export interface Reply {
     replies: Reply[]
     post: Post
     user: User
-    likes_count: number[]
-    dislikes_count: number[]
+    likes: number[]
+    dislikes: number[]
 }
