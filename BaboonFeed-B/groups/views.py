@@ -1,3 +1,5 @@
+from django.db.models import Q
+
 from chats.serializers import MessageSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework import status, viewsets
@@ -19,9 +21,9 @@ class GroupChatViewSet(viewsets.ViewSet):
 
     # GET /groups/
     def list(self, request):
-        groups = GroupChat.objects.filter(members=request.user).order_by('-last_modified').union(
-            GroupChat.objects.filter(leader=request.user).order_by('-last_modified')
-        )
+        groups = GroupChat.objects.filter(
+            Q(members=request.user) | Q(leader=request.user)
+        ).distinct().order_by('-last_modified')
         serializer = GroupChatSerializer(groups, many=True, context={'request': request})
         return Response(serializer.data)
 
