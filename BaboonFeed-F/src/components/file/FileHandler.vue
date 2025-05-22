@@ -10,7 +10,7 @@
                 <source :src="file.file" type="video/mp4" />
                 <track kind="captions" srclang="es" label="Subtítulos en español"
                        src="/subtitulos/video-subtitles.vtt" default/>
-                Tu navegador no soporta el video.
+                Your browser doesn't support this function
             </video>
         </Plyr>
 
@@ -18,7 +18,7 @@
         <Plyr v-else-if="file.type === FileTypes.AUDIO">
             <audio controls class="audio-container" :aria-label="`Audio del post`">
                 <source :src="file.file" type="audio/mp3" />
-                Tu navegador no soporta el audio.
+                Your browser doesn't support this function
             </audio>
         </Plyr>
     </div>

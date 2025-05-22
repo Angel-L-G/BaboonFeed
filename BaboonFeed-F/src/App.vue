@@ -56,16 +56,34 @@ onUnmounted( async () => {
 
 /* Contenido cuando la navbar está contraída */
 .content {
-  width: 100%;
-  flex-grow: 1;
-  margin-left: 100px; /* Espacio de la navbar contraída */
-  margin-right: 250px;
-  transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
+    width: 100%;
+    flex-grow: 1;
+    transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
 }
 
 /* Contenido desplazado cuando la navbar está expandida */
 .content-expanded {
-  margin-left: 250px;
+    margin-left: 250px;
+}
+
+/* Aplicar márgenes solo en pantallas grandes (≥ 992px) */
+@media (min-width: 992px) {
+    .content {
+        margin-left: 100px;
+        margin-right: 250px;
+    }
+
+    .content-expanded {
+        margin-left: 250px;
+    }
+}
+
+@media (max-width: 991px) {
+    /* El contenido principal NO se debe mover en móviles */
+    .content,
+    .content-expanded {
+        margin-left: 80px !important; /* Siempre dejar espacio solo para la sidebar contraída */
+    }
 }
 
 /* Ocultar scrollbar en navegadores WebKit */

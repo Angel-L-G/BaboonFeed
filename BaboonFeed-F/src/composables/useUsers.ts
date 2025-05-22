@@ -15,7 +15,8 @@ export async function useUsers() {
             {
             headers: {"Authorization": `Bearer ${authStore.token}`},
             })
-        users.value = response.data || [];
+        users.value = await response.data || [];
+        users.value = users.value.filter(user => user.username !== authStore.user!.username);
     } catch (error) {
         console.error("Error obteniendo usuarios:" + error);
     }

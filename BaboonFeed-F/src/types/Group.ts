@@ -1,9 +1,9 @@
-import type { User } from './User'
+import type { PublicUserDto } from '@/dtos/PublicUserDto.ts'
 
 export interface Group {
     id: string
     name: string
     avatar_url: string
-    leader: User
-    members: User[]
+    leader: PublicUserDto
+    members: PublicUserDto[]
 }

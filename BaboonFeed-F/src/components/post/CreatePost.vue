@@ -76,6 +76,7 @@ const handleSubmit = async () => {
                 'Authorization': 'Bearer ' + authStore.token
             }
         });
+        window.location.reload();
         console.log(response.data);
     } catch (error) {
         console.error('Error creating post:', error);

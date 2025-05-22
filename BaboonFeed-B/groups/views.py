@@ -1,3 +1,5 @@
+from django.db.models import Q
+
 from chats.serializers import MessageSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework import status, viewsets
@@ -19,9 +21,9 @@ class GroupChatViewSet(viewsets.ViewSet):
 
     # GET /groups/
     def list(self, request):
-        groups = GroupChat.objects.filter(members=request.user).union(
-            GroupChat.objects.filter(leader=request.user).order_by('-last_modified')
-        )
+        groups = GroupChat.objects.filter(
+            Q(members=request.user) | Q(leader=request.user)
+        ).distinct().order_by('-last_modified')
         serializer = GroupChatSerializer(groups, many=True, context={'request': request})
         return Response(serializer.data)
 
@@ -46,10 +48,10 @@ class GroupChatViewSet(viewsets.ViewSet):
     # PUT /groups/<pk>/
     def update(self, request, pk=None):
         group = get_object_or_404(GroupChat, pk=pk)
+        self.check_object_permissions(request, group)
         serializer = GroupChatCreateUpdateSerializer(
             group, data=request.data, context={'request': request}
         )
-        self.check_object_permissions(request, group)
         if serializer.is_valid():
             group = serializer.save()
             output_serializer = GroupChatSerializer(group, context={'request': request})
@@ -88,6 +90,7 @@ class GroupChatViewSet(viewsets.ViewSet):
 
             new_leader = random.choice(remaining_members)
             group.leader = new_leader
+            group.members.remove(new_leader)
             group.save()
             return Response(
                 {

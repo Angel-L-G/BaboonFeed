@@ -6,12 +6,11 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
-
-from files.models import File
-from groups.models import GroupChat
 from rest_framework_simplejwt.tokens import AccessToken
 
 from chats.models import Chat, Message
+from files.models import File
+from groups.models import GroupChat
 
 
 class PrivateChatConsumer(AsyncWebsocketConsumer):
@@ -73,7 +72,7 @@ class PrivateChatConsumer(AsyncWebsocketConsumer):
     @sync_to_async
     def get_or_create_private_chat(self, user1, user2):
         # Buscar un chat privado con exactamente esos 2 usuarios
-        chat = Chat.objects.filter(members__username__in=[user1, user2])
+        chat = Chat.objects.filter(members=user1).filter(members=user2).distinct()
 
         if chat.exists():
             return chat.first()
