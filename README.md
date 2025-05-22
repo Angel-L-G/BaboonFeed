@@ -8,21 +8,20 @@
 
 ### Feed interactivo
 
-- BaboonFeed ofrece un feed donde se mostrarán las publicaciones de los usuarios a los que sigues.
-- Puedes darle "me gusta" a las publicaciones y comentar en ellas para expresar tu opinión o añadir algo a la conversación.
+- BaboonFeed ofrece un flujo de contenido donde se mostrarán las publicaciones de los usuarios.
+- Puedes darle "me gusta" o "no me gusta" a las publicaciones y comentar en ellas para expresar tu opinión o añadir algo a la conversación.
 
 ### Interacción social
 
-- Es posible seguir a otros usuarios para ver sus publicaciones en tu feed.
-- Puedes bloquear a usuarios cuyas publicaciones no sean de tu agrado.
-- Existe la posibilidad de comentar tanto en publicaciones como en otros comentarios, permitiendo expandir las respuestas y generar debates interesantes.
+- Es posible seguir a otros usuarios.
+- Existe la posibilidad de comentar tanto en publicaciones.
 
 ### Mensajería
 
 - BaboonFeed incluye un sistema de chat que permite:
   - Enviar mensajes privados a otros usuarios.
-  - Crear chats grupales para compartir imágenes, videos y audios con varios usuarios.
-- En caso de que bloquees a un usuario (o seas bloqueado), seguirás teniendo acceso al historial de mensajes, pero no podrás enviar ni recibir nuevos mensajes de esa persona.
+  - Crear chats grupales para hablar con varios usuarios.
+  - Ambos permiten compartir imágenes, videos y audios.
 
 ## Seguridad y verificación
 
@@ -35,57 +34,19 @@ Nuestra plataforma cuenta con un sistema de seguridad basado en un registro y ve
 
 ---
 
-BaboonFeed es un espacio para compartir humor, respetando siempre a los demás y fomentando la interacción social de manera sana y divertida.
-
 ## Paleta de Colores
 
-1. **Primario (`primary`)**: `#f39c12`
+| Nombre      | Hex       |
+| ----------- | --------- |
+| `primary`   | `#f39c12` |
+| `secondary` | `#34495e` |
+| `success`   | `#2ecc71` |
+| `info`      | `#3498db` |
+| `warning`   | `#f1c40f` |
+| `danger`    | `#e74c3c` |
+| `light`     | `#ecf0f1` |
+| `dark`      | `#2c3e50` |
+| `purple`    | `#8e44ad` |
+| `pink`      | `#ff69b4` |
+| `cyan`      | `#17a2b8` |
 
-   - Naranja vibrante del logo. Usado para botones principales, encabezados destacados y elementos que requieran atención.
-
-2. **Secundario (`secondary`)**: `#34495e`
-
-   - Azul oscuro del fondo del logo. Ideal para barras de navegación, fondos secundarios o elementos discretos.
-
-3. **Éxito (`success`)**: `#2ecc71`
-
-   - Un verde complementario. Usado para mensajes de éxito o acciones positivas.
-
-4. **Peligro (`danger`)**: `#e74c3c`
-
-   - Rojo cálido del logo. Perfecto para mensajes de error, advertencias o acciones destructivas como eliminar contenido.
-
-5. **Información (`info`)**: `#3498db`
-
-   - Azul brillante complementario. Útil para mensajes informativos o estados neutros.
-
-6. **Advertencia (`warning`)**: `#f1c40f`
-
-   - Amarillo complementario al naranja. Usado para advertencias o alertas importantes.
-
-7. **Fondo (`background`)**: `#ecf0f1`
-   - Gris claro. Ideal como fondo para mantener un diseño limpio y minimalista.
-
----
-
-### CSS/Bootstrap
-
-```css
-:root {
-  --bs-primary: #f39c12; /* Naranja vibrante */
-  --bs-secondary: #34495e; /* Azul oscuro */
-  --bs-success: #2ecc71; /* Verde para éxitos */
-  --bs-danger: #e74c3c; /* Rojo para errores */
-  --bs-warning: #f1c40f; /* Amarillo para advertencias */
-  --bs-info: #3498db; /* Azul para información */
-  --bs-light: #ecf0f1; /* Gris claro */
-  --bs-dark: #2c3e50; /* Azul grisáceo oscuro */
-}
-```
-
-### Aplicación práctica
-
-- **Botón principal**: `btn-primary` → Color naranja.
-- **Botón secundario**: `btn-secondary` → Color azul oscuro.
-- **Alertas**: `alert-danger`, `alert-success`, etc., para mensajes relacionados.
-- **Fondos**: `--bs-light` o `--bs-dark` para contrastar con los elementos visuales principales.
