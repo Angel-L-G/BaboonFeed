@@ -37,8 +37,8 @@ const leaveGroup = async () => {
         await axios.delete(`${API_URL}groups/${group.value?.id}/leave/`, {
             headers: { Authorization: `Bearer ${authStore.token}` },
         })
-        useChatStore().removeGroup(group.value?.id as string)
-        router.push('/')
+        await useChatStore().removeGroup(group.value?.id as string)
+        await router.push('/')
     } catch (err) {
         console.error('Error al salir del grupo:', err)
     }

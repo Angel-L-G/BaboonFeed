@@ -47,9 +47,16 @@ onMounted(async () => {
 
 async function initializeChat() {
     chatStore.setActiveChatId(chatId.value)
-
-    chat.value.newMessages = 0;
-
+    let attempts = 0
+    while (!chat.value && attempts < 50) {
+        await new Promise((resolve) => setTimeout(resolve, 100))
+        attempts++
+    }
+    if (!chat.value) {
+        console.error('Chat no encontrado en el chatStore')
+        return
+    }
+    chat.value.newMessages = 0
     try {
         await waitForSocket(chatId.value)
         socket.value = chatStore.getSocket(chatId.value)

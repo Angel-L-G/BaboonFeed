@@ -72,7 +72,7 @@ async function leaveGroup() {
         await axios.delete(`${API_URL}groups/${selectedGroup.value.id}/leave/`, {
             headers: { Authorization: `Bearer ${auth.token}` },
         })
-        chatStore.removeGroup(selectedGroup.value.id)
+        await chatStore.removeGroup(selectedGroup.value.id)
         groups.value = groups.value.filter(g => g.id !== selectedGroup.value?.id)
     } catch (error) {
         console.error('Error al salir del grupo:', error)

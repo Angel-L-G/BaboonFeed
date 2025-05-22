@@ -7,6 +7,7 @@ import { useAuthStore } from '@/stores/auth.ts'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import { API_URL, API_WEBSOCKET_URL } from '@/globals.ts'
 import type { MessageReceived } from '@/types/Message.ts'
+import type { PublicUserDto } from '@/dtos/PublicUserDto.ts'
 
 type Socket = {
     id: string
@@ -194,6 +195,19 @@ export const useChatStore = defineStore('chat', () => {
         sockets.value.splice(socketIndex, 1)
     }
 
+    async function addPrivateChat(chat: Chat, otherUser: PublicUserDto) {
+        const newChat: Chat = {
+            ...chat,
+            id: `${ChatType.PRIVATE}_${chat.id}`,
+            type: ChatType.PRIVATE,
+            name: otherUser.username,
+            avatar_url: otherUser.avatar,
+        }
+        chatList.value.unshift(newChat)
+        console.log(newChat)
+        return newChat.id;
+    }
+
     async function addGroup(groupData: Chat) {
         const group: Chat = {
             ...groupData,
@@ -225,5 +239,5 @@ export const useChatStore = defineStore('chat', () => {
     }
 
 
-    return { chatList, getUserChats, connectToAllChats, disconnectAllChats, setActiveChatId, getSocket, registerMessageListener, unregisterMessageListener, removeGroup, updateGroup, addGroup }
+    return { chatList, getUserChats, connectToAllChats, disconnectAllChats, setActiveChatId, getSocket, registerMessageListener, unregisterMessageListener, removeGroup, updateGroup, addGroup, addPrivateChat }
 })

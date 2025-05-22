@@ -116,31 +116,20 @@ const startChat = async (targetUser: PublicUserDto) => {
         return
     }
 
-    try {
-        const response = await axios.post(
-            `${API_URL}chats/`,
-            {
-                members: [targetUser.username],
-            },
-            {
-                headers: { Authorization: `Bearer ${auth.token}` },
-            },
-        )
-
-        const newChat: Chat = {
-            ...response.data,
-            id: `${ChatType.PRIVATE}_${response.data.id}`,
-            type: ChatType.PRIVATE,
-            name: targetUser.username,
-            avatar_url: targetUser.avatar,
-        }
-
-        chatStore.chatList.unshift(newChat)
-        console.log(newChat)
-        router.push(`/chat/${newChat.id}`)
-    } catch (err) {
-        console.error('Error al crear el chat:', err)
-    }
+    await axios.post(
+        `${API_URL}chats/`,
+        {
+            members: [targetUser.username],
+        },
+        {
+            headers: { Authorization: `Bearer ${auth.token}` },
+        },
+    ).then(async (response) => {
+        const id = await chatStore.addPrivateChat(response.data, targetUser)
+        await router.push(`/chat/${id}`)
+    }).catch((error) => {
+        console.error(error)
+    })
 }
 </script>
 
