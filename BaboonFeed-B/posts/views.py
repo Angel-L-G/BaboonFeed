@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
 
@@ -15,6 +15,11 @@ class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]  # Permite lectura a todos, pero escritura solo a autenticados
     pagination_class = CustomLimitOffsetPagination
+
+    def get_permissions(self):
+        if self.action == 'replies' and self.request.method == 'POST':
+            return [IsAuthenticated()]
+        return super().get_permissions()
 
     def get_queryset(self):
         queryset = super().get_queryset()

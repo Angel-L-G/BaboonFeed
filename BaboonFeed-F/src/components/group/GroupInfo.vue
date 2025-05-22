@@ -6,6 +6,7 @@ import { API_URL } from '@/globals.ts'
 import type { Group } from '@/types/Group'
 import { useAuthStore } from '@/stores/auth.ts'
 import { useChatStore } from '@/stores/chatStore.ts'
+import EditGroup from '@/components/group/EditGroup.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -15,18 +16,21 @@ const isLoading = ref(true)
 const showConfirmModal = ref(false)
 
 onMounted(async () => {
+    await fetchGroup()
+})
+
+async function fetchGroup() {
     try {
         const response = await axios.get(`${API_URL}groups/${route.params.id}/`, {
             headers: { Authorization: `Bearer ${authStore.token}` },
         })
         group.value = response.data
-        console.log(group.value)
     } catch (err) {
         console.error('Error al cargar grupo:', err)
     } finally {
         isLoading.value = false
     }
-})
+}
 
 const leaveGroup = async () => {
     try {
@@ -46,10 +50,10 @@ const goToUserProfile = (username: string) => {
 </script>
 
 <template>
-    <div class="container mt-4 text-light">
+    <div class="container mt-4 text-white">
         <div v-if="isLoading" class="text-center">
             <div class="spinner-border" role="status">
-                <span class="visually-hidden">Cargando...</span>
+                <span class="visually-hidden">Charging...</span>
             </div>
         </div>
 
@@ -61,10 +65,18 @@ const goToUserProfile = (username: string) => {
                     class="rounded-circle border border-2"
                     style="width: 60px; height: 60px; object-fit: cover"
                 />
-                <h2 class="mb-0">{{ group.name }}</h2>
+                <h2 class="mb-0 text-white">{{ group.name }}</h2>
+                <button
+                    v-if="authStore.user?.username === group.leader.username"
+                    class="btn btn-purple-alt ms-auto"
+                    data-bs-toggle="modal"
+                    data-bs-target="#EditGroupModal"
+                >
+                    <font-awesome-icon :icon="['fas', 'pencil']" />
+                </button>
             </div>
 
-            <h4 class="text-primary">Líder</h4>
+            <h4 class="text-primary">Leader</h4>
             <div
                 class="d-flex align-items-center gap-2 mb-3 pointer"
                 style="cursor: pointer"
@@ -76,7 +88,7 @@ const goToUserProfile = (username: string) => {
                     class="rounded-circle"
                     style="width: 40px; height: 40px; object-fit: cover"
                 />
-                <span>{{ group.leader.username }}</span>
+                <span class="text-white">{{ group.leader.username }}</span>
             </div>
 
             <h4 class="text-primary">Miembros</h4>
@@ -94,7 +106,7 @@ const goToUserProfile = (username: string) => {
                         class="rounded-circle"
                         style="width: 35px; height: 35px; object-fit: cover"
                     />
-                    <span>{{ member.username }}</span>
+                    <span class="text-white">{{ member.username }}</span>
                 </div>
             </div>
 
@@ -123,6 +135,28 @@ const goToUserProfile = (username: string) => {
                     <div class="modal-footer">
                         <button class="btn btn-secondary" @click="showConfirmModal = false">Cancelar</button>
                         <button class="btn btn-danger" @click="leaveGroup">Salir</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal para editar grupo -->
+        <div
+            class="modal fade"
+            id="EditGroupModal"
+            tabindex="-1"
+            aria-labelledby="EditGroupModalLabel"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <div class="modal-content bg-secondary text-light">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Editar grupo</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <EditGroup :groupId="Number(group?.id)" @updated="fetchGroup" v-if="group" />
+
                     </div>
                 </div>
             </div>

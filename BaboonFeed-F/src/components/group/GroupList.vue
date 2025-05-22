@@ -48,6 +48,7 @@ async function createGroup(data: GroupDto) {
             },
         })
         groups.value.push(response.data)
+        await chatStore.addGroup(response.data)
     } catch (error) {
         console.log(error)
         errorMsg.value = 'Error creating group'

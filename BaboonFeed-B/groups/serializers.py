@@ -65,6 +65,8 @@ class GroupChatCreateUpdateSerializer(serializers.ModelSerializer):
         instance.save()
         if members_data:
             instance.members.clear()
-            for member in members_data:
-                instance.members.add(member)
+            for username in members_data:
+                member = User.objects.filter(username=username).first()
+                if member:
+                    instance.members.add(member)
         return instance

@@ -48,10 +48,10 @@ class GroupChatViewSet(viewsets.ViewSet):
     # PUT /groups/<pk>/
     def update(self, request, pk=None):
         group = get_object_or_404(GroupChat, pk=pk)
+        self.check_object_permissions(request, group)
         serializer = GroupChatCreateUpdateSerializer(
             group, data=request.data, context={'request': request}
         )
-        self.check_object_permissions(request, group)
         if serializer.is_valid():
             group = serializer.save()
             output_serializer = GroupChatSerializer(group, context={'request': request})

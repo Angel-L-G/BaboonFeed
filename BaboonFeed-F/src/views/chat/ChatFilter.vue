@@ -3,32 +3,44 @@
         <div class="row justify-content-center mt-5">
             <div class="col-12 col-md-6">
                 <div class="mb-3">
-                    <input type="text" class="form-control" placeholder="Buscar..." v-model="searchQuery"/>
+                    <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Buscar..."
+                        v-model="searchQuery"
+                    />
                 </div>
 
                 <div v-if="searchQuery">
                     <p class="text-cyan">Searching for: "{{ searchQuery }}"</p>
                 </div>
 
-                <ul class="list-group">
-                    <li class="list-group-item d-flex align-items-center gap-3" v-for="user in filteredUsers"
-                        :key="user.username">
-                        <div class="d-flex align-items-center" style="cursor: pointer" @click="goToProfile(user.username)">
-                            <img :src="user.avatar" class="rounded-circle me-3" style="width: 40px; height: 40px; object-fit: cover;" />
-                            <span>{{ user.username }}</span>
+                <div class="d-grid gap-3">
+                    <div
+                        v-for="user in filteredUsers"
+                        :key="user.username"
+                        class="d-flex justify-content-between align-items-center p-3 bg-dark text-light rounded shadow-sm group-card"
+                        role="button"
+                    >
+                        <div
+                            class="d-flex align-items-center gap-3"
+                            @click="goToProfile(user.username)"
+                        >
+                            <img :src="user.avatar" class="rounded-circle" width="48" height="48" />
+                            <strong>{{ user.username }}</strong>
                         </div>
-                        <button class="btn btn-sm btn-primary" @click="startChat(user)">
+                        <button class="btn btn-primary btn-sm" @click="startChat(user)">
                             <font-awesome-icon :icon="['fas', 'comment']" />
                         </button>
-                    </li>
-                </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useUsers } from '@/composables/useUsers.ts'
 import type { PublicUserDto } from '@/dtos/PublicUserDto.ts'
 import { useChatStore } from '@/stores/chatStore.ts'
@@ -39,23 +51,52 @@ import { API_URL } from '@/globals.ts'
 import { useAuthStore } from '@/stores/auth.ts'
 
 const searchQuery = ref('')
-const users = useUsers();
-const filteredUsers = ref<PublicUserDto[]>([]);
+const users = useUsers()
+const filteredUsers = ref<PublicUserDto[]>([])
 const chatStore = useChatStore()
-const router = useRouter();
-const auth = useAuthStore();
+const defaultChats = computed(() =>
+    chatStore.chatList
+        .filter((chat: Chat) => chat.type == ChatType.PRIVATE)
+        .map((chat: Chat) => ({ username: chat.name, avatar: chat.avatar_url } as PublicUserDto)),
+)
+const router = useRouter()
+const auth = useAuthStore()
+
+onMounted(() => {
+    if (searchQuery.value === '') {
+        let initialized = false
+
+        const stop = watch(
+            () => chatStore.chatList.length,
+            (length) => {
+                if (length > 0) {
+                    filteredUsers.value = chatStore.chatList
+                        .filter((chat) => chat.type === ChatType.PRIVATE)
+                        .map((chat) => ({
+                            username: chat.name,
+                            avatar: chat.avatar_url,
+                        }))
+                    if (initialized) stop()
+                    initialized = true
+                }
+            },
+            { immediate: true }
+        )
+    }
+})
+
 
 watch(searchQuery, async (newQuery) => {
     if (!newQuery) {
-        filteredUsers.value = [];
-        return;
+        filteredUsers.value = defaultChats.value
+        return
     }
 
-    const query = newQuery.toLowerCase();
+    const query = newQuery.toLowerCase()
     filteredUsers.value = (await users).value.filter((user) =>
-        user.username.toLowerCase().includes(query)
-    );
-});
+        user.username.toLowerCase().includes(query),
+    )
+})
 
 const goToProfile = (username: string) => {
     router.push(`/users/profile/${username}`)
@@ -63,9 +104,10 @@ const goToProfile = (username: string) => {
 
 const startChat = async (targetUser: PublicUserDto) => {
     console.log('startChat', targetUser)
-    const existingChat = chatStore.chatList.find(chat =>
-        chat.type === ChatType.PRIVATE &&
-        chat.members.some(m => m.username === targetUser.username)
+    const existingChat = chatStore.chatList.find(
+        (chat) =>
+            chat.type === ChatType.PRIVATE &&
+            chat.members.some((m) => m.username === targetUser.username),
     )
 
     if (existingChat) {
@@ -75,11 +117,15 @@ const startChat = async (targetUser: PublicUserDto) => {
     }
 
     try {
-        const response = await axios.post(`${API_URL}chats/`, {
-            members: [targetUser.username]
-        }, {
-            headers: { Authorization: `Bearer ${auth.token}` }
-        })
+        const response = await axios.post(
+            `${API_URL}chats/`,
+            {
+                members: [targetUser.username],
+            },
+            {
+                headers: { Authorization: `Bearer ${auth.token}` },
+            },
+        )
 
         const newChat: Chat = {
             ...response.data,
@@ -96,7 +142,6 @@ const startChat = async (targetUser: PublicUserDto) => {
         console.error('Error al crear el chat:', err)
     }
 }
-
 </script>
 
 <style scoped>

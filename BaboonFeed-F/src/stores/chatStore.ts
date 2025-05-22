@@ -14,7 +14,7 @@ type Socket = {
 }
 
 export const useChatStore = defineStore('chat', () => {
-    const auth = useAuthStore()
+    const authStore = useAuthStore()
     const chatList = ref<Chat[]>([])
     const sockets = ref<Socket[]>([])
     const activeChatId = ref<string>('')
@@ -24,12 +24,12 @@ export const useChatStore = defineStore('chat', () => {
     async function getUserChats() {
         const privateChats = await axios
             .get(`${API_URL}chats/`, {
-                headers: { Authorization: `Bearer ${auth.token}` },
+                headers: { Authorization: `Bearer ${authStore.token}` },
             })
             .then((res) =>
                 res.data.map((chat: Chat) => {
                     const otherUser = chat.members
-                        .filter((user: User) => user.username != auth.user?.username)
+                        .filter((user: User) => user.username != authStore.user?.username)
                         .pop()
                     chat.type = ChatType.PRIVATE
                     chat.id = `${ChatType.PRIVATE}_${chat.id}`
@@ -46,7 +46,7 @@ export const useChatStore = defineStore('chat', () => {
 
         const groupChats = await axios
             .get(`${API_URL}groups/`, {
-                headers: { Authorization: `Bearer ${auth.token}` },
+                headers: { Authorization: `Bearer ${authStore.token}` },
             })
             .then((res) =>
                 res.data.map((chat: Chat) => {
@@ -79,13 +79,11 @@ export const useChatStore = defineStore('chat', () => {
         token: string,
     ) {
         socket.onopen = () => {
-            // Enviar token JWT para autenticación en cuanto el socket se conecta
             const authMessage = { type: 'auth', token: token }
             socket.send(JSON.stringify(authMessage))
             console.log(`WebSocket ${chatInfo.type}#${chatInfo.id} conectado y autenticado`)
         }
 
-        // Manejar mensajes entrantes:
         socket.onmessage = (event) => {
             const data = JSON.parse(event.data)
             handleIncomingMessage(data.message, chatInfo)
@@ -96,7 +94,6 @@ export const useChatStore = defineStore('chat', () => {
                 `WebSocket ${chatInfo.type}#${chatInfo.id} cerrado:`,
                 event.reason || 'conexión cerrada',
             )
-            // Opcional: reconectar lógica o limpieza de estado
         }
 
         socket.onerror = (err) => {
@@ -105,7 +102,6 @@ export const useChatStore = defineStore('chat', () => {
     }
 
     async function connectToAllChats() {
-        const authStore = useAuthStore()
         const token = authStore.token
         const user = authStore.user
         if (!token || !user) return
@@ -148,28 +144,23 @@ export const useChatStore = defineStore('chat', () => {
             onMessageReceived.value(message)
         }
 
-        // Buscar el chat en la lista de chats
         const chatIndex = chatList.value.findIndex((c: Chat) => c.id === chatId)
         if (chatIndex === -1) {
             console.warn('Mensaje para chat no encontrado en store:', chatId)
             return
         }
 
-        // Actualizar último mensaje y fecha en el chat correspondiente
         const chat: Chat = chatList.value[chatIndex]
-        chat.last_message = message.content // o el campo correspondiente recibido
+        chat.last_message = message.content
         chat.last_modified = message.created_at || new Date().toISOString()
 
-        // Si el mensaje incluye más detalles (p.ej., remitente, etc.), podríamos almacenarlos o usarlos según necesidad
-
-        // Notificar visualmente si este chat no es el que el usuario está viendo actualmente
         if (activeChatId.value !== chatId) {
             chat.newMessages++;
             console.log('its different')
         }
 
-        chatList.value.splice(chatIndex, 1) // quitar de su posición actual
-        chatList.value.unshift(chat) // agregar al inicio
+        chatList.value.splice(chatIndex, 1)
+        chatList.value.unshift(chat)
     }
 
     async function disconnectAllChats(){
@@ -203,5 +194,36 @@ export const useChatStore = defineStore('chat', () => {
         sockets.value.splice(socketIndex, 1)
     }
 
-    return { chatList, getUserChats, connectToAllChats, disconnectAllChats, setActiveChatId, getSocket, registerMessageListener, unregisterMessageListener, removeGroup }
+    async function addGroup(groupData: Chat) {
+        const group: Chat = {
+            ...groupData,
+            id: `${ChatType.GROUP}_${groupData.id}`,
+            type: ChatType.GROUP,
+            newMessages: 0,
+        }
+
+        chatList.value.push(group)
+        const groupSocket = new ReconnectingWebSocket(`${API_WEBSOCKET_URL}ws/chat/group/${groupData.id}/`)
+        await _initializeSocket(groupSocket, { type: ChatType.GROUP, id: group.id }, authStore.token || '')
+        sockets.value.push({ id: group.id, socket: groupSocket })
+    }
+
+
+    async function updateGroup(updatedGroup: Chat) {
+        const id = `${ChatType.GROUP}_${updatedGroup.id}`
+        const index = chatList.value.findIndex(c => c.id === id)
+
+        if (index !== -1) {
+            updatedGroup.id = id
+            updatedGroup.type = ChatType.GROUP
+            updatedGroup.newMessages = chatList.value[index].newMessages
+            chatList.value.splice(index, 1)
+            chatList.value.unshift(updatedGroup)
+        } else {
+            console.warn('Grupo no encontrado en chatList para actualizar:', updatedGroup.id)
+        }
+    }
+
+
+    return { chatList, getUserChats, connectToAllChats, disconnectAllChats, setActiveChatId, getSocket, registerMessageListener, unregisterMessageListener, removeGroup, updateGroup, addGroup }
 })
