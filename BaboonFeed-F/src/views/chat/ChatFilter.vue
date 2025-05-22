@@ -64,6 +64,7 @@ const auth = useAuthStore()
 
 onMounted(() => {
     if (searchQuery.value === '') {
+        const currentUsername = auth.user?.username || JSON.parse(localStorage.getItem('user') || '{}')?.username
         let initialized = false
 
         const stop = watch(
@@ -87,6 +88,8 @@ onMounted(() => {
 
 
 watch(searchQuery, async (newQuery) => {
+    const currentUsername = auth.user?.username || JSON.parse(localStorage.getItem('user') || '{}')?.username
+
     if (!newQuery) {
         filteredUsers.value = defaultChats.value
         return
@@ -95,7 +98,7 @@ watch(searchQuery, async (newQuery) => {
     const query = newQuery.toLowerCase()
     filteredUsers.value = (await users).value.filter((user) =>
         user.username.toLowerCase().includes(query),
-    )
+    ).filter(user => user.username !== currentUsername);
 })
 
 const goToProfile = (username: string) => {
