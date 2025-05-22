@@ -37,7 +37,7 @@
         <input
             v-model="search"
             class="form-control bg-primary-subtle mb-2"
-            placeholder="Search user"
+            placeholder="Search users"
         />
         <ul v-if="searchResults.length" class="list-group mb-2">
             <li
@@ -46,22 +46,20 @@
                 class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
                 @click="selectUser(user)"
             >
-                <img :src="user.avatar_url" class="rounded-circle me-2" width="30" height="30" />
+                <img :src="user.avatar" class="rounded-circle me-2" width="30" height="30" />
                 <span>{{ user.username }}</span>
             </li>
         </ul>
 
         <!-- Lista de usuarios seleccionados -->
         <div class="mb-3">
-            <span v-if="group.users.length === 0" class="text-muted"
-                >There're not selected users</span
-            >
+            <span v-if="group.users.length === 0" class="text-light-dark">No users selected</span>
             <div
                 v-for="user in group.users"
                 :key="user.username"
                 class="badge bg-secondary me-2 d-inline-flex align-items-center"
             >
-                <img :src="user.avatar_url" class="rounded-circle me-1" width="20" height="20" />
+                <img :src="user.avatar" class="rounded-circle me-1" width="20" height="20" />
                 {{ user.username }}
                 <button
                     class="btn-close btn-close-white ms-2 btn-sm"
@@ -70,7 +68,6 @@
             </div>
         </div>
 
-        <!-- Botón de crear -->
         <button type="submit" class="btn btn-purple-alt text-light w-100">Create</button>
     </form>
 </template>
@@ -80,13 +77,10 @@ import { ref, watch } from 'vue'
 import axios from 'axios'
 import { API_URL } from '@/globals'
 import { useAuthStore } from '@/stores/auth.ts'
+import { useUsers } from '@/composables/useUsers.ts'
+import type { PublicUserDto } from '@/dtos/PublicUserDto.ts'
 
-const authStore = useAuthStore()
 
-interface UserPreview {
-    username: string
-    avatar_url: string
-}
 
 const emit = defineEmits<{
     (e: 'submit', data: { name: string; avatar: File | null; members: string[] }): void
@@ -96,28 +90,17 @@ const fileInput = ref<HTMLInputElement | null>(null)
 const group = ref({
     name: '',
     avatar: null as File | null,
-    users: [] as UserPreview[],
+    users: [] as PublicUserDto[],
 })
 const previewAvatarUrl = ref<string | null>(null)
 
 const search = ref('')
-const searchResults = ref<UserPreview[]>([])
+const searchResults = ref<PublicUserDto[]>([])
+const users = useUsers()
 
 watch(search, async (value) => {
     if (value.length < 1) return (searchResults.value = [])
-    await axios
-        .get(`${API_URL}users/?username=${value}`, {
-            headers: {
-                Authorization: `Bearer ${authStore.token}`,
-            },
-        })
-        .then(
-            (res) =>
-                (searchResults.value = res.data.filter(
-                    (user: UserPreview) => user.username !== authStore.user?.username,
-                )),
-        )
-        .catch((err) => console.log(err))
+    searchResults.value = (await users).value.filter(user => user.username.toLowerCase().includes(value.toLowerCase()))
 })
 
 const handleFileChange = (e: Event) => {
@@ -135,7 +118,7 @@ const removeFile = () => {
     if (fileInput.value) fileInput.value.value = ''
 }
 
-const selectUser = (user: UserPreview) => {
+const selectUser = (user: PublicUserDto) => {
     if (!group.value.users.some((u) => u.username === user.username)) {
         group.value.users.push(user)
     }

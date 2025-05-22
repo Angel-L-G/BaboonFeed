@@ -110,7 +110,7 @@ async function leaveGroup() {
                     <img :src="group.avatar_url" class="rounded-circle" width="48" height="48" />
                     <strong>{{ group.name }}</strong>
                 </div>
-                <button class="btn btn-danger btn-sm text-white" @click.stop="confirmLeave(group)">
+                <button class="btn btn-danger btn-sm text-white" @click.stop="confirmLeave(group)" data-bs-target="#LeaveGroupModal" data-bs-toggle="modal">
                     Leave
                 </button>
             </div>
@@ -131,23 +131,23 @@ async function leaveGroup() {
         </div>
 
         <div
-            v-if="showConfirmModal"
-            class="modal fade show d-block"
+            id="LeaveGroupModal"
+            class="modal fade"
             tabindex="-1"
             role="dialog"
         >
             <div class="modal-dialog" role="document">
                 <div class="modal-content bg-secondary text-light">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Are you sure you want to leave the group?</h5>
-                        <button type="button" class="btn-close" @click="showConfirmModal = false"></button>
+                    <div class="modal-header" data-bs-theme="dark">
+                        <h5 class="modal-title">Are you sure you want to leave?</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
-                        <p>You won't be able to send or receive messages from this group.</p>
+                        <p>You wont be able to receive and send messsages.</p>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" @click="showConfirmModal = false">Cancel</button>
-                        <button class="btn btn-danger" @click="leaveGroup">Leave</button>
+                        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button class="btn btn-danger" @click="leaveGroup" data-bs-dismiss="modal">Leave</button>
                     </div>
                 </div>
             </div>

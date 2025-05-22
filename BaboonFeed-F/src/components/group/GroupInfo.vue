@@ -13,7 +13,6 @@ const router = useRouter()
 const authStore = useAuthStore()
 const group = ref<Group | null>(null)
 const isLoading = ref(true)
-const showConfirmModal = ref(false)
 
 onMounted(async () => {
     await fetchGroup()
@@ -57,7 +56,7 @@ const goToUserProfile = (username: string) => {
             </div>
         </div>
 
-        <div v-else-if="group" class="card bg-dark p-4">
+        <div v-else-if="group" class="card bg-dark p-4 me-5">
             <div class="d-flex align-items-center gap-3 mb-4">
                 <img
                     :src="group.avatar_url"
@@ -111,30 +110,30 @@ const goToUserProfile = (username: string) => {
             </div>
 
             <div class="mt-4">
-                <button class="btn btn-danger" @click="showConfirmModal = true">
-                    Leave group
+                <button class="btn btn-danger" data-bs-target="#LeaveGroupModal" data-bs-toggle="modal">
+                    Leave
                 </button>
             </div>
         </div>
 
         <div
-            v-if="showConfirmModal"
-            class="modal fade show d-block"
+            id="LeaveGroupModal"
+            class="modal fade"
             tabindex="-1"
             role="dialog"
         >
             <div class="modal-dialog" role="document">
                 <div class="modal-content bg-secondary text-light">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Are you sure you want to leave the group?</h5>
-                        <button type="button" class="btn-close" @click="showConfirmModal = false"></button>
+                    <div class="modal-header" data-bs-theme="dark">
+                        <h5 class="modal-title">Are you sure you want to leave?</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
-                        <p>You won't be able to send or receive messages from this group.</p>
+                        <p>You wont be able to receive and send messsages.</p>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" @click="showConfirmModal = false">Cancel</button>
-                        <button class="btn btn-danger" @click="leaveGroup">Leave</button>
+                        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button class="btn btn-danger" @click="leaveGroup" data-bs-dismiss="modal">Leave</button>
                     </div>
                 </div>
             </div>
@@ -151,7 +150,7 @@ const goToUserProfile = (username: string) => {
             <div class="modal-dialog">
                 <div class="modal-content bg-secondary text-light">
                     <div class="modal-header">
-                        <h5 class="modal-title">Edit grupo</h5>
+                        <h5 class="modal-title">Edit group</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
