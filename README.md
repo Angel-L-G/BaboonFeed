@@ -63,13 +63,10 @@ Nuestra plataforma cuenta con un sistema de seguridad basado en un registro y ve
 | `channels-redis`                | Backend basado en Redis para manejar la capa de canales (asíncrona/pub-sub).                                                           |
 | `daphne`                        | Servidor ASGI (Asynchronous Server Gateway Interface) compatible con Django Channels.                                                  |
 | `pillow`                        | Librería de procesamiento de imágenes en Python, necesaria para trabajar con campos de imagen en Django.                               |
-| `model-bakery`                  | Herramienta para crear instancias de modelos para testing de manera sencilla y rápida.                                                 |
-| `faker`                         | Generador de datos falsos para pruebas, útil para poblar bases de datos en desarrollo.                                                 |
 | `ipython`                       | Intérprete interactivo de Python con mejoras útiles para debugging y exploración.                                                      |
-| `django-rq`                     | Integración de Django con RQ (Redis Queue) para ejecución de tareas en segundo plano (background jobs).                                |
 | `prettyconf`                    | Gestor de configuración basado en variables de entorno, útil para separar configuración de código.                                     |
-| `psycopg2`                      | Driver de PostgreSQL para Python, necesario si usas PostgreSQL como base de datos.                                                     |
 | `django-cors-headers`           | Middleware para manejar CORS (Cross-Origin Resource Sharing) en Django, esencial al conectar frontend y backend en dominios distintos. |
+| `psycopg2`                      | Driver de PostgreSQL para Python, necesario si usas PostgreSQL como base de datos.                                                     |
 
 ---
 
@@ -82,7 +79,7 @@ Nuestra plataforma cuenta con un sistema de seguridad basado en un registro y ve
 | `bootstrap`                           | Framework de diseño CSS con componentes listos para usar y estilos responsivos.                        |
 | `date-fns`                            | Librería para manipulación de fechas con funciones puras y modulares.                                  |
 | `dayjs`                               | Alternativa ligera a Moment.js para manejo de fechas y tiempos.                                        |
-| `fontawesome`                         | Versión antigua del paquete Font Awesome.                |
+| `fontawesome`                         | Versión antigua del paquete Font Awesome.                                                              |
 | `json-server`                         | Servidor mock que convierte un archivo JSON en una API REST completa; útil para desarrollo.            |
 | `pinia`                               | Librería oficial de gestión de estado para Vue 3 (reemplazo moderno de Vuex).                          |
 | `plyr`                                | Reproductor de video/audio moderno, accesible y personalizable.                                        |
