@@ -30,7 +30,7 @@ const authStore = useAuthStore();
                         <div class="d-flex flex-row align-items-center w-100">
                             <img
                                 :src="chatItem.avatar_url"
-                                :alt="`Foto de perfil de ${chatItem.name}`"
+                                :alt="`Photo ${chatItem.name}`"
                                 class="rounded-circle chatImage"
                             />
                             <h3 class="ms-1 text-light-dark fw-bold fs-6 mb-0">

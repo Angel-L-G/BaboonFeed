@@ -1,13 +1,26 @@
 <template>
     <form @submit.prevent="handleSubmit" enctype="multipart/form-data">
-        <h2 class="text-center">Crear Grupo</h2>
+        <h2 class="text-center">Create Group</h2>
+
+        <!-- Vista previa del avatar -->
+        <div class="text-center mb-3" v-if="previewAvatarUrl">
+            <img
+                :src="previewAvatarUrl"
+                alt="Avatar del grupo"
+                class="rounded-circle border border-2"
+                style="width: 100px; height: 100px; object-fit: cover"
+            />
+        </div>
+
+        <!-- Nombre -->
         <input
             v-model="group.name"
             class="form-control mt-3 bg-primary-subtle"
-            placeholder="Nombre del grupo"
+            placeholder="Group's name"
             required
         />
 
+        <!-- Selector de imagen -->
         <div class="input-group mt-3 mb-3">
             <input
                 type="file"
@@ -20,10 +33,11 @@
             </button>
         </div>
 
+        <!-- Buscar usuarios -->
         <input
             v-model="search"
             class="form-control bg-primary-subtle mb-2"
-            placeholder="Buscar usuarios"
+            placeholder="Search user"
         />
         <ul v-if="searchResults.length" class="list-group mb-2">
             <li
@@ -37,9 +51,10 @@
             </li>
         </ul>
 
+        <!-- Lista de usuarios seleccionados -->
         <div class="mb-3">
             <span v-if="group.users.length === 0" class="text-muted"
-            >No hay usuarios seleccionados</span
+                >There're not selected users</span
             >
             <div
                 v-for="user in group.users"
@@ -55,7 +70,8 @@
             </div>
         </div>
 
-        <button type="submit" class="btn btn-purple-alt text-light w-100">Crear</button>
+        <!-- Botón de crear -->
+        <button type="submit" class="btn btn-purple-alt text-light w-100">Create</button>
     </form>
 </template>
 
@@ -82,29 +98,40 @@ const group = ref({
     avatar: null as File | null,
     users: [] as UserPreview[],
 })
+const previewAvatarUrl = ref<string | null>(null)
 
 const search = ref('')
 const searchResults = ref<UserPreview[]>([])
 
 watch(search, async (value) => {
     if (value.length < 1) return (searchResults.value = [])
-    await axios.get(`${API_URL}users/?username=${value}`, {
-        headers: {
-            Authorization: `Bearer ${authStore.token}`,
-        },
-    })
-        .then(res => searchResults.value = res.data)
-        .catch(err => console.log(err))
+    await axios
+        .get(`${API_URL}users/?username=${value}`, {
+            headers: {
+                Authorization: `Bearer ${authStore.token}`,
+            },
+        })
+        .then(
+            (res) =>
+                (searchResults.value = res.data.filter(
+                    (user: UserPreview) => user.username !== authStore.user?.username,
+                )),
+        )
+        .catch((err) => console.log(err))
 })
 
 const handleFileChange = (e: Event) => {
     const target = e.target as HTMLInputElement
     const files = target.files
-    if (files) group.value.avatar = files[0]
+    if (files && files[0]) {
+        group.value.avatar = files[0]
+        previewAvatarUrl.value = URL.createObjectURL(files[0])
+    }
 }
 
 const removeFile = () => {
     group.value.avatar = null
+    previewAvatarUrl.value = null
     if (fileInput.value) fileInput.value.value = ''
 }
 

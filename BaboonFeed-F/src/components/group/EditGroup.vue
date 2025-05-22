@@ -100,21 +100,20 @@ const displayedAvatar = computed(() => previewAvatarUrl.value || originalAvatarU
             <img
                 v-if="displayedAvatar"
                 :src="displayedAvatar"
-                alt="Avatar del grupo"
+                alt="Group Avatar"
                 class="rounded-circle border border-2"
                 style="width: 100px; height: 100px; object-fit: cover"
             />
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Nombre del grupo</label>
+            <label class="form-label">Group's name</label>
             <input v-model="name" type="text" class="form-control bg-primary-subtle" required />
         </div>
 
-        <div class="mb-3">
-            <label class="form-label">Avatar</label>
+        <div class="input-group mt-3 mb-3">
             <input type="file" class="form-control bg-primary-subtle" @change="handleFileChange" ref="fileInput" />
-            <button type="button" class="btn btn-sm btn-danger mt-1" @click="removeFile">Quitar archivo</button>
+            <button type="button" class="btn btn-sm btn-danger" @click="removeFile"><font-awesome-icon :icon="['fas', 'trash']" /></button>
         </div>
 
         <div class="mb-3">
@@ -122,7 +121,7 @@ const displayedAvatar = computed(() => previewAvatarUrl.value || originalAvatarU
                 v-model="search"
                 type="text"
                 class="form-control bg-primary-subtle"
-                placeholder="Buscar usuarios por nombre"
+                placeholder="Search by username"
             />
             <ul v-if="searchResults.length" class="list-group mt-2">
                 <li
@@ -139,7 +138,7 @@ const displayedAvatar = computed(() => previewAvatarUrl.value || originalAvatarU
         </div>
 
         <div class="mb-3">
-            <span v-if="selectedUsers.length === 0" class="text-muted">No hay usuarios seleccionados</span>
+            <span v-if="selectedUsers.length === 0" class="text-muted">There're not selected users</span>
             <div
                 v-for="user in selectedUsers"
                 :key="user.username"

@@ -91,7 +91,7 @@ const goToUserProfile = (username: string) => {
                 <span class="text-white">{{ group.leader.username }}</span>
             </div>
 
-            <h4 class="text-primary">Miembros</h4>
+            <h4 class="text-primary">Members</h4>
             <div class="d-flex flex-wrap gap-3">
                 <div
                     v-for="member in group.members"
@@ -112,7 +112,7 @@ const goToUserProfile = (username: string) => {
 
             <div class="mt-4">
                 <button class="btn btn-danger" @click="showConfirmModal = true">
-                    Salir del grupo
+                    Leave group
                 </button>
             </div>
         </div>
@@ -126,15 +126,15 @@ const goToUserProfile = (username: string) => {
             <div class="modal-dialog" role="document">
                 <div class="modal-content bg-secondary text-light">
                     <div class="modal-header">
-                        <h5 class="modal-title">¿Seguro que quieres salir del grupo?</h5>
+                        <h5 class="modal-title">Are you sure you want to leave the group?</h5>
                         <button type="button" class="btn-close" @click="showConfirmModal = false"></button>
                     </div>
                     <div class="modal-body">
-                        <p>Ya no podrás enviar ni recibir mensajes en este grupo.</p>
+                        <p>You won't be able to send or receive messages from this group.</p>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" @click="showConfirmModal = false">Cancelar</button>
-                        <button class="btn btn-danger" @click="leaveGroup">Salir</button>
+                        <button class="btn btn-secondary" @click="showConfirmModal = false">Cancel</button>
+                        <button class="btn btn-danger" @click="leaveGroup">Leave</button>
                     </div>
                 </div>
             </div>
@@ -151,12 +151,11 @@ const goToUserProfile = (username: string) => {
             <div class="modal-dialog">
                 <div class="modal-content bg-secondary text-light">
                     <div class="modal-header">
-                        <h5 class="modal-title">Editar grupo</h5>
+                        <h5 class="modal-title">Edit grupo</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
                         <EditGroup :groupId="Number(group?.id)" @updated="fetchGroup" v-if="group" />
-
                     </div>
                 </div>
             </div>

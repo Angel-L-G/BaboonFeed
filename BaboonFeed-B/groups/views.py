@@ -90,6 +90,7 @@ class GroupChatViewSet(viewsets.ViewSet):
 
             new_leader = random.choice(remaining_members)
             group.leader = new_leader
+            group.members.remove(new_leader)
             group.save()
             return Response(
                 {

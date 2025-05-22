@@ -139,15 +139,15 @@ async function leaveGroup() {
             <div class="modal-dialog" role="document">
                 <div class="modal-content bg-secondary text-light">
                     <div class="modal-header">
-                        <h5 class="modal-title">¿Seguro que quieres salir del grupo?</h5>
+                        <h5 class="modal-title">Are you sure you want to leave the group?</h5>
                         <button type="button" class="btn-close" @click="showConfirmModal = false"></button>
                     </div>
                     <div class="modal-body">
-                        <p>Ya no podrás enviar ni recibir mensajes en este grupo.</p>
+                        <p>You won't be able to send or receive messages from this group.</p>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" @click="showConfirmModal = false">Cancelar</button>
-                        <button class="btn btn-danger" @click="leaveGroup">Salir</button>
+                        <button class="btn btn-secondary" @click="showConfirmModal = false">Cancel</button>
+                        <button class="btn btn-danger" @click="leaveGroup">Leave</button>
                     </div>
                 </div>
             </div>

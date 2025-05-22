@@ -6,7 +6,7 @@
                     <input
                         type="text"
                         class="form-control"
-                        placeholder="Buscar..."
+                        placeholder="search..."
                         v-model="searchQuery"
                     />
                 </div>
@@ -64,7 +64,6 @@ const auth = useAuthStore()
 
 onMounted(() => {
     if (searchQuery.value === '') {
-        const currentUsername = auth.user?.username || JSON.parse(localStorage.getItem('user') || '{}')?.username
         let initialized = false
 
         const stop = watch(

@@ -275,7 +275,7 @@ onUnmounted(() => {
                 <input
                     v-model="newMessage"
                     type="text"
-                    placeholder="Escribe un mensaje..."
+                    placeholder="Send a message..."
                     class="form-control bg-primary-subtle"
                 />
 
