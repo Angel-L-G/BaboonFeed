@@ -2,94 +2,45 @@
 
 ## Requisitos técnicos del Proyecto
 
-- Construido con Vue 3
-  - Creación del proyecto con:
-    ```sh
-    npm create vue@latest
-    ```
-  - Opciones seleccionadas durante la configuración:
-    - TypeScript
-    - Vue Router
-    - Pinia
-    - ESLint
-    - Vitest
-- Librerías adicionales:
-  - i18n (para traducciones)
-- Framework de estilos CSS utilizado: Bootstrap con Sass para modificarlo.
 
-## Hacer uso de
+### DPL – Desarrollo del Proyecto en el Lenguaje
 
-- **Composition API** para la gestión de estado y funcionalidades de los componentes.
-- **Formato SFC (Single File Components)** en los componentes.
-- **Uso de TypeScript** para tipado estricto y mejor mantenibilidad del código.
-- **Vue Router** para la gestión de navegación por URL.
-- **Barra de navegación** para la estructura de la aplicación.
-- **Props y emit** para la comunicación entre componentes padre-hijo consecutivos en el DOM.
-- **Directivas** personalizadas para mejorar la reutilización del código.
-- **Slot** para definir el componente base del producto de la tienda.
-- **Provide/Inject** para la comunicación entre componentes padre-hijo distanciados en la misma rama del DOM.
-- **Pinia** para compartir datos globales y accesibles desde otros componentes.
-- **Composable** para acceder a la base de datos.
-- **Fetch API** para la obtención de datos.
-- **Traducción de la aplicación** a dos idiomas (Español y [Otro idioma]).
-- **Uso de interfaces** para definir estructuras de datos tipadas.
+  - El sistema permite que los usuarios inicien sesión con sus credenciales. (✅)
+  - Se han creado múltiples usuarios con distintos roles y permisos. (✅)
+  - La validación de contraseñas ha sido automatizada siguiendo buenas prácticas de seguridad. (✅)
+  - Las operaciones de alta, baja y modificación de usuarios en la base de datos han sido implementadas correctamente. (✅)
 
-## Instalación
+### FOL – Formación y Orientación Laboral
 
-1. Clonar el repositorio:
-   ```sh
-   git clone https://github.com/Angel-L-G/BaboonFeed.git
-   cd BaboonFeed-F
-   ```
-2. Instalar dependencias:
-   ```sh
-   npm install
-   npm install -g json-server
-   sudo npm install -g sass
-   ```
-3. Iniciar la Fake API
-  ```sh
-  json-server --watch ./fakeApi.json --port 3000
-  ```
-4. Ejecutar el servidor en modo desarrollo:
-   ```sh
-   npm run dev
-   ```
-   La aplicación estará disponible en `http://localhost:5173`.
+  - Se ha elaborado un plan de marketing para contextualizar y justificar la propuesta del proyecto. (✅)
+  - El proyecto incluye un plan de sostenibilidad que contempla aspectos medioambientales, económicos y sociales. (✅)
 
-## Tests
+### DOR – Diseño de la Interfaz
 
-- **Test unitarios**: Se realizan pruebas con Vitest para garantizar el correcto funcionamiento de los componentes.
-- **Test de componentes**: Validación de props, eventos y comportamiento esperado.
+  - Bootstrap se ha utilizado para garantizar consistencia visual y rapidez en el diseño. (✅)
+  - El diseño contempla principios de adaptabilidad a distintos tamaños de pantalla. (✅)
+  - Se han aplicado criterios de accesibilidad y usabilidad para mejorar la experiencia del usuario. (✅)
+  - El diseño es completamente responsive. (✅)
 
-Para ejecutar las pruebas:
-```sh
-npm run test
-```
+### DSW – Desarrollo del Software
 
-## Estructura del Proyecto
+  - Django ha sido utilizado como framework principal para el backend. (✅)
+  - Se han definido modelos y se ha utilizado el ORM para la interacción con la base de datos. (✅)
+  - La interfaz administrativa de Django se ha habilitado y personalizado. (✅)
+  - Se ha desarrollado una API RESTful para la comunicación entre el frontend y backend. (✅)
+  - El sistema cuenta con autenticación de usuarios. (✅)
+  - Se han implementado tareas asincrónicas mediante colas de mensajes. (❌)
 
-```
-BaboonFeed/
-│-- src/
-│   ├── components/   # Componentes reutilizables
-│   ├── views/        # Vistas principales
-│   ├── store/        # Pinia store
-│   ├── router/       # Configuración del router
-│   ├── i18n/         # Configuración de idiomas
-│   ├── assets/       # Recursos estáticos
-│   ├── types/        # Tipos definidos
-│   ├── __tests__/    # Pruebas unitarias
-│   ├── plugins/      # Configuración de distintas librerias
-│   └── main.ts       # Punto de entrada principal
-│-- fakeApi.json      # Fake API simulando un Backend
-│-- package.json      # Configuración del proyecto
-│-- vite.config.ts    # Configuración de Vite
-```
+### DEW – Desarrollo del Entorno Web
 
-## Buenas prácticas y calidad del código
-
-- Código comentado y bien documentado.
-- Estructura limpia y ordenada.
-- Uso de buenas prácticas de programación.
-- Modularidad y reutilización de componentes.
+  - Vue.js ha sido utilizado como frontend, conectado al backend de Django. (✅)
+  - Se ha hecho uso de Composition API y componentes en formato Single File Component (SFC). (✅)
+  - Se ha empleado TypeScript junto con ESLint para mejorar la calidad del código. (✅)
+  - Se utilizan directivas personalizadas y del core de Vue. (✅)
+  - El proyecto utiliza props/emit, provide/inject y Pinia cuando ha sido necesario. (✅)
+  - Se ha implementado el uso de localStorage y/o sessionStorage. (✅)
+  - Vue Router está integrado para el manejo de rutas y navegación. (✅)
+  - Se han creado composables reutilizables para separar la lógica de componentes. (✅)
+  - Se utilizan slots para contenido dinámico dentro de componentes. (✅)
+  - Se han definido interfaces para una mejor tipificación del código. (✅)
+  - El proyecto incluye tests del frontend para asegurar calidad y funcionamiento. (❌)
