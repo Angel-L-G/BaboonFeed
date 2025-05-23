@@ -157,6 +157,7 @@ async function uploadFile(): Promise<FileCustom | undefined> {
 
 const sendMessage = async () => {
     if (!socket.value || socket.value.readyState !== WebSocket.OPEN) return
+    if (!newMessage.value && !selectedFile.value) return
 
     let file: FileCustom | undefined = undefined
     if (selectedFile.value) {
@@ -241,7 +242,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="container d-flex flex-column justify-content-between my-3" style="height: 90vh" :class="['content', { 'content-expanded': isNavbarExpanded }]">
+    <div class="container d-flex flex-column justify-content-between my-3 content-expanded" style="height: 90vh" :class="['content', { 'content-expanded': isNavbarExpanded }]">
         <!-- Encabezado del chat -->
         <div
             class="d-flex align-items-center justify-content-between px-3 py-2 border-bottom border-primary bg-dark"

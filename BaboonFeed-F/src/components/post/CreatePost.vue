@@ -56,20 +56,24 @@ const removeFile = () => {
 
 const handleSubmit = async () => {
     try {
-        const fileResponse = await axios.post(`${API_URL}files/`,
-            {
-                file: file.value
-            },
-            {headers: {
-                'Content-Type': 'multipart/form-data',
-                'Authorization': 'Bearer ' + authStore.token
-                }}
-        )
-        const fileId = await fileResponse.data.id;
+        let file_id = null
+        if(file.value){
+            const fileResponse = await axios.post(`${API_URL}files/`,
+                {
+                    file: file.value
+                },
+                {headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': 'Bearer ' + authStore.token
+                    }}
+            )
+            file_id = await fileResponse.data.id;
+        }
+
         const response = await axios.post(`${API_URL}posts/`,
             {
                 content: content.value,
-                file_id: fileId
+                file_id
             },
             {
             headers: {

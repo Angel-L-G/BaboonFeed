@@ -10,7 +10,7 @@ class Follow(models.Model):
         unique_together = ['following', 'followed_by']
 
 class User(AbstractUser):
-    bio = models.TextField()
+    bio = models.TextField(blank=True)
     avatar = models.ImageField(upload_to='avatars/user', default='avatars/user/default.png')
     follows = models.ManyToManyField('self', related_name='follows_users', symmetrical=False, through=Follow)
     blocked = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='blocked_users')

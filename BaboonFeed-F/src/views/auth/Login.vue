@@ -34,9 +34,9 @@
             </div>
 
             <!-- Parrafo para mostrar errores -->
-            <p v-if="errorMsg" class="text-danger mt-2" role="alert" aria-live="assertive">
+            <strong v-if="errorMsg" class="text-danger text-center mt-3 m-3 bg-secondary-alt rounded" role="alert" aria-live="assertive">
                 {{ errorMsg }}
-            </p>
+            </strong>
         </div>
     </div>
 </template>
@@ -76,13 +76,13 @@ const handleLogin = async () => {
                 router.push('/home/')
             } else {
                 console.log('No token received')
-                errorMsg.value = 'Credenciales incorrectas'
+                errorMsg.value = 'Incorrect credentials'
                 username.value = ''
                 password.value = ''
             }
         } catch (error) {
             console.error('Error:', error)
-            errorMsg.value = 'Credenciales incorrectas'
+            errorMsg.value = 'Incorrect credentials / Not verified account'
             username.value = ''
             password.value = ''
         }

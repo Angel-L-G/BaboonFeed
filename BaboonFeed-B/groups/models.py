@@ -9,6 +9,7 @@ class GroupChat(models.Model):
     last_message = models.ForeignKey(
         'chats.Message',
         null=True,
+        blank=True,
         on_delete=models.SET_NULL,
         related_name='last_message'
     )
